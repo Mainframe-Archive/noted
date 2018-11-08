@@ -1,23 +1,27 @@
 // @flow
 
-import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native-web'
+import React, { Component } from "react";
+import { StyleSheet, View, Text } from "react-native-web";
 
 const styles = StyleSheet.create({
   root: {
-    textAlign: 'center'
+    textAlign: "center"
   },
   largeText: {
-    fontSize: '40px',
-    fontWeight: 'bold'
+    fontSize: "40px",
+    fontWeight: "bold"
   }
-})
+});
 
 class App extends Component {
   render() {
     return (
       <View style={styles.root}>
-        <Text style={styles.largeText}>Welcome to Noted.<br/>Please take some notes.</Text>
+        <Text style={styles.largeText}>
+          Welcome to Noted.
+          <br />
+          Please take some notes.
+        </Text>
       </View>
     );
   }

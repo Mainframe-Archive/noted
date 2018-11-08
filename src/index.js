@@ -1,11 +1,11 @@
-import React from 'react'
-import { render } from 'react-dom'
-import Modal from 'react-modal'
+import React from "react";
+import { render } from "react-dom";
+import Modal from "react-modal";
 
-import './index.css'
-import App from './components/App';
+import "./index.css";
+import App from "./components/App";
 
-const el = document.getElementById('root')
+const el = document.getElementById("root");
 
-Modal.setAppElement(el)
-render(<App />, el)
+Modal.setAppElement(el);
+render(<App />, el);

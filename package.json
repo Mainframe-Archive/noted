@@ -2,15 +2,6 @@
   "name": "noted",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "flow-bin": "^0.84.0",
-    "react": "^16.6.0",
-    "react-art": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "react-modal": "^3.6.1",
-    "react-native-web": "^0.9.4",
-    "react-scripts": "2.0.5"
-  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
@@ -26,5 +17,17 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "dependencies": {
+    "react": "^16.6.0",
+    "react-art": "^16.6.0",
+    "react-dom": "^16.6.0",
+    "react-modal": "^3.6.1",
+    "react-native-web": "^0.9.4",
+    "react-scripts": "2.0.5"
+  },
+  "devDependencies": {
+    "eslint-config-mainframe": "^2.2.0",
+    "flow-bin": "^0.84.0"
+  }
 }
