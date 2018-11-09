@@ -1,30 +1,47 @@
 // @flow
 
-import React, { Component } from "react";
-import { StyleSheet, View, Text } from "react-native-web";
+import React, { Component, type Node } from 'react'
+import { ThemeProvider } from 'styled-components/native'
 
-const styles = StyleSheet.create({
-  root: {
-    textAlign: "center"
-  },
-  largeText: {
-    fontSize: "40px",
-    fontWeight: "bold"
+import { type Note, type ID } from '../types'
+
+import { Provider } from '../hocs/Context'
+
+import theme from '../theme'
+
+import Home from './Home'
+
+type State = {
+  note: ?Note,
+}
+
+class App extends Component<{}, State> {
+  state: State = {
+    note: null,
   }
-});
 
-class App extends Component {
-  render() {
+  saveNote = (note: Note): void => {
+    console.log('Save Note', note)
+  }
+
+  openNote = (noteId: ID): void => {
+    console.log('Open Note', noteId)
+  }
+
+  render(): Node {
     return (
-      <View style={styles.root}>
-        <Text style={styles.largeText}>
-          Welcome to Noted.
-          <br />
-          Please take some notes.
-        </Text>
-      </View>
-    );
+      <ThemeProvider theme={theme}>
+        <Provider
+          value={{
+            ...this.state,
+            saveNote: this.saveNote,
+            openNote: this.openNote,
+          }}>
+          <Home />
+        </Provider>
+      </ThemeProvider>
+    )
   }
 }
 
-export default App;
+export default App
