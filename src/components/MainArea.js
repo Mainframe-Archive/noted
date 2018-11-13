@@ -4,6 +4,9 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { Editor } from 'react-draft-wysiwyg'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import { EditorState, ContentState, convertFromHTML } from 'draft-js'
+
+import applyContext from '../hocs/Context'
 
 import screenSize from '../hocs/ScreenSize'
 
@@ -19,21 +22,45 @@ const EditorContainer = styled.View`
   flex: 1;
 `
 
-const Title = styled.Text`
+const Title = styled.TextInput`
   font-size: 40px;
   padding-bottom: ${props => props.theme.spacing};
   color: ${props => props.theme.darkGray};
 `
 
-export default class MainArea extends Component<{}> {
+class MainArea extends Component<{}> {
+  constructor(props) {
+    super(props)
+    this.state = {
+      text: 'Notes Title',
+    }
+  }
+
   render() {
     return (
       <Container>
-        <Title>Note Title</Title>
+        <Title
+          value={this.props.note.title}
+          onChangeText={text => this.setState({ text })}
+        />
         <EditorContainer>
-          <Editor />
+          <Editor
+            editorState={EditorState.createWithContent(
+              ContentState.createFromBlockArray(
+                convertFromHTML(this.props.note.content),
+              ),
+            )}
+            onContentStateChange={newContent =>
+              this.props.update({
+                ...this.props.note,
+                content: newContent.blocks[0].text,
+              })
+            }
+          />
         </EditorContainer>
       </Container>
     )
   }
 }
+
+export default applyContext(MainArea)

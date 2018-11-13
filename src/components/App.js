@@ -17,7 +17,7 @@ type State = {
 
 class App extends Component<{}, State> {
   state: State = {
-    note: null,
+    note: { key: 1, content: '<p>start typing...</p>', title: 'untitled' },
   }
 
   saveNote = (note: Note): void => {
@@ -28,6 +28,11 @@ class App extends Component<{}, State> {
     console.log('Open Note', noteId)
   }
 
+  updateActiveNote = note => {
+    console.log(note)
+    this.setState({ note: note })
+  }
+
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
@@ -36,6 +41,7 @@ class App extends Component<{}, State> {
             ...this.state,
             saveNote: this.saveNote,
             openNote: this.openNote,
+            update: this.updateActiveNote,
           }}>
           <Home />
         </Provider>

@@ -2,8 +2,12 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
+import _ from 'lodash'
 
+import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
+
+import NOTES from '../notes.json'
 
 const Container = screenSize(styled.View`
   width: 300px;
@@ -22,12 +26,37 @@ const Text = styled.Text`
   color: ${props => props.theme.white};
 `
 
-export default class LeftNav extends Component<{}> {
+const List = styled.FlatList`
+  width: 800px;
+  cursor: pointer;
+`
+
+class LeftNav extends Component<{}> {
+  state = {
+    data: [],
+  }
+
+  componentDidMount() {
+    this.setState({ data: _.toArray(NOTES) })
+  }
+
+  openNote = item => {
+    console.log('opening... ' + item.title)
+  }
+
   render() {
     return (
       <Container>
-        <Text>Left Navigation</Text>
+        <Text>Your Notes</Text>
+        <List
+          data={this.state.data}
+          renderItem={({ item }) => (
+            <Text onClick={() => this.props.update(item)}>{item.title}</Text>
+          )}
+        />
       </Container>
     )
   }
 }
+
+export default applyContext(LeftNav)
