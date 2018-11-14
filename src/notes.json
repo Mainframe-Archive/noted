@@ -1,0 +1,12 @@
+{
+  "key1": {
+    "content": "thisis my first note! wow!",
+    "key": "key1",
+    "title": "1st note!"
+  },
+  "key2": {
+    "content": "this is my second ever note! thanks!",
+    "key": "key2",
+    "title": "2nd note"
+  }
+}
