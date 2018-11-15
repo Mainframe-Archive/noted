@@ -2,12 +2,9 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import _ from 'lodash'
 
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
-
-import NOTES from '../notes.json'
 
 const Container = screenSize(styled.View`
   width: 300px;
@@ -32,24 +29,12 @@ const List = styled.FlatList`
 `
 
 class LeftNav extends Component<{}> {
-  state = {
-    data: [],
-  }
-
-  componentDidMount() {
-    this.setState({ data: _.toArray(NOTES) })
-  }
-
-  openNote = item => {
-    console.log('opening... ' + item.title)
-  }
-
   render() {
     return (
       <Container>
         <Text>Your Notes</Text>
         <List
-          data={this.state.data}
+          data={this.props.notes}
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}

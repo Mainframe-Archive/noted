@@ -28,12 +28,42 @@ const Title = styled.TextInput`
   color: ${props => props.theme.darkGray};
 `
 
+const ButtonContainer = styled.View`
+  max-width: 130px;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const SaveButton = styled.Button`
+  flex: 1;
+`
+
+const DeleteButton = styled.Button`
+  flex: 1;
+`
+
 class MainArea extends Component<{}> {
   constructor(props) {
     super(props)
     this.state = {
-      text: 'Notes Title',
+      title: this.props.note.title,
+      editorState: EditorState.createWithContent(
+        ContentState.createFromBlockArray(
+          convertFromHTML(this.props.note.content),
+        ),
+      ),
     }
+  }
+
+  onContentChange = contentState => {
+    this.props.update({
+      ...this.props.note,
+      content: contentState.blocks[0].text,
+    })
+  }
+
+  onTitleChange = newTitle => {
+    this.props.update({ ...this.props.note, title: newTitle })
   }
 
   render() {
@@ -41,21 +71,20 @@ class MainArea extends Component<{}> {
       <Container>
         <Title
           value={this.props.note.title}
-          onChangeText={text => this.setState({ text })}
+          onChangeText={text => {
+            this.onTitleChange(text)
+          }}
         />
+        <ButtonContainer>
+          <SaveButton onPress={this.props.save} title="Save" />
+          <DeleteButton onPress={this.props.delete} title="Delete" />
+        </ButtonContainer>
         <EditorContainer>
           <Editor
-            editorState={EditorState.createWithContent(
-              ContentState.createFromBlockArray(
-                convertFromHTML(this.props.note.content),
-              ),
-            )}
-            onContentStateChange={newContent =>
-              this.props.update({
-                ...this.props.note,
-                content: newContent.blocks[0].text,
-              })
-            }
+            defaultEditorState={this.state.editorState}
+            onChange={editorState => {
+              this.onContentChange(editorState)
+            }}
           />
         </EditorContainer>
       </Container>
