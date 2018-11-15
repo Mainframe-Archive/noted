@@ -28,6 +28,16 @@ const List = styled.FlatList`
   cursor: pointer;
 `
 
+const ButtonContainer = styled.View`
+  max-width: 130px;
+  flex-direction: row;
+  justify-content: space-between;
+`
+
+const NewButton = styled.Button`
+  flex: 1;
+`
+
 class LeftNav extends Component<{}> {
   render() {
     return (
@@ -39,6 +49,9 @@ class LeftNav extends Component<{}> {
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
         />
+        <ButtonContainer>
+          <NewButton onPress={this.props.new} title="Add new note" />
+        </ButtonContainer>
       </Container>
     )
   }

@@ -23,20 +23,25 @@ class App extends Component<{}, State> {
   }
 
   componentDidMount() {
-    this.state.notes.map(note => {
-      if (localStorage.hasOwnProperty(note.key)) {
-        let value = localStorage.getItem(note.key)
-        try {
-          value = JSON.parse(value)
-          const index = _.findIndex(this.state.notes, { key: note.key })
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      let value = localStorage.getItem(key)
+      try {
+        value = JSON.parse(value)
+        if (value.key && value.content && value.title) {
+          const index = _.findIndex(this.state.notes, { key: value.key })
+          console.log(index)
           const copy = this.state.notes
-          copy.splice(index, 1, value)
+          if (index !== -1) {
+            copy.splice(index, 1, value)
+          } else {
+            copy.splice(copy.length, 0, value)
+          }
           this.setState({ notes: copy })
-        } catch (e) {
-          console.log(e)
+          console.log(this.state.notes)
         }
-      }
-    })
+      } catch {}
+    }
   }
 
   updateActiveNote = note => {
@@ -55,6 +60,29 @@ class App extends Component<{}, State> {
 
   deleteNote = () => {
     console.log('deleting note... ' + this.state.note.key)
+    console.log('please note: delete not fully functional yet')
+    localStorage.removeItem(this.state.note.key)
+    // you would need to remove from database here too once that's working...
+  }
+
+  generateNewKey = () => {
+    return `${new Date().getTime()}`
+  }
+
+  newNote = () => {
+    console.log('opening new note... ')
+    const newKey = this.generateNewKey()
+    this.setState({
+      notes: [
+        ...this.state.notes,
+        { key: newKey, title: 'untitled', content: '<p>start typing</p>' },
+      ],
+      note: {
+        key: newKey,
+        title: 'untitled',
+        content: '<p>start typing</p>',
+      },
+    })
   }
 
   render(): Node {
@@ -67,6 +95,7 @@ class App extends Component<{}, State> {
             update: this.updateActiveNote,
             save: this.saveNote,
             delete: this.deleteNote,
+            new: this.newNote,
           }}>
           <Home />
         </Provider>

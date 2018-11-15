@@ -30,6 +30,7 @@ const Title = styled.TextInput`
 
 const ButtonContainer = styled.View`
   max-width: 130px;
+  margin-bottom: 30px;
   flex-direction: row;
   justify-content: space-between;
 `
@@ -43,16 +44,13 @@ const DeleteButton = styled.Button`
 `
 
 class MainArea extends Component<{}> {
-  constructor(props) {
-    super(props)
-    this.state = {
-      title: this.props.note.title,
-      editorState: EditorState.createWithContent(
-        ContentState.createFromBlockArray(
-          convertFromHTML(this.props.note.content),
-        ),
+  state: State = {
+    title: this.props.note.title,
+    editorState: EditorState.createWithContent(
+      ContentState.createFromBlockArray(
+        convertFromHTML(this.props.note.content),
       ),
-    }
+    ),
   }
 
   onContentChange = contentState => {

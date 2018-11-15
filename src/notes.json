@@ -8,5 +8,15 @@
     "content": "this is my second ever note! thanks!",
     "key": "key2",
     "title": "2nd note"
+  },
+  "key3": {
+    "content": "this is my second ever note! thanks!",
+    "key": "key3",
+    "title": "3nd note"
+  },
+  "key4": {
+    "content": "this is my second ever note! thanks!",
+    "key": "key4",
+    "title": "4nd note"
   }
 }
