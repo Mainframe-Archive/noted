@@ -6,6 +6,8 @@ import styled, { css } from 'styled-components/native'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
+import SearchBar from './Search'
+
 const Container = screenSize(styled.View`
   width: 300px;
   height: 100%;
@@ -18,20 +20,27 @@ const Container = screenSize(styled.View`
     `};
 `)
 
-const Text = styled.Text`
-  font-size: 10px;
+const TitleText = styled.Text`
+  font-size: 18px;
   color: ${props => props.theme.white};
+  margin-bottom: 20px;
+`
+
+const Text = styled.Text`
+  font-size: 14px;
+  color: ${props => props.theme.white};
+  margin-left: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
 `
 
 const List = styled.FlatList`
   width: 800px;
-  cursor: pointer;
 `
 
-const ButtonContainer = styled.View`
-  max-width: 130px;
-  flex-direction: row;
-  justify-content: space-between;
+const SearchContainer = styled.View`
+  display: flex;
+  align-items: center;
 `
 
 const NewButton = styled.Button`
@@ -42,16 +51,17 @@ class LeftNav extends Component<{}> {
   render() {
     return (
       <Container>
-        <Text>Your Notes</Text>
+        <SearchContainer>
+          <SearchBar data={this.props.notes} />
+        </SearchContainer>
+        <TitleText>Your Notes</TitleText>
         <List
           data={this.props.notes}
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
         />
-        <ButtonContainer>
-          <NewButton onPress={this.props.new} title="Add new note" />
-        </ButtonContainer>
+        <NewButton onPress={this.props.new} title="Add new note" />
       </Container>
     )
   }

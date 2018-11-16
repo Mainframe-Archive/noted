@@ -53,10 +53,10 @@ class MainArea extends Component<{}> {
     ),
   }
 
-  onContentChange = contentState => {
+  onContentChange = newContent => {
     this.props.update({
       ...this.props.note,
-      content: contentState.blocks[0].text,
+      content: newContent.blocks[0].text,
     })
   }
 
@@ -80,9 +80,7 @@ class MainArea extends Component<{}> {
         <EditorContainer>
           <Editor
             defaultEditorState={this.state.editorState}
-            onChange={editorState => {
-              this.onContentChange(editorState)
-            }}
+            onChange={newContent => this.onContentChange(newContent)}
           />
         </EditorContainer>
       </Container>

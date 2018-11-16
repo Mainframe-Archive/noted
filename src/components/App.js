@@ -19,7 +19,11 @@ type State = {
 class App extends Component<{}, State> {
   state: State = {
     notes: _.toArray(NOTES),
-    note: { key: 3, content: '<p>start typing...</p>', title: 'untitled' },
+    note: {
+      key: `${new Date().getTime()}`,
+      content: '<p>start typing...</p>',
+      title: 'untitled',
+    },
   }
 
   componentDidMount() {
@@ -30,7 +34,6 @@ class App extends Component<{}, State> {
         value = JSON.parse(value)
         if (value.key && value.content && value.title) {
           const index = _.findIndex(this.state.notes, { key: value.key })
-          console.log(index)
           const copy = this.state.notes
           if (index !== -1) {
             copy.splice(index, 1, value)
@@ -38,7 +41,6 @@ class App extends Component<{}, State> {
             copy.splice(copy.length, 0, value)
           }
           this.setState({ notes: copy })
-          console.log(this.state.notes)
         }
       } catch {}
     }
@@ -59,10 +61,10 @@ class App extends Component<{}, State> {
   }
 
   deleteNote = () => {
-    console.log('deleting note... ' + this.state.note.key)
-    console.log('please note: delete not fully functional yet')
+    console.log(
+      'please note: delete not fully functional yet until integration with web3 DB',
+    )
     localStorage.removeItem(this.state.note.key)
-    // you would need to remove from database here too once that's working...
   }
 
   generateNewKey = () => {
