@@ -21,14 +21,11 @@ export default class Suggestions extends Component<> {
       <Container>
         <FlatList
           data={this.props.results}
-          renderItem={({ item }) => {
-            console.log('hi')
-            return (
-              <SuggestionText onClick={() => this.props.update(item)}>
-                {item.title}
-              </SuggestionText>
-            )
-          }}
+          renderItem={({ item }) => (
+            <SuggestionText onClick={() => this.props.update(item)}>
+              {item.title}
+            </SuggestionText>
+          )}
         />
       </Container>
     )
