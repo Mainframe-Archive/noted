@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 
-import { type Note, type ID } from '../types'
+import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
 

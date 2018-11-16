@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
+import _ from 'lodash'
 import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import Suggestions from './Suggestions'
@@ -45,7 +46,12 @@ class SearchBar extends Component<{}> {
           const regex = new RegExp(escapedString + 'w*', 'g')
           const result = note.title.match(regex)
           if (result) {
-            this.setState({ results: [note] })
+            const index = _.findIndex(this.state.results, { title: note.title })
+            if (index === -1) {
+              const copy = this.state.results
+              copy.push(note)
+              this.setState({ results: copy })
+            }
           }
         })
       }

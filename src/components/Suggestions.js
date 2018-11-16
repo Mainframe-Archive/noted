@@ -1,27 +1,36 @@
 import React, { Component } from 'react'
-import { FlatList, Text } from 'react-native-web'
+import { FlatList } from 'react-native-web'
 import styled from 'styled-components/native'
 
 const SuggestionText = styled.Text`
-  background-color: #fff;
   color: ${props => props.theme.blue};
-  border-radius: 5px;
   font-size: 14px;
   padding: 5px;
   cursor: pointer;
 `
 
-const Suggestions = props => {
-  return (
-    <FlatList
-      data={props.results}
-      renderItem={({ item }) => (
-        <SuggestionText onClick={() => props.update(item)}>
-          {item.title}
-        </SuggestionText>
-      )}
-    />
-  )
-}
+const Container = styled.View`
+  background-color: #fff;
+  border-radius: 5px;
+  opacity: 0.7;
+`
 
-export default Suggestions
+export default class Suggestions extends Component<> {
+  render() {
+    return (
+      <Container>
+        <FlatList
+          data={this.props.results}
+          renderItem={({ item }) => {
+            console.log('hi')
+            return (
+              <SuggestionText onClick={() => this.props.update(item)}>
+                {item.title}
+              </SuggestionText>
+            )
+          }}
+        />
+      </Container>
+    )
+  }
+}
