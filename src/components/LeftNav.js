@@ -4,11 +4,17 @@ import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
 import { FlatList } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
+import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
 import SearchBar from './Search'
+
+type Props = {
+  notes: Array<Note>,
+  update: Note => void,
+}
 
 const Container = screenSize(styled.View`
   width: 300px;
@@ -45,7 +51,7 @@ const NewButton = styled.Button`
   flex: 1;
 `
 
-class LeftNav extends Component<{}> {
+class LeftNav extends Component<Props> {
   render() {
     return (
       <Container>
@@ -56,7 +62,7 @@ class LeftNav extends Component<{}> {
         <FlatList
           data={this.props.notes
             .sort((a, b) => {
-              return a.date - b.date
+              return parseInt(a.date) - parseInt(b.date)
             })
             .slice(this.props.notes.length - 5, this.props.notes.length)}
           renderItem={({ item }) => (

@@ -3,6 +3,7 @@
 import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
+import uuidv4 from 'uuid/v4'
 
 import { type Note } from '../types'
 
@@ -13,7 +14,7 @@ import NOTES from '../notes.json'
 import Home from './Home'
 
 type State = {
-  note: ?Note,
+  note: Note,
   notes: Array<Note>,
 }
 
@@ -44,7 +45,9 @@ class App extends Component<{}, State> {
           }
           this.setState({ notes: copy })
         }
-      } catch {}
+      } catch {
+        console.log('Bad JSON')
+      }
     }
   }
 
@@ -60,6 +63,10 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
+
+    // uncomment for auto save to local storage. discuss whether we want
+    // storage as updated, or on a timer
+    // localStorage.setItem(this.state.note.key, JSON.stringify(note))
   }
 
   saveNote = (): void => {

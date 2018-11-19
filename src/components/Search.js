@@ -5,7 +5,21 @@ import styled, { css } from 'styled-components/native'
 import _ from 'lodash'
 import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
+import { type Note } from '../types'
 import Suggestions from './Suggestions'
+
+type State = {
+  query: string,
+  results: Array<Note>,
+}
+
+type Props = {
+  note: Note,
+  notes: Array<Note>,
+  update: (note: Note) => void,
+  save: () => void,
+  delete: () => void,
+}
 
 const Container = screenSize(styled.View`
   width: 300px;
@@ -28,7 +42,7 @@ const Search = styled.TextInput`
   outline-width: 0;
 `
 
-class SearchBar extends Component<{}> {
+class SearchBar extends Component<Props, State> {
   state = {
     query: '',
     results: [],

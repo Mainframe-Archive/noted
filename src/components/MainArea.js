@@ -3,12 +3,27 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { Editor } from 'react-draft-wysiwyg'
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import { EditorState, ContentState, convertFromHTML } from 'draft-js'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+
+import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
 
 import screenSize from '../hocs/ScreenSize'
+
+type State = {
+  title: string,
+  editorState: EditorState,
+}
+
+type Props = {
+  note: Note,
+  notes: Array<Note>,
+  update: (note: Note) => void,
+  save: () => void,
+  delete: () => void,
+}
 
 const Container = screenSize(styled.View`
   flex: 1;
@@ -43,7 +58,7 @@ const DeleteButton = styled.Button`
   flex: 1;
 `
 
-class MainArea extends Component<{}> {
+class MainArea extends Component<Props, State> {
   state: State = {
     title: this.props.note.title,
     editorState: EditorState.createWithContent(
