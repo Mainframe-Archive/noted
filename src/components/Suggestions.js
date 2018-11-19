@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Text } from 'react-native-web'
+import { FlatList } from 'react-native-web'
 import styled from 'styled-components/native'
 
 const SuggestionText = styled.Text`
@@ -16,11 +16,6 @@ const Container = styled.View`
 `
 
 const Suggestions = props => {
-  const myArray = [
-    { key: 1, title: 'hi' },
-    { key: 2, title: 'bonjour' },
-    { key: 3, title: 'hola' },
-  ]
   return (
     <Container>
       <FlatList

@@ -56,6 +56,7 @@ class SearchBar extends Component<{}> {
               }
             })
           }
+          return this.state.results
         })
       }
     }
