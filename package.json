@@ -29,7 +29,8 @@
     "react-native-web": "^0.9.4",
     "react-scripts": "^2.0.5",
     "react-sizes": "^1.0.4",
-    "styled-components": "^4.0.3"
+    "styled-components": "^4.0.3",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "eslint-config-mainframe": "^2.2.0",

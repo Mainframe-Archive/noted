@@ -3,6 +3,7 @@
 import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
+import uuidv4 from 'uuid/v4'
 
 import { type Note } from '../types'
 
@@ -14,15 +15,17 @@ import Home from './Home'
 
 type State = {
   note: ?Note,
+  notes: Array<Note>,
 }
 
 class App extends Component<{}, State> {
   state: State = {
     notes: _.toArray(NOTES),
     note: {
-      key: `${new Date().getTime()}`,
+      key: uuidv4(),
       content: 'start typing...',
       title: 'untitled',
+      date: `${new Date().getTime()}`,
     },
   }
 
@@ -47,8 +50,8 @@ class App extends Component<{}, State> {
   }
 
   updateActiveNote = note => {
-    const index = _.findIndex(this.state.notes, { key: note.key })
-    const copy = this.state.notes
+    const copy = this.state.notes.slice()
+    const index = _.findIndex(copy, { key: note.key })
     copy.splice(index, 1, note)
     this.setState({
       note: note,
@@ -58,32 +61,37 @@ class App extends Component<{}, State> {
 
   saveNote = (): void => {
     localStorage.setItem(this.state.note.key, JSON.stringify(this.state.note))
+
+    const note = Object.assign({}, this.state.note)
+    note.date = `${new Date().getTime()}`
+    const copy = this.state.notes.slice()
+    const index = _.findIndex(copy, { key: note.key })
+    copy.splice(index, 1, note)
+
+    this.setState({
+      note: note,
+      notes: copy,
+    })
   }
 
   deleteNote = () => {
     console.log(
-      'please note: delete not fully functional yet until integration with web3 DB',
+      'please note: delete not fully functional yet until integration with web3',
     )
     localStorage.removeItem(this.state.note.key)
   }
 
-  generateNewKey = () => {
-    return `${new Date().getTime()}`
-  }
-
   newNote = () => {
-    console.log('opening new note... ')
-    const newKey = this.generateNewKey()
+    const newKey = uuidv4()
+    const newNote = {
+      key: newKey,
+      title: 'untitled',
+      content: 'start typing...',
+      date: `${new Date().getTime()}`,
+    }
     this.setState({
-      notes: [
-        ...this.state.notes,
-        { key: newKey, title: 'untitled', content: 'start typing...' },
-      ],
-      note: {
-        key: newKey,
-        title: 'untitled',
-        content: 'start typing...',
-      },
+      notes: [...this.state.notes, newNote],
+      note: newNote,
     })
   }
 

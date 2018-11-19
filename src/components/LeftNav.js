@@ -53,10 +53,11 @@ class LeftNav extends Component<{}> {
         </SearchContainer>
         <TitleText>Your Recent Notes</TitleText>
         <FlatList
-          data={this.props.notes.slice(
-            this.props.notes.length - 5,
-            this.props.notes.length,
-          )}
+          data={this.props.notes
+            .sort((a, b) => {
+              return a.date - b.date
+            })
+            .slice(this.props.notes.length - 5, this.props.notes.length)}
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
