@@ -47,13 +47,14 @@ class SearchBar extends Component<{}> {
           const result = note.title.match(regex)
           if (result) {
             const copy = this.state.results.slice()
-            console.log(copy)
             const index = _.findIndex(copy, { title: note.title })
-            if (index === -1) {
-              copy.splice(0, 0, note)
-            }
-            console.log(copy)
-            this.setState({ results: copy })
+
+            this.setState((state, props) => {
+              return {
+                results:
+                  index === -1 ? state.results.concat(note) : state.results,
+              }
+            })
           }
         })
       }
