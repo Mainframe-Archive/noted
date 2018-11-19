@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
+import { FlatList } from 'react-native-web'
 
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
@@ -34,10 +35,6 @@ const Text = styled.Text`
   cursor: pointer;
 `
 
-const List = styled.FlatList`
-  width: 800px;
-`
-
 const SearchContainer = styled.View`
   display: flex;
   align-items: center;
@@ -54,8 +51,18 @@ class LeftNav extends Component<{}> {
         <SearchContainer>
           <SearchBar data={this.props.notes} />
         </SearchContainer>
+        <TitleText>Your Recent Notes</TitleText>
+        <FlatList
+          data={this.props.notes.slice(
+            this.props.notes.length - 5,
+            this.props.notes.length,
+          )}
+          renderItem={({ item }) => (
+            <Text onClick={() => this.props.update(item)}>{item.title}</Text>
+          )}
+        />
         <TitleText>Your Notes</TitleText>
-        <List
+        <FlatList
           data={this.props.notes}
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>

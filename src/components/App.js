@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 
-import { type Note, type ID } from '../types'
+import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
 
@@ -21,7 +21,7 @@ class App extends Component<{}, State> {
     notes: _.toArray(NOTES),
     note: {
       key: `${new Date().getTime()}`,
-      content: '<p>start typing...</p>',
+      content: 'start typing...',
       title: 'untitled',
     },
   }
@@ -77,12 +77,12 @@ class App extends Component<{}, State> {
     this.setState({
       notes: [
         ...this.state.notes,
-        { key: newKey, title: 'untitled', content: '<p>start typing</p>' },
+        { key: newKey, title: 'untitled', content: 'start typing...' },
       ],
       note: {
         key: newKey,
         title: 'untitled',
-        content: '<p>start typing</p>',
+        content: 'start typing...',
       },
     })
   }
