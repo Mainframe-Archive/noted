@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
 import { FlatList } from 'react-native-web'
+import uuidv4 from 'uuid/v4'
 
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
@@ -69,7 +70,17 @@ class LeftNav extends Component<{}> {
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
         />
-        <NewButton onPress={this.props.new} title="Add new note" />
+        <NewButton
+          onPress={() =>
+            this.props.update({
+              key: uuidv4(),
+              title: 'untitled',
+              content: 'start typing...',
+              date: `${new Date().getTime()}`,
+            })
+          }
+          title="Add new note"
+        />
       </Container>
     )
   }

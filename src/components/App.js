@@ -3,7 +3,6 @@
 import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
-import uuidv4 from 'uuid/v4'
 
 import { type Note } from '../types'
 
@@ -20,13 +19,13 @@ type State = {
 
 class App extends Component<{}, State> {
   state: State = {
-    notes: _.toArray(NOTES),
     note: {
       key: uuidv4(),
       content: 'start typing...',
       title: 'untitled',
       date: `${new Date().getTime()}`,
     },
+    notes: _.toArray(NOTES),
   }
 
   componentDidMount() {
@@ -49,10 +48,14 @@ class App extends Component<{}, State> {
     }
   }
 
-  updateActiveNote = note => {
+  updateActiveNote = (note: Note): void => {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
-    copy.splice(index, 1, note)
+    if (index === -1) {
+      copy.splice(copy.length, 0, note)
+    } else {
+      copy.splice(index, 1, note)
+    }
     this.setState({
       note: note,
       notes: copy,
@@ -74,25 +77,11 @@ class App extends Component<{}, State> {
     localStorage.setItem(this.state.note.key, JSON.stringify(note))
   }
 
-  deleteNote = () => {
+  deleteNote = (): void => {
     console.log(
       'please note: delete not fully functional yet until integration with web3',
     )
     localStorage.removeItem(this.state.note.key)
-  }
-
-  newNote = () => {
-    const newKey = uuidv4()
-    const newNote = {
-      key: newKey,
-      title: 'untitled',
-      content: 'start typing...',
-      date: `${new Date().getTime()}`,
-    }
-    this.setState({
-      notes: [...this.state.notes, newNote],
-      note: newNote,
-    })
   }
 
   render(): Node {
@@ -105,7 +94,6 @@ class App extends Component<{}, State> {
             update: this.updateActiveNote,
             save: this.saveNote,
             delete: this.deleteNote,
-            new: this.newNote,
           }}>
           <Home />
         </Provider>
