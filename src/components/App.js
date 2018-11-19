@@ -60,8 +60,6 @@ class App extends Component<{}, State> {
   }
 
   saveNote = (): void => {
-    localStorage.setItem(this.state.note.key, JSON.stringify(this.state.note))
-
     const note = Object.assign({}, this.state.note)
     note.date = `${new Date().getTime()}`
     const copy = this.state.notes.slice()
@@ -72,6 +70,8 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
+
+    localStorage.setItem(this.state.note.key, JSON.stringify(note))
   }
 
   deleteNote = () => {
