@@ -5,18 +5,18 @@
     "title": "1st note!"
   },
   "key2": {
-    "content": "this is my second ever note! thanks!",
+    "content": "this is my second ever note!",
     "key": "key2",
     "title": "2nd note"
   },
   "key3": {
-    "content": "this is my second ever note! thanks!",
+    "content": "this is my third note",
     "key": "key3",
-    "title": "3nd note"
+    "title": "3rd note"
   },
   "key4": {
-    "content": "this is my second ever note! thanks!",
+    "content": "this is my fourth note",
     "key": "key4",
-    "title": "4nd note"
+    "title": "4th note"
   }
 }
