@@ -39,10 +39,10 @@ class App extends Component<{}, State> {
         if (value.key && value.content && value.title) {
           const index = _.findIndex(this.state.notes, { key: value.key })
           const copy = this.state.notes
-          if (index !== -1) {
-            copy.splice(index, 1, value)
-          } else {
+          if (index === -1) {
             copy.splice(copy.length, 0, value)
+          } else {
+            copy.splice(index, 1, value)
           }
           this.setState({ notes: copy })
         }
@@ -66,7 +66,6 @@ class App extends Component<{}, State> {
     })
 
     // uncomment for auto save to local storage. discuss whether we want
-    // storage as updated, or on a timer
     // localStorage.setItem(this.state.note.key, JSON.stringify(note))
   }
 
