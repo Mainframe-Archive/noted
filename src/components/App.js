@@ -31,8 +31,9 @@ class App extends Component<{}, State> {
 
   componentDidMount() {
     for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i)
-      let value = localStorage.getItem(key)
+      const key = localStorage.key(i) || ''
+      let value = localStorage.getItem(key) || '{}'
+
       try {
         value = JSON.parse(value)
         if (value.key && value.content && value.title) {
