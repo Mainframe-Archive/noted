@@ -62,7 +62,7 @@ class LeftNav extends Component<Props> {
         <FlatList
           data={this.props.notes
             .sort((a, b) => {
-              return parseInt(a.date) - parseInt(b.date)
+              return a.date - b.date
             })
             .slice(this.props.notes.length - 5, this.props.notes.length)}
           renderItem={({ item }) => (
