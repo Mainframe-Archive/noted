@@ -84,9 +84,7 @@ class MainArea extends Component<Props, State> {
       <Container>
         <Title
           value={this.props.note.title}
-          onChangeText={text => {
-            this.onTitleChange(text)
-          }}
+          onChangeText={this.onTitleChange}
         />
         <ButtonContainer>
           <SaveButton onPress={this.props.save} title="Save" />

@@ -49,7 +49,9 @@ class SearchBar extends Component<Props, State> {
   }
 
   handleInputChange = text => {
-    this.setState({ query: text })
+    const nextState = { query: text }
+    // this.setState({ query: text })
+
     if (this.state.query && this.state.query.length > 1) {
       if (this.state.query.length % 2 === 0) {
         this.props.notes.map(note => {
@@ -62,18 +64,13 @@ class SearchBar extends Component<Props, State> {
           if (result) {
             const copy = this.state.results.slice()
             const index = _.findIndex(copy, { title: note.title })
-
-            this.setState(state => {
-              return {
-                results:
-                  index === -1 ? state.results.concat(note) : state.results,
-              }
-            })
+            nextState.results = index === -1 ? copy.concat(note) : copy
           }
           return this.state.results
         })
       }
     }
+    this.setState(nextState)
   }
 
   render() {
@@ -81,7 +78,7 @@ class SearchBar extends Component<Props, State> {
       <Container>
         <Search
           placeholder="Search Title"
-          onChangeText={text => this.handleInputChange(text)}
+          onChangeText={this.handleInputChange}
           value={this.state.query}
         />
         <Suggestions results={this.state.results} update={this.props.update} />
