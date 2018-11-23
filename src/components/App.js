@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 
+import { getLSKey } from '../localstorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -30,26 +31,28 @@ class App extends Component<{}, State> {
   }
 
   componentDidMount() {
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i) || ''
-      let value = localStorage.getItem(key) || '{}'
+    // for (let i = 0; i < localStorage.length; i++) {
+    //   const key = localStorage.key(i) || ''
+    //   let value = localStorage.getItem(key) || '{}'
+    //
+    //   try {
+    //     value = JSON.parse(value)
+    //     if (value.key && value.content && value.title) {
+    //       const index = _.findIndex(this.state.notes, { key: value.key })
+    //       const copy = this.state.notes
+    //       if (index === -1) {
+    //         copy.splice(copy.length, 0, value)
+    //       } else {
+    //         copy.splice(index, 1, value)
+    //       }
+    //       this.setState({ notes: copy })
+    //     }
+    //   } catch {
+    //     console.log('Bad JSON')
+    //   }
+    // }
 
-      try {
-        value = JSON.parse(value)
-        if (value.key && value.content && value.title) {
-          const index = _.findIndex(this.state.notes, { key: value.key })
-          const copy = this.state.notes
-          if (index === -1) {
-            copy.splice(copy.length, 0, value)
-          } else {
-            copy.splice(index, 1, value)
-          }
-          this.setState({ notes: copy })
-        }
-      } catch {
-        console.log('Bad JSON')
-      }
-    }
+    localStorage.setItem(getLSKey(), JSON.stringify(NOTES))
   }
 
   updateActiveNote = (note: Note): void => {
@@ -81,7 +84,7 @@ class App extends Component<{}, State> {
       notes: copy,
     })
 
-    localStorage.setItem(this.state.note.key, JSON.stringify(note))
+    localStorage.setItem(getLSKey(), JSON.stringify(copy))
   }
 
   deleteNote = (): void => {
