@@ -29,7 +29,7 @@ class App extends Component<{}, State> {
       title: 'untitled',
       date: new Date().getTime(),
     },
-    notes: Object.values(NOTES),
+    notes: _.toArray(NOTES),
   }
 
   componentDidMount() {
@@ -37,13 +37,13 @@ class App extends Component<{}, State> {
     // maybe key can be related to public key or smthg
     !localStorage.getItem('local-storage-session-key') &&
       localStorage.setItem('local-storage-session-key', uuidv4())
-    const sessionKey = localStorage.getItem('local-storage-session-key')
+    const sessionKey = localStorage.getItem('local-storage-session-key') || ''
 
     this.setState({ sessionKey: sessionKey })
 
     !localStorage.getItem(sessionKey) &&
       localStorage.setItem(sessionKey, JSON.stringify(NOTES))
-    let newData = localStorage.getItem(sessionKey)
+    let newData = localStorage.getItem(sessionKey) || '{}'
 
     try {
       newData = JSON.parse(newData)
