@@ -50,8 +50,6 @@ class SearchBar extends Component<Props, State> {
 
   handleInputChange = text => {
     const nextState = { query: text }
-    // this.setState({ query: text })
-
     if (this.state.query && this.state.query.length > 1) {
       if (this.state.query.length % 2 === 0) {
         this.props.notes.map(note => {
