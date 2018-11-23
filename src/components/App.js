@@ -5,7 +5,7 @@ import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 
-import { getLSKey } from '../localstorage'
+// import { getLSKey } from '../localstorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -17,10 +17,12 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
+  sessionKey: string,
 }
 
 class App extends Component<{}, State> {
   state: State = {
+    sessionKey: '',
     note: {
       key: uuidv4(),
       content: 'start typing...',
@@ -31,28 +33,24 @@ class App extends Component<{}, State> {
   }
 
   componentDidMount() {
-    // for (let i = 0; i < localStorage.length; i++) {
-    //   const key = localStorage.key(i) || ''
-    //   let value = localStorage.getItem(key) || '{}'
-    //
-    //   try {
-    //     value = JSON.parse(value)
-    //     if (value.key && value.content && value.title) {
-    //       const index = _.findIndex(this.state.notes, { key: value.key })
-    //       const copy = this.state.notes
-    //       if (index === -1) {
-    //         copy.splice(copy.length, 0, value)
-    //       } else {
-    //         copy.splice(index, 1, value)
-    //       }
-    //       this.setState({ notes: copy })
-    //     }
-    //   } catch {
-    //     console.log('Bad JSON')
-    //   }
-    // }
+    // writing key to final storage probably not final solution,
+    // maybe key can be related to public key or smthg
+    !localStorage.getItem('local-storage-session-key') &&
+      localStorage.setItem('local-storage-session-key', uuidv4())
+    const sessionKey = localStorage.getItem('local-storage-session-key')
 
-    localStorage.setItem(getLSKey(), JSON.stringify(NOTES))
+    this.setState({ sessionKey: sessionKey })
+
+    !localStorage.getItem(sessionKey) &&
+      localStorage.setItem(sessionKey, JSON.stringify(NOTES))
+    let newData = localStorage.getItem(sessionKey)
+
+    try {
+      newData = JSON.parse(newData)
+      this.setState({ notes: newData })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   updateActiveNote = (note: Note): void => {
@@ -67,9 +65,6 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
-
-    // uncomment for auto save to local storage. discuss whether we want
-    // localStorage.setItem(this.state.note.key, JSON.stringify(note))
   }
 
   saveNote = (): void => {
@@ -84,14 +79,27 @@ class App extends Component<{}, State> {
       notes: copy,
     })
 
-    localStorage.setItem(getLSKey(), JSON.stringify(copy))
+    localStorage.setItem(this.state.sessionKey, JSON.stringify(copy))
   }
 
   deleteNote = (): void => {
     console.log(
       'please note: delete not fully functional yet until integration with web3',
     )
-    localStorage.removeItem(this.state.note.key)
+    const copy = this.state.notes.slice()
+    const index = _.findIndex(copy, { key: this.state.note.key })
+    copy.splice(index, 1)
+    localStorage.setItem(this.state.sessionKey, JSON.stringify(copy))
+
+    this.setState({
+      note: {
+        key: uuidv4(),
+        content: 'start typing...',
+        title: 'untitled',
+        date: new Date().getTime(),
+      },
+      notes: copy,
+    })
   }
 
   render(): Node {
