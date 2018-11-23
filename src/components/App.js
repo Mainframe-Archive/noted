@@ -24,9 +24,9 @@ class App extends Component<{}, State> {
       key: uuidv4(),
       content: 'start typing...',
       title: 'untitled',
-      date: `${new Date().getTime()}`,
+      date: new Date().getTime(),
     },
-    notes: _.toArray(NOTES),
+    notes: Object.values(NOTES),
   }
 
   componentDidMount() {
@@ -71,7 +71,7 @@ class App extends Component<{}, State> {
 
   saveNote = (): void => {
     const note = Object.assign({}, this.state.note)
-    note.date = `${new Date().getTime()}`
+    note.date = new Date().getTime()
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     copy.splice(index, 1, note)

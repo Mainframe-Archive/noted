@@ -82,7 +82,7 @@ class LeftNav extends Component<Props> {
               key: uuidv4(),
               title: 'untitled',
               content: 'start typing...',
-              date: `${new Date().getTime()}`,
+              date: new Date().getTime(),
             })
           }
           title="Add new note"
