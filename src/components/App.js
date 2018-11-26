@@ -45,10 +45,9 @@ class App extends Component<{}, State> {
       localStorage.setItem(sessionKey, JSON.stringify(NOTES))
     let newData = localStorage.getItem(sessionKey) || '{}'
 
-    console.log(newData)
-
     try {
       newData = JSON.parse(newData)
+      newData = Object.values(newData)
       this.setState({ notes: newData })
     } catch (e) {
       console.log(e)
@@ -109,7 +108,8 @@ class App extends Component<{}, State> {
       <ThemeProvider theme={theme}>
         <Provider
           value={{
-            ...this.state,
+            notes: this.state.notes,
+            note: this.state.note,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,
