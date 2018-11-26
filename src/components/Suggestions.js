@@ -21,7 +21,9 @@ const Suggestions = props => {
       <FlatList
         data={props.results}
         renderItem={({ item }) => (
-          <SuggestionText onClick={props.update}>{item.title}</SuggestionText>
+          <SuggestionText onClick={() => props.update(item)}>
+            {item.title}
+          </SuggestionText>
         )}
       />
     </Container>

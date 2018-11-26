@@ -54,8 +54,6 @@ class App extends Component<{}, State> {
   }
 
   updateActiveNote = (note: Note): void => {
-    console.log('update was called!')
-
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
@@ -109,8 +107,7 @@ class App extends Component<{}, State> {
       <ThemeProvider theme={theme}>
         <Provider
           value={{
-            notes: this.state.notes,
-            note: this.state.note,
+            ...this.state,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,

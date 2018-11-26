@@ -5,6 +5,7 @@ import styled from 'styled-components/native'
 
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
+import InitialState from './InitialState'
 
 const Root = styled.View`
   width: 100vw;
@@ -13,11 +14,29 @@ const Root = styled.View`
   flex-direction: row;
 `
 class Home extends Component<{}> {
+  state = {
+    initial: true,
+  }
+
+  componentDidMount() {
+    if (localStorage.getItem('local-storage-session-key')) {
+      this.setState({ initial: false })
+    }
+  }
+
+  setInitialFalse = () => {
+    this.setState({ initial: false })
+  }
+
   render() {
     return (
       <Root>
         <LeftNav />
-        <MainArea />
+        {this.state.initial ? (
+          <InitialState setInitialFalse={this.setInitialFalse} />
+        ) : (
+          <MainArea />
+        )}
       </Root>
     )
   }
