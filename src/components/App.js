@@ -45,6 +45,8 @@ class App extends Component<{}, State> {
       localStorage.setItem(sessionKey, JSON.stringify(NOTES))
     let newData = localStorage.getItem(sessionKey) || '{}'
 
+    console.log(newData)
+
     try {
       newData = JSON.parse(newData)
       this.setState({ notes: newData })

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { FlatList } from 'react-native-web'
+import { FlatList, View } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 
@@ -53,25 +53,40 @@ const NewButton = styled.Button`
 
 class LeftNav extends Component<Props> {
   render() {
+    const sortedData = [{ title: 'hi', key: 1 }, { title: 'hi2', key: 2 }]
+    // if (this.props.notes.length) {
+    //   sortedData =
+    //     this.props.notes.length < 5
+    //       ? this.props.notes
+    //           .sort((a, b) => {
+    //             return b.date - a.date
+    //           })
+    //           .slice(0, this.props.notes.length)
+    //       : this.props.notes
+    //           .sort((a, b) => {
+    //             return b.date - a.date
+    //           })
+    //           .slice(0, 5)
+    // }
+    const myData = this.props.notes || [
+      { title: 'hi', key: 1 },
+      { title: 'hi2', key: 2 },
+    ]
     return (
       <Container>
         <SearchContainer>
-          <SearchBar data={this.props.notes} />
+          <SearchBar data={this.props.notes || null} />
         </SearchContainer>
         <TitleText>Your Recent Notes</TitleText>
         <FlatList
-          data={this.props.notes
-            .sort((a, b) => {
-              return a.date - b.date
-            })
-            .slice(this.props.notes.length - 5, this.props.notes.length)}
+          data={this.props.notes || null}
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
         />
         <TitleText>Your Notes</TitleText>
         <FlatList
-          data={this.props.notes}
+          data={this.props.notes || null}
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
