@@ -7,18 +7,24 @@ import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 import InitialState from './InitialState'
 
+type State = {
+  initial: boolean,
+}
+
 const Root = styled.View`
   width: 100vw;
   height: 100vh;
   flex: 1;
   flex-direction: row;
 `
-class Home extends Component<{}> {
+class Home extends Component<{}, State> {
   state = {
     initial: true,
   }
 
   componentDidMount() {
+    // there will likely be a better/ additional deciding factor here
+    // once integrated w/ swarm
     if (localStorage.getItem('local-storage-session-key')) {
       this.setState({ initial: false })
     }

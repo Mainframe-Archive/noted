@@ -5,9 +5,11 @@ import styled from 'styled-components/native'
 import uuidv4 from 'uuid/v4'
 import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
+import { type Note } from '../types'
 
 type Props = {
   setInitialFalse: () => void,
+  update: Note => void,
 }
 
 const Container = screenSize(styled.View`
