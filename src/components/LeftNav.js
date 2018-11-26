@@ -2,11 +2,19 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
+import { FlatList } from 'react-native-web'
+import uuidv4 from 'uuid/v4'
+import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
 import SearchBar from './Search'
+
+type Props = {
+  notes: Array<Note>,
+  update: Note => void,
+}
 
 const Container = screenSize(styled.View`
   width: 300px;
@@ -34,10 +42,6 @@ const Text = styled.Text`
   cursor: pointer;
 `
 
-const List = styled.FlatList`
-  width: 800px;
-`
-
 const SearchContainer = styled.View`
   display: flex;
   align-items: center;
@@ -47,21 +51,50 @@ const NewButton = styled.Button`
   flex: 1;
 `
 
-class LeftNav extends Component<{}> {
+class LeftNav extends Component<Props> {
   render() {
     return (
       <Container>
         <SearchContainer>
-          <SearchBar data={this.props.notes} />
+          <SearchBar data={this.props.notes || null} />
         </SearchContainer>
-        <TitleText>Your Notes</TitleText>
-        <List
-          data={this.props.notes}
+        <TitleText>Your Recent Notes</TitleText>
+        <FlatList
+          data={
+            this.props.notes.length < 5
+              ? this.props.notes
+                  .sort((a, b) => {
+                    return b.date - a.date
+                  })
+                  .slice(0, this.props.notes.length)
+              : this.props.notes
+                  .sort((a, b) => {
+                    return b.date - a.date
+                  })
+                  .slice(0, 5)
+          }
           renderItem={({ item }) => (
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
         />
-        <NewButton onPress={this.props.new} title="Add new note" />
+        <TitleText>Your Notes</TitleText>
+        <FlatList
+          data={this.props.notes.reverse()}
+          renderItem={({ item }) => (
+            <Text onClick={() => this.props.update(item)}>{item.title}</Text>
+          )}
+        />
+        <NewButton
+          onPress={() =>
+            this.props.update({
+              key: uuidv4(),
+              title: 'untitled',
+              content: 'start typing...',
+              date: new Date().getTime(),
+            })
+          }
+          title="Add new note"
+        />
       </Container>
     )
   }

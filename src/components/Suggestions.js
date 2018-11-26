@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { FlatList } from 'react-native-web'
 import styled from 'styled-components/native'
 
@@ -15,19 +15,19 @@ const Container = styled.View`
   opacity: 0.7;
 `
 
-export default class Suggestions extends Component<> {
-  render() {
-    return (
-      <Container>
-        <FlatList
-          data={this.props.results}
-          renderItem={({ item }) => (
-            <SuggestionText onClick={() => this.props.update(item)}>
-              {item.title}
-            </SuggestionText>
-          )}
-        />
-      </Container>
-    )
-  }
+const Suggestions = props => {
+  return (
+    <Container>
+      <FlatList
+        data={props.results}
+        renderItem={({ item }) => (
+          <SuggestionText onClick={() => props.update(item)}>
+            {item.title}
+          </SuggestionText>
+        )}
+      />
+    </Container>
+  )
 }
+
+export default Suggestions

@@ -5,7 +5,21 @@ import styled, { css } from 'styled-components/native'
 import _ from 'lodash'
 import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
+import { type Note } from '../types'
 import Suggestions from './Suggestions'
+
+type State = {
+  query: string,
+  results: Array<Note>,
+}
+
+type Props = {
+  note: Note,
+  notes: Array<Note>,
+  update: (note: Note) => void,
+  save: () => void,
+  delete: () => void,
+}
 
 const Container = screenSize(styled.View`
   width: 300px;
@@ -25,17 +39,16 @@ const Search = styled.TextInput`
   font-size: 12px;
   border-radius: 4px;
   padding: 5px 10px;
-  outline-width: 0;
 `
 
-class SearchBar extends Component<{}> {
+class SearchBar extends Component<Props, State> {
   state = {
     query: '',
     results: [],
   }
 
   handleInputChange = text => {
-    this.setState({ query: text })
+    const nextState = { query: text, results: [] }
     if (this.state.query && this.state.query.length > 1) {
       if (this.state.query.length % 2 === 0) {
         this.props.notes.map(note => {
@@ -46,16 +59,15 @@ class SearchBar extends Component<{}> {
           const regex = new RegExp(escapedString + 'w*', 'g')
           const result = note.title.match(regex)
           if (result) {
-            const index = _.findIndex(this.state.results, { title: note.title })
-            if (index === -1) {
-              const copy = this.state.results
-              copy.push(note)
-              this.setState({ results: copy })
-            }
+            const copy = this.state.results.slice()
+            const index = _.findIndex(copy, { title: note.title })
+            nextState.results = index === -1 ? copy.concat(note) : copy
           }
+          return this.state.results
         })
       }
     }
+    this.setState(nextState)
   }
 
   render() {
@@ -63,7 +75,7 @@ class SearchBar extends Component<{}> {
       <Container>
         <Search
           placeholder="Search Title"
-          onChangeText={text => this.handleInputChange(text)}
+          onChangeText={this.handleInputChange}
           value={this.state.query}
         />
         <Suggestions results={this.state.results} update={this.props.update} />

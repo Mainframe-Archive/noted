@@ -13,11 +13,6 @@ const Root = styled.View`
   flex-direction: row;
 `
 class Home extends Component<{}> {
-  constructor(props) {
-    super(props)
-    this.state = { activeNote: 'key1' }
-  }
-
   render() {
     return (
       <Root>
