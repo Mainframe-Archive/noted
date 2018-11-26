@@ -54,6 +54,8 @@ class App extends Component<{}, State> {
   }
 
   updateActiveNote = (note: Note): void => {
+    console.log('update was called!')
+
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
