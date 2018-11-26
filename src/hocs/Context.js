@@ -2,21 +2,25 @@
 
 import React, { createContext } from 'react'
 
-import { type Note, type ID } from '../types'
+import { type Note } from '../types'
 
 export type NotedContext = {
   note: ?Note,
-  saveNote: (note: Note) => void,
-  openNote: (noteId: ID) => void,
+  notes: Array<Note>,
+  save: () => void,
+  update: (note: Note) => void,
+  key: string,
 }
 
 const DEFAULT_CONTEXT = {
+  key: '',
   note: null,
-  saveNote: (note: Note): void => {
-    console.log('Save Note', note)
+  notes: [],
+  save: (): void => {
+    console.log('Save Note')
   },
-  openNote: (noteId: ID): void => {
-    console.log('Open Note', noteId)
+  update: (note: Note): void => {
+    console.log('Open Note', note)
   },
 }
 
