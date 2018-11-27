@@ -48,26 +48,25 @@ class SearchBar extends Component<Props, State> {
   }
 
   handleInputChange = text => {
-    const nextState = { query: text, results: [] }
-    if (this.state.query && this.state.query.length > 1) {
-      if (this.state.query.length % 2 === 0) {
-        this.props.notes.map(note => {
-          const escapedString = this.state.query.replace(
-            /[.*+?^${}()|[\]\\]/g,
-            '\\$&',
-          )
-          const regex = new RegExp(escapedString + 'w*', 'g')
-          const result = note.title.match(regex)
-          if (result) {
-            const copy = this.state.results.slice()
-            const index = _.findIndex(copy, { title: note.title })
-            nextState.results = index === -1 ? copy.concat(note) : copy
-          }
-          return this.state.results
-        })
-      }
+    if (text && text.length > 1) {
+      this.props.notes.map(note => {
+        const escapedString = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const regex = new RegExp(escapedString + 'w*', 'g')
+        const result = note.title.match(regex)
+        if (result) {
+          const copy = this.state.results.slice()
+          const index = _.findIndex(copy, { title: note.title })
+          this.setState(prevState => ({
+            query: text,
+            results:
+              index === -1
+                ? prevState.results.concat(note)
+                : prevState.results.splice(index, 1, note),
+          }))
+        }
+        return this.state.results
+      })
     }
-    this.setState(nextState)
   }
 
   render() {
@@ -76,7 +75,6 @@ class SearchBar extends Component<Props, State> {
         <Search
           placeholder="Search Title"
           onChangeText={this.handleInputChange}
-          value={this.state.query}
         />
         <Suggestions results={this.state.results} update={this.props.update} />
       </Container>

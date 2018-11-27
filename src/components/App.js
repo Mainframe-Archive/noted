@@ -5,7 +5,6 @@ import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 
-// import { getLSKey } from '../localstorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -22,7 +21,6 @@ type State = {
 
 class App extends Component<{}, State> {
   state: State = {
-    sessionKey: '',
     note: {
       key: uuidv4(),
       content: 'start typing...',
@@ -33,21 +31,13 @@ class App extends Component<{}, State> {
   }
 
   componentDidMount() {
-    // writing key to final storage probably not final solution,
-    // maybe key can be related to public key or smthg
-    !localStorage.getItem('local-storage-session-key') &&
-      localStorage.setItem('local-storage-session-key', uuidv4())
-    const sessionKey = localStorage.getItem('local-storage-session-key') || ''
-
-    this.setState({ sessionKey: sessionKey })
-
-    !localStorage.getItem(sessionKey) &&
-      localStorage.setItem(sessionKey, JSON.stringify(NOTES))
-    let newData = localStorage.getItem(sessionKey) || '{}'
+    !localStorage.getItem('notes') &&
+      localStorage.setItem('notes', JSON.stringify(NOTES))
+    let newData = localStorage.getItem('notes') || '{}'
 
     try {
       newData = JSON.parse(newData)
-      newData = Object.values(newData)
+      newData = _.toArray(newData)
       this.setState({ notes: newData })
     } catch (e) {
       console.log(e)
@@ -80,7 +70,7 @@ class App extends Component<{}, State> {
       notes: copy,
     })
 
-    localStorage.setItem(this.state.sessionKey, JSON.stringify(copy))
+    localStorage.setItem('notes', JSON.stringify(copy))
   }
 
   deleteNote = (): void => {
@@ -90,7 +80,7 @@ class App extends Component<{}, State> {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: this.state.note.key })
     copy.splice(index, 1)
-    localStorage.setItem(this.state.sessionKey, JSON.stringify(copy))
+    localStorage.setItem('notes', JSON.stringify(copy))
 
     this.setState({
       note: {
@@ -108,8 +98,7 @@ class App extends Component<{}, State> {
       <ThemeProvider theme={theme}>
         <Provider
           value={{
-            notes: this.state.notes,
-            note: this.state.note,
+            ...this.state,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,
