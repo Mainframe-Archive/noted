@@ -46,6 +46,7 @@ class App extends Component<{}, State> {
 
     try {
       newData = JSON.parse(newData)
+      newData = _.toArray(newData)
       this.setState({ notes: newData })
     } catch (e) {
       console.log(e)
