@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 
+import { getNotes } from '../localStorage'
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 import InitialState from './InitialState'
@@ -23,11 +24,11 @@ class Home extends Component<{}, State> {
   }
 
   componentDidMount() {
-    // there will likely be a better/ additional deciding factor here
-    // once integrated w/ swarm
-    if (localStorage.getItem('notes')) {
-      this.setState({ initial: false })
-    }
+    getNotes().then(result => {
+      if (result !== undefined && result.length !== 0) {
+        this.setState({ initial: false })
+      }
+    })
   }
 
   setInitialFalse = () => {

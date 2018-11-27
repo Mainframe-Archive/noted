@@ -31,10 +31,12 @@ class App extends Component<{}, State> {
 
   componentDidMount() {
     getNotes().then(result => {
-      if (result === undefined || result.length == 0) {
+      if (result === undefined || result.length === 0) {
         setNotes(NOTES)
+        this.setState({ notes: NOTES })
+      } else {
+        this.setState({ notes: _.toArray(result) })
       }
-      this.setState({ notes: _.toArray(result) })
     })
   }
 
