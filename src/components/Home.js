@@ -25,7 +25,7 @@ class Home extends Component<{}, State> {
   componentDidMount() {
     // there will likely be a better/ additional deciding factor here
     // once integrated w/ swarm
-    if (localStorage.getItem('local-storage-session-key')) {
+    if (localStorage.getItem('notes')) {
       this.setState({ initial: false })
     }
   }

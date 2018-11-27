@@ -21,7 +21,6 @@ type State = {
 
 class App extends Component<{}, State> {
   state: State = {
-    sessionKey: '',
     note: {
       key: uuidv4(),
       content: 'start typing...',
@@ -32,17 +31,9 @@ class App extends Component<{}, State> {
   }
 
   componentDidMount() {
-    // writing key to final storage probably not final solution,
-    // maybe key can be related to public key or smthg
-    !localStorage.getItem('local-storage-session-key') &&
-      localStorage.setItem('local-storage-session-key', uuidv4())
-    const sessionKey = localStorage.getItem('local-storage-session-key') || ''
-
-    this.setState({ sessionKey: sessionKey })
-
-    !localStorage.getItem(sessionKey) &&
-      localStorage.setItem(sessionKey, JSON.stringify(NOTES))
-    let newData = localStorage.getItem(sessionKey) || '{}'
+    !localStorage.getItem('notes') &&
+      localStorage.setItem('notes', JSON.stringify(NOTES))
+    let newData = localStorage.getItem('notes') || '{}'
 
     try {
       newData = JSON.parse(newData)
@@ -79,7 +70,7 @@ class App extends Component<{}, State> {
       notes: copy,
     })
 
-    localStorage.setItem(this.state.sessionKey, JSON.stringify(copy))
+    localStorage.setItem('notes', JSON.stringify(copy))
   }
 
   deleteNote = (): void => {
@@ -89,7 +80,7 @@ class App extends Component<{}, State> {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: this.state.note.key })
     copy.splice(index, 1)
-    localStorage.setItem(this.state.sessionKey, JSON.stringify(copy))
+    localStorage.setItem('notes', JSON.stringify(copy))
 
     this.setState({
       note: {
