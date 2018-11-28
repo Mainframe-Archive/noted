@@ -3,7 +3,8 @@
     "key": "key1",
     "title": "1st note!",
     "content": "thisis my first note! wow!",
-    "date": 1543005478365
+    "date": 1543005478365,
+    "folder": "diary"
   },
   "key2": {
     "key": "key2",
@@ -15,12 +16,14 @@
     "key": "key3",
     "title": "3rd note",
     "content": "this is my third note",
-    "date": 1543005478367
+    "date": 1543005478367,
+    "folder": "diary"
   },
   "key4": {
     "key": "key4",
     "title": "4th note",
     "content": "this is my fourth note",
-    "date": 1543005478369
+    "date": 1543005478369,
+    "folder": "recipes"
   }
 }
