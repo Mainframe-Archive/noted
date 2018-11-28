@@ -34,6 +34,14 @@ const TitleText = styled.Text`
   margin-bottom: 20px;
 `
 
+const EditableText = styled.TextInput`
+  font-size: 14px;
+  color: ${props => props.theme.white};
+  margin-left: 10px;
+  margin-bottom: 5px;
+  cursor: pointer;
+`
+
 const Text = styled.Text`
   font-size: 14px;
   color: ${props => props.theme.white};
@@ -73,12 +81,39 @@ const TextInput = styled.TextInput`
 `
 
 class LeftNav extends Component<Props> {
+  constructor(props) {
+    super(props)
+    this.count = 0
+  }
+
   state = {
-    addFolder: 'enter folder name here',
+    addFolder: '',
+    edit: false,
+    newTitle: '',
   }
 
   newFolder = () => {
     this.setState({ addFolder: 'new folder' })
+  }
+
+  handleClick = item => {
+    this.props.update(item)
+
+    this.count++
+    this.timeout = setTimeout(() => {
+      if (this.count === 2) {
+        this.setState({
+          edit: true,
+        })
+      } else {
+      }
+      this.count = 0
+    }, 250)
+  }
+
+  updateText = (text, item) => {
+    this.setState({ newTitle: text })
+    this.props.update({ ...item, title: text })
   }
 
   render() {
@@ -122,7 +157,13 @@ class LeftNav extends Component<Props> {
                   .slice(0, 5)
           }
           renderItem={({ item }) => (
-            <Text onClick={() => this.props.update(item)}>{item.title}</Text>
+            <EditableText
+              editable={this.state.edit}
+              onClick={() => this.handleClick(item)}
+              defaultValue={item.title}
+              onChangeText={text => this.updateText(text, item)}
+              onSubmitEditing={() => this.props.save(item)}
+            />
           )}
         />
         <TitleText>Your Notes</TitleText>
@@ -136,9 +177,13 @@ class LeftNav extends Component<Props> {
               <FlatList
                 data={subArray}
                 renderItem={({ item }) => (
-                  <Text onClick={() => this.props.update(item)}>
-                    {item.title}
-                  </Text>
+                  <EditableText
+                    editable={this.state.edit}
+                    onClick={() => this.handleClick(item)}
+                    defaultValue={item.title}
+                    onChangeText={text => this.updateText(text, item)}
+                    onSubmitEditing={() => this.props.save(item)}
+                  />
                 )}
               />
             </View>
