@@ -77,7 +77,7 @@ class MainArea extends Component<Props, State> {
   onContentChange = newContent => {
     this.props.update({
       ...this.props.note,
-      content: convertFromRaw(newContent),
+      content: newContent,
     })
   }
 
@@ -86,9 +86,7 @@ class MainArea extends Component<Props, State> {
   }
 
   render() {
-    console.log(
-      this.props.note.content && this.props.note.content.getBlocksAsArray(),
-    )
+    console.log(this.props.note.content)
     return (
       <Container>
         <Title
