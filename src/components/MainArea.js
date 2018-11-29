@@ -19,6 +19,7 @@ import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
 type State = {
+  title: string,
   editorState: EditorState,
 }
 
@@ -67,17 +68,23 @@ class MainArea extends Component<Props, State> {
   state: State = {
     editorState: EditorState.createWithContent(
       this.props.note.content
-        ? ContentState.createFromBlockArray(
-            this.props.note.content.getBlocksAsArray(),
-          )
-        : ContentState.createFromText('no content yet'),
+        ? convertFromRaw(JSON.parse(this.props.note.content))
+        : ContentState.createFromText('start typing...'),
     ),
   }
 
+  onEditorChange = editorState => {
+    this.setState({ editorState: editorState })
+  }
+
   onContentChange = newContent => {
+    const contentState = this.state.editorState.getCurrentContent()
+    let noteContent = convertToRaw(contentState)
+    noteContent = JSON.stringify(noteContent)
+    console.log(noteContent)
     this.props.update({
       ...this.props.note,
-      content: newContent,
+      content: noteContent,
     })
   }
 
@@ -86,7 +93,6 @@ class MainArea extends Component<Props, State> {
   }
 
   render() {
-    console.log(this.props.note.content)
     return (
       <Container>
         <Title
@@ -100,7 +106,8 @@ class MainArea extends Component<Props, State> {
         <EditorContainer>
           <Editor
             defaultEditorState={this.state.editorState}
-            onChange={newContent => this.onContentChange(newContent)}
+            onEditorStateChange={this.onEditorChange}
+            onContentStateChange={this.onContentChange}
           />
         </EditorContainer>
       </Container>
