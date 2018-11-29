@@ -4,6 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
+import { EditorState, ContentState, convertFromRaw } from 'draft-js'
 
 import { type Note } from '../types'
 
@@ -23,7 +24,6 @@ class App extends Component<{}, State> {
   state: State = {
     note: {
       key: uuidv4(),
-      content: 'start typing...',
       title: 'untitled',
       date: new Date().getTime(),
     },
@@ -56,6 +56,7 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
+    console.log(this.state.note)
   }
 
   saveNote = (): void => {
@@ -85,7 +86,6 @@ class App extends Component<{}, State> {
     this.setState({
       note: {
         key: uuidv4(),
-        content: 'start typing...',
         title: 'untitled',
         date: new Date().getTime(),
       },
