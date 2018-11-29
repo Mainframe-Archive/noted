@@ -19,7 +19,6 @@ import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
 type State = {
-  title: string,
   editorState: EditorState,
 }
 
@@ -66,8 +65,6 @@ const DeleteButton = styled.Button`
 
 class MainArea extends Component<Props, State> {
   state: State = {
-    title:
-      this.props.note.title !== undefined ? this.props.note.title : 'untitled',
     editorState: EditorState.createWithContent(
       this.props.note.content
         ? ContentState.createFromBlockArray(
@@ -85,15 +82,19 @@ class MainArea extends Component<Props, State> {
   }
 
   onTitleChange = newTitle => {
-    this.setState({ title: newTitle })
     this.props.update({ ...this.props.note, title: newTitle })
   }
 
   render() {
-    console.log(this.state.title)
+    console.log(
+      this.props.note.content && this.props.note.content.getBlocksAsArray(),
+    )
     return (
       <Container>
-        <Title value={this.state.title} onChangeText={this.onTitleChange} />
+        <Title
+          value={this.props.note.title ? this.props.note.title : 'untitled'}
+          onChangeText={this.onTitleChange}
+        />
         <ButtonContainer>
           <SaveButton onPress={this.props.save} title="Save" />
           <DeleteButton onPress={this.props.delete} title="Delete" />
