@@ -51,7 +51,6 @@ class InitialState extends Component<Props> {
               this.props.setInitialFalse()
               this.props.update({
                 key: uuidv4(),
-                title: 'untitled',
                 date: new Date().getTime(),
               })
             }}

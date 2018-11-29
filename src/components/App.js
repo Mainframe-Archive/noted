@@ -24,10 +24,9 @@ class App extends Component<{}, State> {
   state: State = {
     note: {
       key: uuidv4(),
-      title: 'untitled',
       date: new Date().getTime(),
     },
-    notes: _.toArray(NOTES),
+    notes: NOTES ? _.toArray(NOTES) : [],
   }
 
   componentDidMount() {
@@ -56,7 +55,6 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
-    console.log(this.state.note)
   }
 
   saveNote = (): void => {
@@ -86,7 +84,6 @@ class App extends Component<{}, State> {
     this.setState({
       note: {
         key: uuidv4(),
-        title: 'untitled',
         date: new Date().getTime(),
       },
       notes: copy,

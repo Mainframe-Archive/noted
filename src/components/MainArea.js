@@ -66,13 +66,14 @@ const DeleteButton = styled.Button`
 
 class MainArea extends Component<Props, State> {
   state: State = {
-    title: this.props.note.title,
+    title:
+      this.props.note.title !== undefined ? this.props.note.title : 'untitled',
     editorState: EditorState.createWithContent(
       this.props.note.content
         ? ContentState.createFromBlockArray(
             this.props.note.content.getBlocksAsArray(),
           )
-        : ContentState.createFromText('start typing...'),
+        : ContentState.createFromText('no content yet'),
     ),
   }
 
@@ -84,16 +85,15 @@ class MainArea extends Component<Props, State> {
   }
 
   onTitleChange = newTitle => {
+    this.setState({ title: newTitle })
     this.props.update({ ...this.props.note, title: newTitle })
   }
 
   render() {
+    console.log(this.state.title)
     return (
       <Container>
-        <Title
-          value={this.props.note.title}
-          onChangeText={this.onTitleChange}
-        />
+        <Title value={this.state.title} onChangeText={this.onTitleChange} />
         <ButtonContainer>
           <SaveButton onPress={this.props.save} title="Save" />
           <DeleteButton onPress={this.props.delete} title="Delete" />
