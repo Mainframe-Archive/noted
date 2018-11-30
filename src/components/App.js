@@ -24,7 +24,7 @@ class App extends Component<{}, State> {
       key: uuidv4(),
       date: new Date().getTime(),
     },
-    notes: NOTES ? _.toArray(NOTES) : [],
+    notes: _.toArray(NOTES),
   }
 
   componentDidMount() {
