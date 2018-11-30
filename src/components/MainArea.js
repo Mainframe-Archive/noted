@@ -10,7 +10,7 @@ import {
   convertToRaw,
 } from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-
+import _ from 'lodash'
 import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
@@ -75,7 +75,8 @@ class MainArea extends Component<Props, State> {
     this.setState({ editorState: editorState })
   }
 
-  onContentChange = () => {
+  onContentChange = _.debounce(e => {
+    console.log('debounce')
     const contentState = this.state.editorState.getCurrentContent()
     let noteContent = convertToRaw(contentState)
     noteContent = JSON.stringify(noteContent)
@@ -83,7 +84,7 @@ class MainArea extends Component<Props, State> {
       ...this.props.note,
       content: noteContent,
     })
-  }
+  }, 250)
 
   onTitleChange = newTitle => {
     this.props.update({ ...this.props.note, title: newTitle })
