@@ -3,13 +3,13 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 
-import { getNotes } from '../localStorage'
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 import InitialState from './InitialState'
 
-type State = {
+type Props = {
   initial: boolean,
+  setInitialFalse: () => void,
 }
 
 const Root = styled.View`
@@ -18,7 +18,8 @@ const Root = styled.View`
   flex: 1;
   flex-direction: row;
 `
-class Home extends Component<{}, State> {
+
+class Home extends Component<Props> {
   render() {
     return (
       <Root>

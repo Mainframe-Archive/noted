@@ -33,9 +33,8 @@ class App extends Component<{}, State> {
   componentDidMount() {
     getNotes().then(result => {
       if (result === undefined || result.length === 0) {
+        this.setState({ notes: _.toArray(NOTES), initial: true })
         setNotes(NOTES)
-        this.setState({ notes: NOTES })
-        this.setState({ initial: true })
       } else {
         this.setState({ notes: _.toArray(result) })
       }
