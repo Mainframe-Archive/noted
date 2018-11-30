@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
-
+import { getNotes, setNotes } from '../localStorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -16,6 +16,7 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
+  initial: boolean,
 }
 
 class App extends Component<{}, State> {
@@ -25,20 +26,18 @@ class App extends Component<{}, State> {
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
+    initial: false,
   }
 
   componentDidMount() {
-    !localStorage.getItem('notes') &&
-      localStorage.setItem('notes', JSON.stringify(NOTES))
-    let newData = localStorage.getItem('notes') || '{}'
-
-    try {
-      newData = JSON.parse(newData)
-      newData = _.toArray(newData)
-      this.setState({ notes: newData })
-    } catch (e) {
-      console.log(e)
-    }
+    getNotes().then(result => {
+      if (result === undefined || result.length === 0) {
+        this.setState({ notes: _.toArray(NOTES), initial: true })
+        setNotes(NOTES)
+      } else {
+        this.setState({ notes: _.toArray(result) })
+      }
+    })
   }
 
   updateActiveNote = (note: Note): void => {
@@ -67,7 +66,7 @@ class App extends Component<{}, State> {
       notes: copy,
     })
 
-    localStorage.setItem('notes', JSON.stringify(copy))
+    setNotes(copy)
   }
 
   deleteNote = (): void => {
@@ -77,7 +76,7 @@ class App extends Component<{}, State> {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: this.state.note.key })
     copy.splice(index, 1)
-    localStorage.setItem('notes', JSON.stringify(copy))
+    setNotes(copy)
 
     this.setState({
       note: {
@@ -86,6 +85,10 @@ class App extends Component<{}, State> {
       },
       notes: copy,
     })
+  }
+
+  setInitialFalse = () => {
+    this.setState({ initial: false })
   }
 
   render(): Node {
@@ -99,7 +102,10 @@ class App extends Component<{}, State> {
             save: this.saveNote,
             delete: this.deleteNote,
           }}>
-          <Home />
+          <Home
+            initial={this.state.initial}
+            setInitialFalse={this.setInitialFalse}
+          />
         </Provider>
       </ThemeProvider>
     )
