@@ -102,7 +102,7 @@ class MainArea extends Component<Props, State> {
         </ButtonContainer>
         <EditorContainer>
           <Editor
-            defaultEditorState={this.state.editorState}
+            editorState={this.state.editorState}
             onEditorStateChange={this.onEditorChange}
             onContentStateChange={this.onContentChange}
           />
