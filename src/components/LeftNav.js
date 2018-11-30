@@ -65,6 +65,7 @@ const SearchContainer = styled.View`
 
 const NewButton = styled.Button`
   flex: 1;
+  margin-bottom: 100px;
 `
 const TextInput = styled.TextInput`
   background-color: ${props => props.theme.white};
@@ -116,6 +117,14 @@ class LeftNav extends Component<Props> {
     this.props.update({ ...item, title: text })
   }
 
+  onDragOver = e => {
+    e.preventDefault()
+  }
+
+  onDragStart = (e, item) => {
+    e.dataTransfer('id', item.key)
+  }
+
   render() {
     const folders = []
     this.props.notes.map(note => {
@@ -132,6 +141,10 @@ class LeftNav extends Component<Props> {
       return folders
     })
 
+    if (folders['archive'] === undefined) {
+      folders['archive'] = []
+    }
+
     if (this.state.addFolder) {
       folders[this.state.addFolder] = []
     }
@@ -140,6 +153,17 @@ class LeftNav extends Component<Props> {
       <Container>
         <SearchContainer>
           <SearchBar data={this.props.notes || null} />
+          <NewButton
+            onPress={() =>
+              this.props.update({
+                key: uuidv4(),
+                title: 'untitled',
+                content: 'start typing...',
+                date: new Date().getTime(),
+              })
+            }
+            title="Add new note"
+          />
         </SearchContainer>
         <TitleText>Your Recent Notes</TitleText>
         <FlatList
@@ -171,13 +195,17 @@ class LeftNav extends Component<Props> {
         {Object.values(folders).map((subArray, index) => {
           return (
             <View key={subArray[0] ? subArray[0].key : index}>
-              <FolderText>
+              <FolderText
+                onDragOver={e => this.onDragOver(e)}
+                onDrop={e => this.onDrop(e, subArray)}>
                 {subArray[0] ? subArray[0].folder : this.state.addFolder}
               </FolderText>
               <FlatList
                 data={subArray}
                 renderItem={({ item }) => (
                   <EditableText
+                    draggable
+                    onDragStart={e => this.onDragStart(e, item)}
                     editable={this.state.edit}
                     onClick={() => this.handleClick(item)}
                     defaultValue={item.title}
@@ -189,17 +217,6 @@ class LeftNav extends Component<Props> {
             </View>
           )
         })}
-        <NewButton
-          onPress={() =>
-            this.props.update({
-              key: uuidv4(),
-              title: 'untitled',
-              content: 'start typing...',
-              date: new Date().getTime(),
-            })
-          }
-          title="Add new note"
-        />
       </Container>
     )
   }
