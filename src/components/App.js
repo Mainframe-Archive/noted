@@ -16,6 +16,7 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
+  initial: boolean,
 }
 
 class App extends Component<{}, State> {
