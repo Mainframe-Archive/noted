@@ -42,14 +42,6 @@ const EditableText = styled.TextInput`
   cursor: pointer;
 `
 
-const Text = styled.Text`
-  font-size: 14px;
-  color: ${props => props.theme.white};
-  margin-left: 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-`
-
 const FolderText = styled.Text`
   font-size: 15px;
   color: ${props => props.theme.white};
@@ -66,19 +58,6 @@ const SearchContainer = styled.View`
 const NewButton = styled.Button`
   flex: 1;
   margin-bottom: 100px;
-`
-const TextInput = styled.TextInput`
-  background-color: ${props => props.theme.white};
-  color: ${props => props.theme.blue};
-  padding: 5px;
-  margin: 5px;
-  border-radius: 5px;
-  display: none;
-  ${props =>
-    props.show &&
-    css`
-      display: block;
-    `}
 `
 
 class LeftNav extends Component<Props> {
@@ -121,15 +100,14 @@ class LeftNav extends Component<Props> {
     e.preventDefault()
   }
 
-  onDragStart = (e, note) => {
-    e.dataTransfer.setData('note', JSON.stringify(note))
+  onDragStart = (e, key) => {
+    e.dataTransfer.setData('key', key)
   }
 
   onDrop = (e, folder) => {
-    let note = e.dataTransfer.getData('note')
-    note = JSON.parse(note)
-    note.folder = folder
-    this.props.update({ note: note })
+    const key = e.dataTransfer.getData('key')
+    const note = Object.assign({}, this.props.getNote(key))
+    this.props.update({ ...note, folder: folder })
   }
 
   render() {
@@ -193,7 +171,7 @@ class LeftNav extends Component<Props> {
               onClick={() => this.handleClick(item)}
               defaultValue={item.title}
               onChangeText={text => this.updateText(text, item)}
-              onSubmitEditing={() => this.props.save(item)}
+              onSubmitEditing={this.props.save}
             />
           )}
         />
@@ -212,7 +190,7 @@ class LeftNav extends Component<Props> {
                 renderItem={({ item }) => (
                   <EditableText
                     draggable
-                    onDragStart={e => this.onDragStart(e, item)}
+                    onDragStart={e => this.onDragStart(e, item.key)}
                     editable={this.state.edit}
                     onClick={() => this.handleClick(item)}
                     defaultValue={item.title}

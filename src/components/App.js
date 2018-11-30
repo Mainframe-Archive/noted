@@ -42,6 +42,11 @@ class App extends Component<{}, State> {
     })
   }
 
+  getNoteFromKey = (key: string): Note => {
+    const note = this.state.notes.find(note => note.key === key)
+    return note
+  }
+
   updateActiveNote = (note: Note): void => {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
@@ -67,6 +72,8 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
+
+    console.log(this.state.note)
 
     setNotes(copy)
   }
@@ -105,6 +112,7 @@ class App extends Component<{}, State> {
             update: this.updateActiveNote,
             save: this.saveNote,
             delete: this.deleteNote,
+            getNote: this.getNoteFromKey,
           }}>
           <Home
             initial={this.state.initial}
