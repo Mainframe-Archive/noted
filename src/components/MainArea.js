@@ -76,7 +76,6 @@ class MainArea extends Component<Props, State> {
   }
 
   onContentChange = _.debounce(e => {
-    console.log('debounce')
     const contentState = this.state.editorState.getCurrentContent()
     let noteContent = convertToRaw(contentState)
     noteContent = JSON.stringify(noteContent)
