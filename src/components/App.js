@@ -4,7 +4,6 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
-import { EditorState, ContentState, convertFromRaw } from 'draft-js'
 
 import { type Note } from '../types'
 
@@ -17,7 +16,6 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
-  sessionKey: string,
 }
 
 class App extends Component<{}, State> {

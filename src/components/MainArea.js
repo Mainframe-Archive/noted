@@ -6,7 +6,6 @@ import { Editor } from 'react-draft-wysiwyg'
 import {
   EditorState,
   ContentState,
-  convertFromHTML,
   convertFromRaw,
   convertToRaw,
 } from 'draft-js'
@@ -19,7 +18,6 @@ import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
 type State = {
-  title: string,
   editorState: EditorState,
 }
 
