@@ -7,8 +7,9 @@ import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 import InitialState from './InitialState'
 
-type State = {
+type Props = {
   initial: boolean,
+  setInitialFalse: () => void,
 }
 
 const Root = styled.View`
@@ -17,29 +18,14 @@ const Root = styled.View`
   flex: 1;
   flex-direction: row;
 `
-class Home extends Component<{}, State> {
-  state = {
-    initial: true,
-  }
 
-  componentDidMount() {
-    // there will likely be a better/ additional deciding factor here
-    // once integrated w/ swarm
-    if (localStorage.getItem('notes')) {
-      this.setState({ initial: false })
-    }
-  }
-
-  setInitialFalse = () => {
-    this.setState({ initial: false })
-  }
-
+class Home extends Component<Props> {
   render() {
     return (
       <Root>
         <LeftNav />
-        {this.state.initial ? (
-          <InitialState setInitialFalse={this.setInitialFalse} />
+        {this.props.initial ? (
+          <InitialState setInitialFalse={this.props.setInitialFalse} />
         ) : (
           <MainArea />
         )}
