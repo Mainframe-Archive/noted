@@ -121,8 +121,15 @@ class LeftNav extends Component<Props> {
     e.preventDefault()
   }
 
-  onDragStart = (e, item) => {
-    e.dataTransfer('id', item.key)
+  onDragStart = (e, note) => {
+    e.dataTransfer.setData('note', JSON.stringify(note))
+  }
+
+  onDrop = (e, folder) => {
+    let note = e.dataTransfer.getData('note')
+    note = JSON.parse(note)
+    note.folder = folder
+    this.props.update({ note: note })
   }
 
   render() {
@@ -197,7 +204,7 @@ class LeftNav extends Component<Props> {
             <View key={subArray[0] ? subArray[0].key : index}>
               <FolderText
                 onDragOver={e => this.onDragOver(e)}
-                onDrop={e => this.onDrop(e, subArray)}>
+                onDrop={e => this.onDrop(e, subArray[0].folder)}>
                 {subArray[0] ? subArray[0].folder : this.state.addFolder}
               </FolderText>
               <FlatList
