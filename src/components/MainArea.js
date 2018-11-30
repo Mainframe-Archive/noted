@@ -75,7 +75,7 @@ class MainArea extends Component<Props, State> {
     this.setState({ editorState: editorState })
   }
 
-  onContentChange = newContent => {
+  onContentChange = () => {
     const contentState = this.state.editorState.getCurrentContent()
     let noteContent = convertToRaw(contentState)
     noteContent = JSON.stringify(noteContent)
