@@ -19,28 +19,12 @@ const Root = styled.View`
   flex-direction: row;
 `
 class Home extends Component<{}, State> {
-  state = {
-    initial: true,
-  }
-
-  componentDidMount() {
-    getNotes().then(result => {
-      if (result !== undefined && result.length !== 0) {
-        this.setState({ initial: false })
-      }
-    })
-  }
-
-  setInitialFalse = () => {
-    this.setState({ initial: false })
-  }
-
   render() {
     return (
       <Root>
         <LeftNav />
-        {this.state.initial ? (
-          <InitialState setInitialFalse={this.setInitialFalse} />
+        {this.props.initial ? (
+          <InitialState setInitialFalse={this.props.setInitialFalse} />
         ) : (
           <MainArea />
         )}

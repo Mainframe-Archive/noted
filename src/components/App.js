@@ -27,6 +27,7 @@ class App extends Component<{}, State> {
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
+    initial: false,
   }
 
   componentDidMount() {
@@ -34,6 +35,7 @@ class App extends Component<{}, State> {
       if (result === undefined || result.length === 0) {
         setNotes(NOTES)
         this.setState({ notes: NOTES })
+        this.setState({ initial: true })
       } else {
         this.setState({ notes: _.toArray(result) })
       }
@@ -89,6 +91,10 @@ class App extends Component<{}, State> {
     })
   }
 
+  setInitialFalse = () => {
+    this.setState({ initial: false })
+  }
+
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
@@ -100,7 +106,10 @@ class App extends Component<{}, State> {
             save: this.saveNote,
             delete: this.deleteNote,
           }}>
-          <Home />
+          <Home
+            initial={this.state.initial}
+            setInitialFalse={this.setInitialFalse}
+          />
         </Provider>
       </ThemeProvider>
     )
