@@ -42,7 +42,7 @@ const EditableText = styled.TextInput`
   cursor: pointer;
 `
 
-const FolderText = styled.Text`
+const FolderText = styled.TextInput`
   font-size: 15px;
   color: ${props => props.theme.white};
   margin-bottom: 5px;
@@ -67,17 +67,19 @@ class LeftNav extends Component<Props> {
   }
 
   state = {
-    addFolder: '',
     edit: false,
     newTitle: '',
+    addFolder: '',
   }
 
-  newFolder = () => {
+  addFolder = () => {
     this.setState({ addFolder: 'new folder' })
   }
 
   handleClick = item => {
-    this.props.update(item)
+    if (item) {
+      this.props.update(item)
+    }
 
     this.count++
     this.timeout = setTimeout(() => {
@@ -107,32 +109,13 @@ class LeftNav extends Component<Props> {
   onDrop = (e, folder) => {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign({}, this.props.getNote(key))
-    this.props.update({ ...note, folder: folder })
+    note.folder = folder
+    console.log(note)
+    this.props.update(note, true)
   }
 
   render() {
-    const folders = []
-    this.props.notes.map(note => {
-      if (note.folder !== undefined) {
-        if (folders[note.folder]) {
-          const all = folders[note.folder]
-          folders[note.folder] = [...all, note]
-        } else {
-          folders[note.folder] = [note]
-        }
-      } else {
-        folders['no-folder'] = [note]
-      }
-      return folders
-    })
-
-    if (folders['archive'] === undefined) {
-      folders['archive'] = []
-    }
-
-    if (this.state.addFolder) {
-      folders[this.state.addFolder] = []
-    }
+    console.log(this.props.folders)
 
     return (
       <Container>
@@ -176,15 +159,27 @@ class LeftNav extends Component<Props> {
           )}
         />
         <TitleText>Your Notes</TitleText>
-        <NewButton title="Add a new folder" onPress={this.newFolder} />
-        {Object.values(folders).map((subArray, index) => {
+        <NewButton title="Add a new folder" onPress={this.addFolder} />
+        {Object.values(this.props.folders).map((subArray, index) => {
           return (
             <View key={subArray[0] ? subArray[0].key : index}>
               <FolderText
+                editable={this.state.edit}
+                onClick={() => this.handleClick()}
                 onDragOver={e => this.onDragOver(e)}
-                onDrop={e => this.onDrop(e, subArray[0].folder)}>
-                {subArray[0] ? subArray[0].folder : this.state.addFolder}
-              </FolderText>
+                onDrop={e =>
+                  this.onDrop(
+                    e,
+                    subArray[0] ? subArray[0].folder : this.state.addFolder,
+                  )
+                }
+                onSubmitEditing={newFolderName =>
+                  this.updateFolderNames(newFolderName)
+                }
+                defaultValue={
+                  subArray[0] ? subArray[0].folder : this.state.addFolder
+                }
+              />
               <FlatList
                 data={subArray}
                 renderItem={({ item }) => (
@@ -195,7 +190,7 @@ class LeftNav extends Component<Props> {
                     onClick={() => this.handleClick(item)}
                     defaultValue={item.title}
                     onChangeText={text => this.updateText(text, item)}
-                    onSubmitEditing={() => this.props.save(item)}
+                    onSubmitEditing={() => this.props.update(item, true)}
                   />
                 )}
               />

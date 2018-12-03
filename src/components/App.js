@@ -47,7 +47,7 @@ class App extends Component<{}, State> {
     return note
   }
 
-  updateActiveNote = (note: Note): void => {
+  updateActiveNote = (note: Note, save?: boolean): void => {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
@@ -55,6 +55,11 @@ class App extends Component<{}, State> {
     } else {
       copy.splice(index, 1, note)
     }
+
+    if (save) {
+      setNotes(copy)
+    }
+
     this.setState({
       note: note,
       notes: copy,
@@ -72,8 +77,6 @@ class App extends Component<{}, State> {
       note: note,
       notes: copy,
     })
-
-    console.log(this.state.note)
 
     setNotes(copy)
   }
@@ -102,12 +105,41 @@ class App extends Component<{}, State> {
     this.setState({ initial: false })
   }
 
+  getFolderArray = () => {
+    const folders = []
+    this.state.notes.map(note => {
+      if (note.folder !== undefined) {
+        if (folders[note.folder]) {
+          const all = folders[note.folder]
+          folders[note.folder] = [...all, note]
+        } else {
+          folders[note.folder] = [note]
+        }
+      } else {
+        folders['no-folder'] = [note]
+      }
+      return folders
+    })
+
+    if (folders['archive'] === undefined) {
+      folders['archive'] = []
+    }
+
+    if (this.state.addFolder) {
+      console.log('hi')
+      folders[this.state.addFolder] = []
+    }
+
+    return folders
+  }
+
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
         <Provider
           value={{
             ...this.state,
+            folders: this.getFolderArray(),
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,
