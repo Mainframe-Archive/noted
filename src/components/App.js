@@ -4,6 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
+import MainframeSDK from '@mainframe/sdk'
 
 import { type Note } from '../types'
 
@@ -28,6 +29,7 @@ class App extends Component<{}, State> {
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
+    sessionKey: '',
   }
 
   componentDidMount() {
@@ -103,6 +105,7 @@ class App extends Component<{}, State> {
             update: this.updateActiveNote,
             save: this.saveNote,
             delete: this.deleteNote,
+            mf: new MainframeSDK(),
           }}>
           <Home />
         </Provider>
