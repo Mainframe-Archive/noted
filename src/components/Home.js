@@ -6,16 +6,12 @@ import styled from 'styled-components/native'
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 import InitialState from './InitialState'
-import MainframeSDK from '@mainframe/sdk'
 import applyContext from '../hocs/Context'
 
-type State = {
+type Props = {
   initial: boolean,
   apiVersion: string,
-}
-
-type Props = {
-  mf: MainframeSDK,
+  setInitialFalse: () => void,
 }
 
 const Root = styled.View`
@@ -24,7 +20,6 @@ const Root = styled.View`
   flex: 1;
   flex-direction: row;
 `
-
 const SdkVersion = styled.Text`
   position: fixed;
   z-index: 1;
@@ -32,34 +27,14 @@ const SdkVersion = styled.Text`
   padding: 5px;
 `
 
-class Home extends Component<Props, State> {
-  state = {
-    initial: true,
-    apiVersion: '',
-  }
-
-  async componentDidMount() {
-    // there will likely be a better/ additional deciding factor here
-    // once integrated w/ swarm
-    if (localStorage.getItem('notes')) {
-      this.setState({ initial: false })
-    }
-    console.log("this.props", this.props)
-    this.setState({apiVersion: await this.props.mf.apiVersion()})
-
-  }
-
-  setInitialFalse = () => {
-    this.setState({ initial: false })
-  }
-
+class Home extends Component<Props> {
   render() {
     return (
       <Root>
         <LeftNav />
-        <SdkVersion>Mainframe SDK Version: {this.state.apiVersion}</SdkVersion>
-        {this.state.initial ? (
-          <InitialState setInitialFalse={this.setInitialFalse} />
+        <SdkVersion>Mainframe SDK Version: {this.props.apiVersion}</SdkVersion>
+        {this.props.initial ? (
+          <InitialState setInitialFalse={this.props.setInitialFalse} />
         ) : (
           <MainArea />
         )}

@@ -6,6 +6,7 @@ import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 import MainframeSDK from '@mainframe/sdk'
 
+import { getNotes, setNotes } from '../localStorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -17,7 +18,10 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
+  mf: MainframeSDK,
   sessionKey: string,
+  apiVersion: string,
+  initial: boolean,
 }
 
 class App extends Component<{}, State> {
@@ -29,21 +33,22 @@ class App extends Component<{}, State> {
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
+    mf: new MainframeSDK(),
     sessionKey: '',
+    apiVersion: '',
+    initial: false,
   }
 
-  componentDidMount() {
-    !localStorage.getItem('notes') &&
-      localStorage.setItem('notes', JSON.stringify(NOTES))
-    let newData = localStorage.getItem('notes') || '{}'
-
-    try {
-      newData = JSON.parse(newData)
-      newData = _.toArray(newData)
-      this.setState({ notes: newData })
-    } catch (e) {
-      console.log(e)
-    }
+  async componentDidMount() {
+    getNotes().then(result => {
+      if (result === undefined || result.length === 0) {
+        this.setState({ notes: _.toArray(NOTES), initial: true })
+        setNotes(NOTES)
+      } else {
+        this.setState({ notes: _.toArray(result) })
+      }
+    })
+    this.setState({ apiVersion: await this.state.mf.apiVersion() })
   }
 
   updateActiveNote = (note: Note): void => {
@@ -72,7 +77,7 @@ class App extends Component<{}, State> {
       notes: copy,
     })
 
-    localStorage.setItem('notes', JSON.stringify(copy))
+    setNotes(copy)
   }
 
   deleteNote = (): void => {
@@ -82,7 +87,7 @@ class App extends Component<{}, State> {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: this.state.note.key })
     copy.splice(index, 1)
-    localStorage.setItem('notes', JSON.stringify(copy))
+    setNotes(copy)
 
     this.setState({
       note: {
@@ -93,6 +98,10 @@ class App extends Component<{}, State> {
       },
       notes: copy,
     })
+  }
+
+  setInitialFalse = () => {
+    this.setState({ initial: false })
   }
 
   render(): Node {
@@ -107,7 +116,11 @@ class App extends Component<{}, State> {
             delete: this.deleteNote,
             mf: new MainframeSDK(),
           }}>
-          <Home />
+          <Home
+            initial={this.state.initial}
+            apiVersion={this.state.apiVersion}
+            setInitialFalse={this.setInitialFalse}
+          />
         </Provider>
       </ThemeProvider>
     )
