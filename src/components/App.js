@@ -19,7 +19,6 @@ type State = {
   note: Note,
   notes: Array<Note>,
   mf: MainframeSDK,
-  sessionKey: string,
   apiVersion: string,
   initial: boolean,
 }
@@ -34,7 +33,6 @@ class App extends Component<{}, State> {
     },
     notes: _.toArray(NOTES),
     mf: new MainframeSDK(),
-    sessionKey: '',
     apiVersion: '',
     initial: false,
   }
