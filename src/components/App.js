@@ -141,14 +141,10 @@ class App extends Component<{}, State> {
           folders[note.folder] = [note]
         }
       } else {
-        folders['no-folder'] = [note]
+        folders[''] = [note]
       }
       return folders
     })
-
-    if (folders['archive'] === undefined) {
-      folders['archive'] = []
-    }
 
     if (this.state.addFolder) {
       folders[this.state.addFolder] = []

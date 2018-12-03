@@ -40,6 +40,17 @@ const EditableText = styled.TextInput`
   margin-left: 10px;
   margin-bottom: 5px;
   cursor: pointer;
+  display: block;
+`
+
+const FolderContainer = styled.View`
+  display: inline;
+`
+
+const CollapseFolder = styled.Text`
+  color: ${props => props.theme.white};
+  font-weight: bold;
+  cursor: pointer;
 `
 
 const FolderText = styled.TextInput`
@@ -48,6 +59,15 @@ const FolderText = styled.TextInput`
   margin-bottom: 5px;
   margin-top: 10px;
   cursor: pointer;
+`
+
+const FolderFlatList = styled.FlatList`
+  display: block;
+  ${props =>
+    props.open === props.folder &&
+    css`
+      display: none;
+    `}
 `
 
 const SearchContainer = styled.View`
@@ -71,6 +91,7 @@ class LeftNav extends Component<Props> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
+    open: null,
   }
 
   addFolder = () => {
@@ -166,46 +187,63 @@ class LeftNav extends Component<Props> {
         {Object.values(this.props.folders).map((subArray, index) => {
           return (
             <View key={subArray[0] ? subArray[0].key : index}>
-              <FolderText
-                editable={this.state.edit}
-                onClick={() => this.handleClick()}
-                onDragOver={e => this.onDragOver(e)}
-                onDrop={e =>
-                  this.onDrop(
-                    e,
-                    subArray[0] ? subArray[0].folder : this.state.addFolder,
-                  )
-                }
-                onChangeText={text => this.updateFolder(text)}
-                onSubmitEditing={() =>
-                  this.props.updateFolders(
-                    this.state.newFolder,
-                    subArray[0].folder,
-                  )
-                }
-                defaultValue={
-                  subArray[0] ? subArray[0].folder : this.state.addFolder
-                }
-              />
-              <FlatList
-                data={subArray}
-                renderItem={({ item }) => (
-                  <EditableText
-                    draggable
-                    onDragStart={e => this.onDragStart(e, item.key)}
-                    editable={this.state.edit}
-                    onClick={() => this.handleClick(item)}
-                    defaultValue={item.title}
-                    onChangeText={text => this.updateText(text)}
-                    onSubmitEditing={() =>
-                      this.props.update(
-                        { ...item, title: this.state.newTitle },
-                        true,
-                      )
-                    }
-                  />
-                )}
-              />
+              <FolderContainer>
+                <CollapseFolder
+                  onClick={() =>
+                    this.setState({
+                      open:
+                        this.state.open === subArray[0].folder
+                          ? null
+                          : subArray[0].folder,
+                    })
+                  }>
+                  {this.state.open === subArray[0].folder ? '> ' : 'v '}
+                </CollapseFolder>
+                <FolderText
+                  editable={this.state.edit}
+                  onClick={() => this.handleClick()}
+                  onDragOver={e => this.onDragOver(e)}
+                  onDrop={e =>
+                    this.onDrop(
+                      e,
+                      subArray[0] ? subArray[0].folder : this.state.addFolder,
+                    )
+                  }
+                  onChangeText={text => this.updateFolder(text)}
+                  onSubmitEditing={() =>
+                    this.props.updateFolders(
+                      this.state.newFolder,
+                      subArray[0].folder,
+                    )
+                  }
+                  defaultValue={
+                    subArray[0] ? subArray[0].folder : this.state.addFolder
+                  }
+                />
+                <FolderFlatList
+                  open={this.state.open}
+                  folder={subArray[0].folder}
+                  data={subArray}
+                  renderItem={({ item }) => {
+                    return (
+                      <EditableText
+                        draggable
+                        onDragStart={e => this.onDragStart(e, item.key)}
+                        editable={this.state.edit}
+                        onClick={() => this.handleClick(item)}
+                        defaultValue={item.title}
+                        onChangeText={text => this.updateText(text)}
+                        onSubmitEditing={() =>
+                          this.props.update(
+                            { ...item, title: this.state.newTitle },
+                            true,
+                          )
+                        }
+                      />
+                    )
+                  }}
+                />
+              </FolderContainer>
             </View>
           )
         })}
