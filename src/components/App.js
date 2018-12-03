@@ -105,6 +105,31 @@ class App extends Component<{}, State> {
     this.setState({ initial: false })
   }
 
+  updateFolderNames = (newFolder, oldFolder) => {
+    const copy = this.state.notes.slice()
+    this.state.notes.map(note => {
+      if (note.folder === oldFolder) {
+        note.folder = newFolder
+        const index = _.findIndex(copy, { key: note.key })
+        copy.splice(index, 1, note)
+      } else {
+        const index = _.findIndex(copy, { key: note.key })
+        copy.splice(index, 1, note)
+      }
+      return copy
+    })
+    this.setState({
+      notes: copy,
+      note: {
+        key: uuidv4(),
+        title: 'untitled',
+        content: 'start typing...',
+        date: new Date().getTime(),
+      },
+    })
+    setNotes(copy)
+  }
+
   getFolderArray = () => {
     const folders = []
     this.state.notes.map(note => {
@@ -126,7 +151,6 @@ class App extends Component<{}, State> {
     }
 
     if (this.state.addFolder) {
-      console.log('hi')
       folders[this.state.addFolder] = []
     }
 
@@ -140,6 +164,7 @@ class App extends Component<{}, State> {
           value={{
             ...this.state,
             folders: this.getFolderArray(),
+            updateFolders: this.updateFolderNames,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,

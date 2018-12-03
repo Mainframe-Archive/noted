@@ -70,6 +70,7 @@ class LeftNav extends Component<Props> {
     edit: false,
     newTitle: '',
     addFolder: '',
+    newFolder: '',
   }
 
   addFolder = () => {
@@ -93,9 +94,12 @@ class LeftNav extends Component<Props> {
     }, 250)
   }
 
-  updateText = (text, item) => {
+  updateText = text => {
     this.setState({ newTitle: text })
-    this.props.update({ ...item, title: text })
+  }
+
+  updateFolder = text => {
+    this.setState({ newFolder: text })
   }
 
   onDragOver = e => {
@@ -110,13 +114,10 @@ class LeftNav extends Component<Props> {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign({}, this.props.getNote(key))
     note.folder = folder
-    console.log(note)
     this.props.update(note, true)
   }
 
   render() {
-    console.log(this.props.folders)
-
     return (
       <Container>
         <SearchContainer>
@@ -153,8 +154,10 @@ class LeftNav extends Component<Props> {
               editable={this.state.edit}
               onClick={() => this.handleClick(item)}
               defaultValue={item.title}
-              onChangeText={text => this.updateText(text, item)}
-              onSubmitEditing={this.props.save}
+              onChangeText={text => this.updateText(text)}
+              onSubmitEditing={() =>
+                this.props.update({ ...item, title: this.state.newTitle }, true)
+              }
             />
           )}
         />
@@ -173,8 +176,12 @@ class LeftNav extends Component<Props> {
                     subArray[0] ? subArray[0].folder : this.state.addFolder,
                   )
                 }
-                onSubmitEditing={newFolderName =>
-                  this.updateFolderNames(newFolderName)
+                onChangeText={text => this.updateFolder(text)}
+                onSubmitEditing={() =>
+                  this.props.updateFolders(
+                    this.state.newFolder,
+                    subArray[0].folder,
+                  )
                 }
                 defaultValue={
                   subArray[0] ? subArray[0].folder : this.state.addFolder
@@ -189,8 +196,13 @@ class LeftNav extends Component<Props> {
                     editable={this.state.edit}
                     onClick={() => this.handleClick(item)}
                     defaultValue={item.title}
-                    onChangeText={text => this.updateText(text, item)}
-                    onSubmitEditing={() => this.props.update(item, true)}
+                    onChangeText={text => this.updateText(text)}
+                    onSubmitEditing={() =>
+                      this.props.update(
+                        { ...item, title: this.state.newTitle },
+                        true,
+                      )
+                    }
                   />
                 )}
               />
