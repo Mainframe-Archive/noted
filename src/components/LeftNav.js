@@ -64,7 +64,7 @@ const FolderText = styled.TextInput`
 const FolderFlatList = styled.FlatList`
   display: block;
   ${props =>
-    props.open === props.folder &&
+    props.open !== -1 &&
     css`
       display: none;
     `}
@@ -91,11 +91,20 @@ class LeftNav extends Component<Props> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
-    open: null,
+    open: [],
   }
 
   addFolder = () => {
     this.setState({ addFolder: 'new folder' })
+  }
+
+  openFolder = folder => {
+    const copy = this.state.open.slice()
+    const index = copy.indexOf(folder)
+    index === -1 ? copy.push(folder) : copy.splice(index, 1)
+    this.setState({
+      open: copy,
+    })
   }
 
   handleClick = item => {
@@ -189,15 +198,10 @@ class LeftNav extends Component<Props> {
             <View key={subArray[0] ? subArray[0].key : index}>
               <FolderContainer>
                 <CollapseFolder
-                  onClick={() =>
-                    this.setState({
-                      open:
-                        this.state.open === subArray[0].folder
-                          ? null
-                          : subArray[0].folder,
-                    })
-                  }>
-                  {this.state.open === subArray[0].folder ? '> ' : 'v '}
+                  onClick={() => this.openFolder(subArray[0].folder)}>
+                  {this.state.open.indexOf(subArray[0].folder) === -1
+                    ? '> '
+                    : 'v '}
                 </CollapseFolder>
                 <FolderText
                   editable={this.state.edit}
@@ -221,8 +225,7 @@ class LeftNav extends Component<Props> {
                   }
                 />
                 <FolderFlatList
-                  open={this.state.open}
-                  folder={subArray[0].folder}
+                  open={this.state.open.indexOf(subArray[0].folder)}
                   data={subArray}
                   renderItem={({ item }) => {
                     return (
