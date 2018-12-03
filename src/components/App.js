@@ -112,7 +112,6 @@ class App extends Component<{}, State> {
             update: this.updateActiveNote,
             save: this.saveNote,
             delete: this.deleteNote,
-            mf: new MainframeSDK(),
           }}>
           <Home
             initial={this.state.initial}

@@ -6,7 +6,6 @@ import styled from 'styled-components/native'
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 import InitialState from './InitialState'
-import applyContext from '../hocs/Context'
 
 type Props = {
   initial: boolean,
@@ -43,4 +42,4 @@ class Home extends Component<Props> {
   }
 }
 
-export default applyContext(Home)
+export default Home
