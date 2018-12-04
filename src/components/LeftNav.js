@@ -87,7 +87,7 @@ class LeftNav extends Component<Props> {
   }
 
   state = {
-    edit: false,
+    edit: '',
     newTitle: '',
     addFolder: '',
     newFolder: '',
@@ -116,7 +116,7 @@ class LeftNav extends Component<Props> {
     this.timeout = setTimeout(() => {
       if (this.count === 2) {
         this.setState({
-          edit: true,
+          edit: item.key,
         })
       } else {
       }
@@ -188,11 +188,16 @@ class LeftNav extends Component<Props> {
               key={item.key}
               editable={this.state.edit}
               onClick={() => this.handleClick(item)}
-              value={item.title}
-              onChangeText={text => this.updateText(text)}
-              onSubmitEditing={() =>
-                this.props.update({ ...item, title: this.state.newTitle }, true)
+              value={
+                this.state.newTitle && this.state.edit === item.key
+                  ? this.state.newTitle
+                  : item.title
               }
+              onChangeText={text => this.updateText(text)}
+              onSubmitEditing={() => {
+                this.props.update({ ...item, title: this.state.newTitle }, true)
+                this.setState({ newTitle: '', edit: '' })
+              }}
             />
           )}
         />
@@ -246,14 +251,19 @@ class LeftNav extends Component<Props> {
                         onDragStart={e => this.onDragStart(e, item.key)}
                         editable={this.state.edit}
                         onClick={() => this.handleClick(item)}
-                        value={item.title}
+                        value={
+                          this.state.newTitle && this.state.edit === item.key
+                            ? this.state.newTitle
+                            : item.title
+                        }
                         onChangeText={text => this.updateText(text)}
-                        onSubmitEditing={() =>
+                        onSubmitEditing={() => {
                           this.props.update(
                             { ...item, title: this.state.newTitle },
                             true,
                           )
-                        }
+                          this.setState({ newTitle: '', edit: '' })
+                        }}
                       />
                     )
                   }}
