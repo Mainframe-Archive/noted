@@ -44,7 +44,15 @@ class App extends Component<{}, State> {
         this.setState({ notes: _.toArray(result) })
       }
     })
+    this.interval = setInterval(() => {
+      console.log('auto saved')
+      this.saveNote()
+    }, 5000)
     // this.setState({ apiVersion: await this.state.mf.apiVersion() })
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
   }
 
   getNoteFromKey = (key: string): Note => {
