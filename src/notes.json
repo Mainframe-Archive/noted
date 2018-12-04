@@ -4,21 +4,5 @@
     "title": "1st note!",
     "date": 1543005478365,
     "folder": "diary"
-  },
-  "key2": {
-    "key": "key2",
-    "title": "2nd note",
-    "date": 1543005478366
-  },
-  "key3": {
-    "key": "key3",
-    "title": "3rd note",
-    "date": 1543005478367,
-    "folder": "diary"
-  },
-  "key4": {
-    "key": "key4",
-    "title": "4th note",
-    "date": 1543005478369
   }
 }
