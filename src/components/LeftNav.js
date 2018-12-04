@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { FlatList, View, Text } from 'react-native-web'
+import { FlatList, View } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 
@@ -96,7 +96,6 @@ class LeftNav extends Component<Props> {
 
   addFolder = () => {
     this.setState({ addFolder: 'new folder' })
-    // this.props.addFolder('new folder')
   }
 
   openFolder = folder => {
@@ -224,6 +223,7 @@ class LeftNav extends Component<Props> {
                   }
                   onChangeText={text => this.updateFolder(text)}
                   onSubmitEditing={() =>
+                    subArray[0] &&
                     this.props.updateFolders(
                       this.state.newFolder,
                       subArray[0].folder,

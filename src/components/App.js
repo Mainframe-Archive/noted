@@ -58,10 +58,8 @@ class App extends Component<{}, State> {
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
       copy.splice(copy.length, 0, note)
-      console.log(copy)
     } else {
       copy.splice(index, 1, note)
-      console.log(copy)
     }
 
     if (save) {
