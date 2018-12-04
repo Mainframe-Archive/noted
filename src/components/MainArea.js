@@ -3,9 +3,14 @@
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { Editor } from 'react-draft-wysiwyg'
-import { EditorState, ContentState, convertFromHTML } from 'draft-js'
+import {
+  EditorState,
+  ContentState,
+  convertFromRaw,
+  convertToRaw,
+} from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
-
+import _ from 'lodash'
 import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
@@ -13,7 +18,6 @@ import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
 type State = {
-  title: string,
   editorState: EditorState,
 }
 
@@ -60,20 +64,26 @@ const DeleteButton = styled.Button`
 
 class MainArea extends Component<Props, State> {
   state: State = {
-    title: this.props.note.title,
     editorState: EditorState.createWithContent(
-      ContentState.createFromBlockArray(
-        convertFromHTML(this.props.note.content),
-      ),
+      this.props.note.content
+        ? convertFromRaw(JSON.parse(this.props.note.content))
+        : ContentState.createFromText('start typing...'),
     ),
   }
 
-  onContentChange = newContent => {
+  onEditorChange = editorState => {
+    this.setState({ editorState: editorState })
+  }
+
+  onContentChange = _.debounce(e => {
+    const contentState = this.state.editorState.getCurrentContent()
+    let noteContent = convertToRaw(contentState)
+    noteContent = JSON.stringify(noteContent)
     this.props.update({
       ...this.props.note,
-      content: newContent.blocks[0].text,
+      content: noteContent,
     })
-  }
+  }, 250)
 
   onTitleChange = newTitle => {
     this.props.update({ ...this.props.note, title: newTitle })
@@ -83,7 +93,7 @@ class MainArea extends Component<Props, State> {
     return (
       <Container>
         <Title
-          value={this.props.note.title}
+          value={this.props.note.title ? this.props.note.title : 'untitled'}
           onChangeText={this.onTitleChange}
         />
         <ButtonContainer>
@@ -92,8 +102,9 @@ class MainArea extends Component<Props, State> {
         </ButtonContainer>
         <EditorContainer>
           <Editor
-            defaultEditorState={this.state.editorState}
-            onChange={newContent => this.onContentChange(newContent)}
+            editorState={this.state.editorState}
+            onEditorStateChange={this.onEditorChange}
+            onContentStateChange={this.onContentChange}
           />
         </EditorContainer>
       </Container>

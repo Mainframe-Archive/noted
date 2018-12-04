@@ -4,6 +4,8 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
+// import MainframeSDK from '@mainframe/sdk'
+
 import { getNotes, setNotes } from '../localStorage'
 import { type Note } from '../types'
 
@@ -16,6 +18,8 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
+  // mf: MainframeSDK,
+  apiVersion: string,
   initial: boolean,
 }
 
@@ -23,15 +27,15 @@ class App extends Component<{}, State> {
   state: State = {
     note: {
       key: uuidv4(),
-      content: 'start typing...',
-      title: 'untitled',
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
+    // mf: new MainframeSDK(),
+    apiVersion: '',
     initial: false,
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     getNotes().then(result => {
       if (result === undefined || result.length === 0) {
         this.setState({ notes: _.toArray(NOTES), initial: true })
@@ -40,6 +44,7 @@ class App extends Component<{}, State> {
         this.setState({ notes: _.toArray(result) })
       }
     })
+    // this.setState({ apiVersion: await this.state.mf.apiVersion() })
   }
 
   getNoteFromKey = (key: string): Note => {
@@ -93,8 +98,6 @@ class App extends Component<{}, State> {
     this.setState({
       note: {
         key: uuidv4(),
-        content: 'start typing...',
-        title: 'untitled',
         date: new Date().getTime(),
       },
       notes: copy,
@@ -169,6 +172,7 @@ class App extends Component<{}, State> {
           }}>
           <Home
             initial={this.state.initial}
+            apiVersion={this.state.apiVersion}
             setInitialFalse={this.setInitialFalse}
           />
         </Provider>
