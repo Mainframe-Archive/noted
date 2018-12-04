@@ -108,14 +108,11 @@ class App extends Component<{}, State> {
     this.setState({ initial: false })
   }
 
-  updateFolderNames = (newFolder, oldFolder) => {
+  updateFolderNames = (newFolder: string, oldFolder: string) => {
     const copy = this.state.notes.slice()
     this.state.notes.map(note => {
       if (note.folder === oldFolder) {
         note.folder = newFolder
-        const index = _.findIndex(copy, { key: note.key })
-        copy.splice(index, 1, note)
-      } else {
         const index = _.findIndex(copy, { key: note.key })
         copy.splice(index, 1, note)
       }
@@ -126,7 +123,6 @@ class App extends Component<{}, State> {
       note: {
         key: uuidv4(),
         title: 'untitled',
-        content: 'start typing...',
         date: new Date().getTime(),
       },
     })
@@ -144,14 +140,15 @@ class App extends Component<{}, State> {
           folders[note.folder] = [note]
         }
       } else {
-        folders[''] = [note]
+        if (folders['']) {
+          const all = folders['']
+          folders[''] = [...all, note]
+        } else {
+          folders[''] = [note]
+        }
       }
       return folders
     })
-
-    if (this.state.addFolder) {
-      folders[this.state.addFolder] = []
-    }
 
     return folders
   }
