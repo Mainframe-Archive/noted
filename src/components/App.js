@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
-import MainframeSDK from '@mainframe/sdk'
+// import MainframeSDK from '@mainframe/sdk'
 
 import { getNotes, setNotes } from '../localStorage'
 import { type Note } from '../types'
@@ -18,7 +18,7 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
-  mf: MainframeSDK,
+  // mf: MainframeSDK,
   apiVersion: string,
   initial: boolean,
 }
@@ -30,7 +30,7 @@ class App extends Component<{}, State> {
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
-    mf: new MainframeSDK(),
+    // mf: new MainframeSDK(),
     apiVersion: '',
     initial: false,
   }
@@ -44,7 +44,7 @@ class App extends Component<{}, State> {
         this.setState({ notes: _.toArray(result) })
       }
     })
-    this.setState({ apiVersion: await this.state.mf.apiVersion() })
+    // this.setState({ apiVersion: await this.state.mf.apiVersion() })
   }
 
   updateActiveNote = (note: Note): void => {
