@@ -116,7 +116,7 @@ class LeftNav extends Component<Props> {
     this.timeout = setTimeout(() => {
       if (this.count === 2) {
         this.setState({
-          edit: item.key,
+          edit: item ? item.key : true,
         })
       } else {
       }
@@ -227,13 +227,14 @@ class LeftNav extends Component<Props> {
                     )
                   }
                   onChangeText={text => this.updateFolder(text)}
-                  onSubmitEditing={() =>
+                  onSubmitEditing={() => {
                     subArray[0] &&
-                    this.props.updateFolders(
-                      this.state.newFolder,
-                      subArray[0].folder,
-                    )
-                  }
+                      this.props.updateFolders(
+                        this.state.newFolder,
+                        subArray[0].folder,
+                      )
+                    this.setState({ edit: '' })
+                  }}
                   defaultValue={
                     subArray[0] ? subArray[0].folder : this.state.addFolder
                   }
