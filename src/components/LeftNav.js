@@ -148,6 +148,8 @@ class LeftNav extends Component<Props> {
   }
 
   render() {
+    console.log(this.props.notes)
+    console.log(this.props.folders)
     return (
       <Container>
         <SearchContainer>
@@ -166,6 +168,7 @@ class LeftNav extends Component<Props> {
         </SearchContainer>
         <TitleText>Your Recent Notes</TitleText>
         <FlatList
+          key={this.props.note.key}
           data={
             this.props.notes.length < 5
               ? this.props.notes
@@ -181,6 +184,7 @@ class LeftNav extends Component<Props> {
           }
           renderItem={({ item }) => (
             <EditableText
+              key={item.key}
               editable={this.state.edit}
               onClick={() => this.handleClick(item)}
               defaultValue={item.title}
@@ -230,6 +234,7 @@ class LeftNav extends Component<Props> {
                   renderItem={({ item }) => {
                     return (
                       <EditableText
+                        key={item.key}
                         draggable
                         onDragStart={e => this.onDragStart(e, item.key)}
                         editable={this.state.edit}
