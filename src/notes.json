@@ -2,25 +2,21 @@
   "key1": {
     "key": "key1",
     "title": "1st note!",
-    "content": "thisis my first note! wow!",
     "date": 1543005478365
   },
   "key2": {
     "key": "key2",
     "title": "2nd note",
-    "content": "this is my second ever note!",
     "date": 1543005478366
   },
   "key3": {
     "key": "key3",
     "title": "3rd note",
-    "content": "this is my third note",
     "date": 1543005478367
   },
   "key4": {
     "key": "key4",
     "title": "4th note",
-    "content": "this is my fourth note",
     "date": 1543005478369
   }
 }

@@ -27,8 +27,6 @@ class App extends Component<{}, State> {
   state: State = {
     note: {
       key: uuidv4(),
-      content: 'start typing...',
-      title: 'untitled',
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
@@ -90,8 +88,6 @@ class App extends Component<{}, State> {
     this.setState({
       note: {
         key: uuidv4(),
-        content: 'start typing...',
-        title: 'untitled',
         date: new Date().getTime(),
       },
       notes: copy,

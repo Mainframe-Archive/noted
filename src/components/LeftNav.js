@@ -88,8 +88,6 @@ class LeftNav extends Component<Props> {
           onPress={() =>
             this.props.update({
               key: uuidv4(),
-              title: 'untitled',
-              content: 'start typing...',
               date: new Date().getTime(),
             })
           }

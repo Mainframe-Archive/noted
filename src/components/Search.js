@@ -52,7 +52,7 @@ class SearchBar extends Component<Props, State> {
       this.props.notes.map(note => {
         const escapedString = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const regex = new RegExp(escapedString + 'w*', 'g')
-        const result = note.title.match(regex)
+        const result = note.title ? note.title.match(regex) : null
         if (result) {
           const copy = this.state.results.slice()
           const index = _.findIndex(copy, { title: note.title })
