@@ -96,6 +96,7 @@ class LeftNav extends Component<Props> {
 
   addFolder = () => {
     this.setState({ addFolder: 'new folder' })
+    // this.props.addFolder('new folder')
   }
 
   openFolder = folder => {
@@ -148,8 +149,13 @@ class LeftNav extends Component<Props> {
   }
 
   render() {
-    console.log(this.props.notes)
-    console.log(this.props.folders)
+    console.log(this.props.getFolders())
+    const folders = this.props.getFolders()
+    if (this.state.addFolder) {
+      folders[this.state.addFolder] = []
+      console.log(folders)
+    }
+
     return (
       <Container>
         <SearchContainer>
@@ -196,15 +202,18 @@ class LeftNav extends Component<Props> {
         />
         <TitleText>Your Notes</TitleText>
         <NewButton title="Add a new folder" onPress={this.addFolder} />
-        {Object.values(this.props.folders).map((subArray, index) => {
+        {Object.values(folders).map((subArray, index) => {
           return (
             <View key={subArray[0] ? subArray[0].key : index}>
               <FolderContainer>
                 <CollapseFolder
-                  onClick={() => this.openFolder(subArray[0].folder)}>
-                  {this.state.open.indexOf(subArray[0].folder) === -1
-                    ? '> '
-                    : 'v '}
+                  onClick={() =>
+                    this.openFolder(subArray[0] && subArray[0].folder)
+                  }>
+                  {subArray[0] &&
+                    (this.state.open.indexOf(subArray[0].folder) === -1
+                      ? 'v '
+                      : '> ')}
                 </CollapseFolder>
                 <FolderText
                   editable={this.state.edit}
@@ -228,7 +237,9 @@ class LeftNav extends Component<Props> {
                   }
                 />
                 <FolderFlatList
-                  open={this.state.open.indexOf(subArray[0].folder)}
+                  open={
+                    subArray[0] && this.state.open.indexOf(subArray[0].folder)
+                  }
                   data={subArray}
                   renderItem={({ item }) => {
                     return (

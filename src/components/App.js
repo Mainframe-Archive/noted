@@ -33,6 +33,7 @@ class App extends Component<{}, State> {
     // mf: new MainframeSDK(),
     apiVersion: '',
     initial: false,
+    addFolder: '',
   }
 
   async componentDidMount() {
@@ -147,11 +148,19 @@ class App extends Component<{}, State> {
           folders[''] = [note]
         }
       }
+      if (this.state.addFolder) {
+        folders[this.state.addFolder] = []
+        this.setState({ addFolder: '' })
+      }
       return folders
     })
 
     return folders
   }
+
+  // addFolder = (newName: string) => {
+  //   this.setState({ addFolder: newName })
+  // }
 
   render(): Node {
     return (
@@ -159,8 +168,9 @@ class App extends Component<{}, State> {
         <Provider
           value={{
             ...this.state,
-            folders: this.getFolderArray(),
+            getFolders: this.getFolderArray,
             updateFolders: this.updateFolderNames,
+            // addFolder: this.addFolder,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,
