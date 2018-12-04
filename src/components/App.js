@@ -141,11 +141,11 @@ class App extends Component<{}, State> {
           folders[note.folder] = [note]
         }
       } else {
-        if (folders['']) {
-          const all = folders['']
-          folders[''] = [...all, note]
+        if (folders['all notes']) {
+          const all = folders['all notes']
+          folders['all notes'] = [...all, note]
         } else {
-          folders[''] = [note]
+          folders['all notes'] = [note]
         }
       }
       if (this.state.addFolder) {
@@ -158,10 +158,6 @@ class App extends Component<{}, State> {
     return folders
   }
 
-  // addFolder = (newName: string) => {
-  //   this.setState({ addFolder: newName })
-  // }
-
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
@@ -170,7 +166,6 @@ class App extends Component<{}, State> {
             ...this.state,
             getFolders: this.getFolderArray,
             updateFolders: this.updateFolderNames,
-            // addFolder: this.addFolder,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,

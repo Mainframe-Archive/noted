@@ -95,7 +95,8 @@ class LeftNav extends Component<Props> {
   }
 
   addFolder = () => {
-    this.setState({ addFolder: 'new folder' })
+    // this.setState({ addFolder: 'new folder' })
+    this.props.update({ key: uuidv4(), invisible: true, folder: 'new folder' })
   }
 
   openFolder = folder => {
@@ -149,9 +150,9 @@ class LeftNav extends Component<Props> {
 
   render() {
     const folders = this.props.getFolders()
-    if (this.state.addFolder) {
-      folders[this.state.addFolder] = []
-    }
+    // if (this.state.addFolder) {
+    //   folders[this.state.addFolder] = []
+    // }
 
     return (
       <Container>
@@ -183,23 +184,28 @@ class LeftNav extends Component<Props> {
                   })
                   .slice(0, 5)
           }
-          renderItem={({ item }) => (
-            <EditableText
-              key={item.key}
-              editable={this.state.edit}
-              onClick={() => this.handleClick(item)}
-              value={
-                this.state.newTitle && this.state.edit === item.key
-                  ? this.state.newTitle
-                  : item.title
-              }
-              onChangeText={text => this.updateText(text)}
-              onSubmitEditing={() => {
-                this.props.update({ ...item, title: this.state.newTitle }, true)
-                this.setState({ newTitle: '', edit: '' })
-              }}
-            />
-          )}
+          renderItem={({ item }) =>
+            item.invisible !== true && (
+              <EditableText
+                key={item.key}
+                editable={this.state.edit}
+                onClick={() => this.handleClick(item)}
+                value={
+                  this.state.newTitle && this.state.edit === item.key
+                    ? this.state.newTitle
+                    : item.title
+                }
+                onChangeText={text => this.updateText(text)}
+                onSubmitEditing={() => {
+                  this.props.update(
+                    { ...item, title: this.state.newTitle },
+                    true,
+                  )
+                  this.setState({ newTitle: '', edit: '' })
+                }}
+              />
+            )
+          }
         />
         <TitleText>Your Notes</TitleText>
         <NewButton title="Add a new folder" onPress={this.addFolder} />
@@ -246,26 +252,28 @@ class LeftNav extends Component<Props> {
                   data={subArray}
                   renderItem={({ item }) => {
                     return (
-                      <EditableText
-                        key={item.key}
-                        draggable
-                        onDragStart={e => this.onDragStart(e, item.key)}
-                        editable={this.state.edit}
-                        onClick={() => this.handleClick(item)}
-                        value={
-                          this.state.newTitle && this.state.edit === item.key
-                            ? this.state.newTitle
-                            : item.title
-                        }
-                        onChangeText={text => this.updateText(text)}
-                        onSubmitEditing={() => {
-                          this.props.update(
-                            { ...item, title: this.state.newTitle },
-                            true,
-                          )
-                          this.setState({ newTitle: '', edit: '' })
-                        }}
-                      />
+                      item.invisible !== true && (
+                        <EditableText
+                          key={item.key}
+                          draggable
+                          onDragStart={e => this.onDragStart(e, item.key)}
+                          editable={this.state.edit}
+                          onClick={() => this.handleClick(item)}
+                          value={
+                            this.state.newTitle && this.state.edit === item.key
+                              ? this.state.newTitle
+                              : item.title
+                          }
+                          onChangeText={text => this.updateText(text)}
+                          onSubmitEditing={() => {
+                            this.props.update(
+                              { ...item, title: this.state.newTitle },
+                              true,
+                            )
+                            this.setState({ newTitle: '', edit: '' })
+                          }}
+                        />
+                      )
                     )
                   }}
                 />
