@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { FlatList, View } from 'react-native-web'
+import { FlatList, View, Text } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 
@@ -149,11 +149,9 @@ class LeftNav extends Component<Props> {
   }
 
   render() {
-    console.log(this.props.getFolders())
     const folders = this.props.getFolders()
     if (this.state.addFolder) {
       folders[this.state.addFolder] = []
-      console.log(folders)
     }
 
     return (
@@ -173,7 +171,6 @@ class LeftNav extends Component<Props> {
         </SearchContainer>
         <TitleText>Your Recent Notes</TitleText>
         <FlatList
-          key={this.props.note.key}
           data={
             this.props.notes.length < 5
               ? this.props.notes
@@ -192,7 +189,7 @@ class LeftNav extends Component<Props> {
               key={item.key}
               editable={this.state.edit}
               onClick={() => this.handleClick(item)}
-              defaultValue={item.title}
+              value={item.title}
               onChangeText={text => this.updateText(text)}
               onSubmitEditing={() =>
                 this.props.update({ ...item, title: this.state.newTitle }, true)
@@ -249,7 +246,7 @@ class LeftNav extends Component<Props> {
                         onDragStart={e => this.onDragStart(e, item.key)}
                         editable={this.state.edit}
                         onClick={() => this.handleClick(item)}
-                        defaultValue={item.title}
+                        value={item.title}
                         onChangeText={text => this.updateText(text)}
                         onSubmitEditing={() =>
                           this.props.update(
