@@ -5,7 +5,6 @@ import styled, { css } from 'styled-components/native'
 import { FlatList, View } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
-
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
@@ -34,7 +33,7 @@ const TitleText = styled.Text`
   margin-bottom: 20px;
 `
 
-const EditableText = styled.TextInput`
+const EditableText = styled.Text`
   font-size: 14px;
   color: ${props => props.theme.white};
   margin-left: 10px;
@@ -95,7 +94,6 @@ class LeftNav extends Component<Props> {
   }
 
   addFolder = () => {
-    // this.setState({ addFolder: 'new folder' })
     this.props.update({ key: uuidv4(), invisible: true, folder: 'new folder' })
   }
 
@@ -103,6 +101,7 @@ class LeftNav extends Component<Props> {
     const copy = this.state.open.slice()
     const index = copy.indexOf(folder)
     index === -1 ? copy.push(folder) : copy.splice(index, 1)
+    console.log(copy)
     this.setState({
       open: copy,
     })
@@ -149,15 +148,11 @@ class LeftNav extends Component<Props> {
   }
 
   render() {
-    const folders = this.props.getFolders()
-    // if (this.state.addFolder) {
-    //   folders[this.state.addFolder] = []
-    // }
-
+    const ind = Object.keys(this.props.getFolders()).indexOf('all notes')
     return (
       <Container>
         <SearchContainer>
-          <SearchBar data={this.props.notes || null} />
+          <SearchBar data={this.props.notes} />
           <NewButton
             onPress={() =>
               this.props.update({
@@ -188,42 +183,33 @@ class LeftNav extends Component<Props> {
             item.invisible !== true && (
               <EditableText
                 key={item.key}
-                editable={this.state.edit}
-                onClick={() => this.handleClick(item)}
-                value={
-                  this.state.newTitle && this.state.edit === item.key
-                    ? this.state.newTitle
-                    : item.title
-                }
-                onChangeText={text => this.updateText(text)}
-                onSubmitEditing={() => {
-                  this.props.update(
-                    { ...item, title: this.state.newTitle },
-                    true,
-                  )
-                  this.setState({ newTitle: '', edit: '' })
-                }}
-              />
+                onClick={() => this.handleClick(item)}>
+                {item.title}
+              </EditableText>
             )
           }
         />
         <TitleText>Your Notes</TitleText>
         <NewButton title="Add a new folder" onPress={this.addFolder} />
-        {Object.values(folders).map((subArray, index) => {
+        {Object.values(this.props.getFolders()).map((subArray, index) => {
+          let allNotes = ''
+          if (ind === index) {
+            allNotes = 'all notes'
+          }
           return (
-            <View key={subArray[0] ? subArray[0].key : index}>
+            <View key={subArray[0] ? subArray[0].key + index : index}>
               <FolderContainer>
                 <CollapseFolder
                   onClick={() =>
-                    this.openFolder(subArray[0] && subArray[0].folder)
+                    this.openFolder(subArray[0] && subArray[0].key + index)
                   }>
                   {subArray[0] &&
-                    (this.state.open.indexOf(subArray[0].folder) === -1
+                    (this.state.open.indexOf(subArray[0].key + index) === -1
                       ? 'v '
                       : '> ')}
                 </CollapseFolder>
                 <FolderText
-                  editable={this.state.edit}
+                  editable={!!this.state.edit}
                   onClick={() => this.handleClick()}
                   onDragOver={e => this.onDragOver(e)}
                   onDrop={e =>
@@ -242,37 +228,24 @@ class LeftNav extends Component<Props> {
                     this.setState({ edit: '' })
                   }}
                   defaultValue={
-                    subArray[0] ? subArray[0].folder : this.state.addFolder
+                    allNotes ? allNotes : subArray[0] && subArray[0].folder
                   }
                 />
                 <FolderFlatList
                   open={
-                    subArray[0] && this.state.open.indexOf(subArray[0].folder)
+                    subArray[0] &&
+                    this.state.open.indexOf(subArray[0].key + index)
                   }
                   data={subArray}
                   renderItem={({ item }) => {
                     return (
                       item.invisible !== true && (
                         <EditableText
-                          key={item.key}
                           draggable
                           onDragStart={e => this.onDragStart(e, item.key)}
-                          editable={this.state.edit}
-                          onClick={() => this.handleClick(item)}
-                          value={
-                            this.state.newTitle && this.state.edit === item.key
-                              ? this.state.newTitle
-                              : item.title
-                          }
-                          onChangeText={text => this.updateText(text)}
-                          onSubmitEditing={() => {
-                            this.props.update(
-                              { ...item, title: this.state.newTitle },
-                              true,
-                            )
-                            this.setState({ newTitle: '', edit: '' })
-                          }}
-                        />
+                          onClick={() => this.handleClick(item)}>
+                          {item.title}
+                        </EditableText>
                       )
                     )
                   }}

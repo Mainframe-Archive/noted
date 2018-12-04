@@ -33,7 +33,6 @@ class App extends Component<{}, State> {
     // mf: new MainframeSDK(),
     apiVersion: '',
     initial: false,
-    addFolder: '',
   }
 
   async componentDidMount() {
@@ -135,26 +134,18 @@ class App extends Component<{}, State> {
     this.state.notes.map(note => {
       if (note.folder !== undefined) {
         if (folders[note.folder]) {
-          const all = folders[note.folder]
-          folders[note.folder] = [...all, note]
+          folders[note.folder] = [...folders[note.folder], note]
         } else {
           folders[note.folder] = [note]
         }
-      } else {
-        if (folders['all notes']) {
-          const all = folders['all notes']
-          folders['all notes'] = [...all, note]
-        } else {
-          folders['all notes'] = [note]
-        }
       }
-      if (this.state.addFolder) {
-        folders[this.state.addFolder] = []
-        this.setState({ addFolder: '' })
+      if (folders['all notes'] !== undefined) {
+        folders['all notes'] = [...folders['all notes'], note]
+      } else {
+        folders['all notes'] = [note]
       }
       return folders
     })
-
     return folders
   }
 
