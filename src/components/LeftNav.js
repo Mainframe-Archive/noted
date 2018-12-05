@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { FlatList, View } from 'react-native-web'
+import { View } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
@@ -147,9 +147,7 @@ class LeftNav extends Component<Props> {
   }
 
   render() {
-    const ind = Object.keys(this.props.getFolders()).indexOf('all notes')
-    const notes = Object.values(this.props.getFolders())
-    console.log(notes)
+    const notes = Object.values(this.props.notes).flat()
     return (
       <Container>
         <SearchContainer>
@@ -165,7 +163,7 @@ class LeftNav extends Component<Props> {
             title="Add new note"
           />
         </SearchContainer>
-        {!this.props.initial && (
+        {/*!this.props.initial && (
           <View>
             <TitleText>Your Recent Notes</TitleText>
             <FlatList
@@ -193,14 +191,10 @@ class LeftNav extends Component<Props> {
               }
             />
           </View>
-        )}
+        )*/}
         <TitleText>Your Notes</TitleText>
         <NewButton title="Add a new folder" onPress={this.addFolder} />
         {Object.values(this.props.getFolders()).map((subArray, index) => {
-          let allNotes = ''
-          if (ind === index) {
-            allNotes = 'all notes'
-          }
           return (
             <View key={subArray[0] ? subArray[0].key + index : index}>
               <FolderContainer>
@@ -232,9 +226,7 @@ class LeftNav extends Component<Props> {
                       )
                     this.setState({ edit: '' })
                   }}
-                  defaultValue={
-                    allNotes ? allNotes : subArray[0] && subArray[0].folder
-                  }
+                  defaultValue={subArray[0] && subArray[0].folder}
                 />
                 <FolderFlatList
                   open={
@@ -263,18 +255,17 @@ class LeftNav extends Component<Props> {
           <CollapseFolder onClick={() => this.openFolder('all notes')}>
             {this.state.open.indexOf('all notes') === -1 ? 'v ' : '> '}
           </CollapseFolder>
-          <FolderText
-            editable={false}
-            onClick={() => this.handleClick()}
-            defaultValue={'all notes'}
-          />
+          <FolderText editable={false} defaultValue={'all notes'} />
           <FolderFlatList
             open={this.state.open.indexOf('all notes')}
             data={notes}
             renderItem={({ item }) => {
               return (
                 item.invisible !== true && (
-                  <EditableText onClick={() => this.handleClick(item)}>
+                  <EditableText
+                    draggable
+                    onDragStart={e => this.onDragStart(e, item.key)}
+                    onClick={() => this.handleClick(item)}>
                     {item.title}
                   </EditableText>
                 )
