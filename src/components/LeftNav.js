@@ -8,6 +8,7 @@ import { type Note } from '../types'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 
+import Folder from './Folder'
 import SearchBar from './Search'
 
 type Props = {
@@ -251,7 +252,7 @@ class LeftNav extends Component<Props> {
             </View>
           )
         })}
-        <FolderContainer>
+        {/*<FolderContainer>
           <CollapseFolder onClick={() => this.openFolder('all notes')}>
             {this.state.open.indexOf('all notes') === -1 ? 'v ' : '> '}
           </CollapseFolder>
@@ -272,7 +273,25 @@ class LeftNav extends Component<Props> {
               )
             }}
           />
-        </FolderContainer>
+        </FolderContainer>*/}
+        <Folder
+          data={notes}
+          openFolder={this.openFolder}
+          folderName={'all notes'}
+          edit={false}
+          open={this.state.open.indexOf('all notes')}
+          dragStart={this.onDragStart}
+          handleClick={this.handleClick}
+        />
+        <Folder
+          data={[]}
+          openFolder={this.openFolder}
+          folderName={'archive'}
+          edit={false}
+          open={this.state.open.indexOf('archive')}
+          dragStart={this.onDragStart}
+          handleClick={this.handleClick}
+        />
       </Container>
     )
   }
