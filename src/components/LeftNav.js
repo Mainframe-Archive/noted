@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
+import { Button } from '@morpheus-ui/core'
 import { FlatList } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
@@ -47,10 +48,6 @@ const SearchContainer = styled.View`
   align-items: center;
 `
 
-const NewButton = styled.Button`
-  flex: 1;
-`
-
 class LeftNav extends Component<Props> {
   render() {
     return (
@@ -84,7 +81,7 @@ class LeftNav extends Component<Props> {
             <Text onClick={() => this.props.update(item)}>{item.title}</Text>
           )}
         />
-        <NewButton
+        <Button
           onPress={() =>
             this.props.update({
               key: uuidv4(),
@@ -92,6 +89,9 @@ class LeftNav extends Component<Props> {
             })
           }
           title="Add new note"
+          backgroundColor="blue"
+          borderColor="blue"
+          titleColor="white"
         />
       </Container>
     )

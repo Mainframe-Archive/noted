@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
+import { Button, TextField } from '@morpheus-ui/core'
 import { Editor } from 'react-draft-wysiwyg'
 import {
   EditorState,
@@ -41,25 +42,11 @@ const EditorContainer = styled.View`
   flex: 1;
 `
 
-const Title = styled.TextInput`
-  font-size: 40px;
-  padding-bottom: ${props => props.theme.spacing};
-  color: ${props => props.theme.darkGray};
-`
-
 const ButtonContainer = styled.View`
   max-width: 130px;
-  margin-bottom: 30px;
+  margin-top: 15;
   flex-direction: row;
   justify-content: space-between;
-`
-
-const SaveButton = styled.Button`
-  flex: 1;
-`
-
-const DeleteButton = styled.Button`
-  flex: 1;
 `
 
 class MainArea extends Component<Props, State> {
@@ -92,14 +79,13 @@ class MainArea extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Title
-          value={this.props.note.title ? this.props.note.title : 'untitled'}
+        <TextField
+          name="title"
+          label="Note Title"
+          placeholder="untitled"
+          value={this.props.note.title}
           onChangeText={this.onTitleChange}
         />
-        <ButtonContainer>
-          <SaveButton onPress={this.props.save} title="Save" />
-          <DeleteButton onPress={this.props.delete} title="Delete" />
-        </ButtonContainer>
         <EditorContainer>
           <Editor
             editorState={this.state.editorState}
@@ -107,6 +93,10 @@ class MainArea extends Component<Props, State> {
             onContentStateChange={this.onContentChange}
           />
         </EditorContainer>
+        <ButtonContainer>
+          <Button onPress={this.props.save} title="Save" titleColor="white" backgroundColor="red" borderColor="red" />
+          <Button onPress={this.props.delete} title="Delete" />
+        </ButtonContainer>
       </Container>
     )
   }
