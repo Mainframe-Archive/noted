@@ -34,42 +34,6 @@ const TitleText = styled.Text`
   margin-bottom: 20px;
 `
 
-const EditableText = styled.Text`
-  font-size: 14px;
-  color: ${props => props.theme.white};
-  margin-left: 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  display: block;
-`
-
-const FolderContainer = styled.View`
-  display: inline;
-`
-
-const CollapseFolder = styled.Text`
-  color: ${props => props.theme.white};
-  font-weight: bold;
-  cursor: pointer;
-`
-
-const FolderText = styled.TextInput`
-  font-size: 15px;
-  color: ${props => props.theme.white};
-  margin-bottom: 5px;
-  margin-top: 10px;
-  cursor: pointer;
-`
-
-const FolderFlatList = styled.FlatList`
-  display: block;
-  ${props =>
-    props.open !== -1 &&
-    css`
-      display: none;
-    `}
-`
-
 const SearchContainer = styled.View`
   display: flex;
   align-items: center;
@@ -110,18 +74,18 @@ class LeftNav extends Component<Props> {
   handleClick = item => {
     if (item) {
       this.props.update(item)
+    } else {
+      this.count++
+      this.timeout = setTimeout(() => {
+        if (this.count === 2) {
+          this.setState({
+            edit: item ? item.key : true,
+          })
+        } else {
+        }
+        this.count = 0
+      }, 250)
     }
-
-    this.count++
-    this.timeout = setTimeout(() => {
-      if (this.count === 2) {
-        this.setState({
-          edit: item ? item.key : true,
-        })
-      } else {
-      }
-      this.count = 0
-    }, 250)
   }
 
   updateText = text => {
@@ -174,6 +138,17 @@ class LeftNav extends Component<Props> {
                 openFolder={this.openFolder}
                 folderID={subArray[0].key}
                 folderName={subArray[0].folder}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+                onChangeText={this.updateFolder}
+                onSubmitEditing={() => {
+                  subArray[0] &&
+                    this.props.updateFolders(
+                      this.state.newFolder,
+                      subArray[0].folder,
+                    )
+                  this.setState({ edit: '' })
+                }}
                 edit={!!this.state.edit}
                 open={this.state.open.indexOf(subArray[0].key)}
                 dragStart={this.onDragStart}
@@ -186,9 +161,9 @@ class LeftNav extends Component<Props> {
           data={notes}
           openFolder={this.openFolder}
           folderName={'all notes'}
-          folderID={6520250516}
+          folderID={'6520250516'}
           edit={false}
-          open={this.state.open.indexOf(6520250516)}
+          open={this.state.open.indexOf('6520250516')}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
         />
@@ -196,9 +171,9 @@ class LeftNav extends Component<Props> {
           data={[]}
           openFolder={this.openFolder}
           folderName={'archive'}
-          folderID={65202505614}
+          folderID={'65202505614'}
           edit={false}
-          open={this.state.open.indexOf(65202505614)}
+          open={this.state.open.indexOf('65202505614')}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
         />
