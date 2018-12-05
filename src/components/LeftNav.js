@@ -7,7 +7,6 @@ import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
-import { getArchive } from '../localStorage'
 import Folder from './Folder'
 import SearchBar from './Search'
 
@@ -56,13 +55,6 @@ class LeftNav extends Component<Props> {
     addFolder: '',
     newFolder: '',
     open: [],
-    archive: [],
-  }
-
-  componentDidMount() {
-    getArchive().then(result => {
-      this.setState({ archive: result })
-    })
   }
 
   addFolder = () => {
@@ -96,8 +88,7 @@ class LeftNav extends Component<Props> {
   }
 
   getFromArchive = (key: string) => {
-    const note = this.state.archive.find(note => note.key === key)
-    console.log(note)
+    const note = this.props.archive.find(note => note.key === key)
     return note
   }
 
@@ -132,7 +123,7 @@ class LeftNav extends Component<Props> {
   archiveNote = e => {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign({}, this.props.getNote(key))
-    this.props.archive(note)
+    this.props.updateArchive(note)
   }
 
   render() {
@@ -193,7 +184,7 @@ class LeftNav extends Component<Props> {
           handleClick={this.handleClick}
         />
         <Folder
-          data={this.state.archive}
+          data={this.props.archive}
           openFolder={this.openFolder}
           folderName={'archive'}
           folderID={'65202505614'}

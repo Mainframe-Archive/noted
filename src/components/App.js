@@ -6,7 +6,7 @@ import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 // import MainframeSDK from '@mainframe/sdk'
 
-import { getNotes, setNotes, archiveNote } from '../localStorage'
+import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -32,6 +32,7 @@ class App extends Component<{}, State> {
     notes: _.toArray(NOTES),
     // mf: new MainframeSDK(),
     apiVersion: '',
+    archive: [],
     initial: false,
   }
 
@@ -43,6 +44,9 @@ class App extends Component<{}, State> {
       } else {
         this.setState({ notes: _.toArray(result) })
       }
+    })
+    getArchive().then(result => {
+      this.setState({ archive: result })
     })
     // this.interval = setInterval(() => {
     //   console.log('auto saved')
@@ -69,6 +73,9 @@ class App extends Component<{}, State> {
       copy.splice(index, 1, note)
     }
 
+    // I think of this as a 'soft save'
+    // i.e. when we change folder I dont call save
+    // because I don't want the date to change
     if (save) {
       setNotes(copy)
     }
@@ -115,7 +122,10 @@ class App extends Component<{}, State> {
   }
 
   archiveNote = (note: Note) => {
-    archiveNote(note)
+    const copy = this.state.archive.slice()
+    copy.push(note)
+    this.setState({ archive: copy })
+    archiveNotes(copy)
     this.deleteNote(note)
   }
 
@@ -167,7 +177,8 @@ class App extends Component<{}, State> {
             ...this.state,
             getFolders: this.getFolderArray,
             updateFolders: this.updateFolderNames,
-            archive: this.archiveNote,
+            updateArchive: this.archiveNote,
+            archive: this.state.archive,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,
