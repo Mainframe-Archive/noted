@@ -164,122 +164,31 @@ class LeftNav extends Component<Props> {
             title="Add new note"
           />
         </SearchContainer>
-        {/*!this.props.initial && (
-          <View>
-            <TitleText>Your Recent Notes</TitleText>
-            <FlatList
-              data={
-                this.props.notes.length < 5
-                  ? this.props.notes
-                      .sort((a, b) => {
-                        return b.date - a.date
-                      })
-                      .slice(0, this.props.notes.length)
-                  : this.props.notes
-                      .sort((a, b) => {
-                        return b.date - a.date
-                      })
-                      .slice(0, 5)
-              }
-              renderItem={({ item }) =>
-                item.invisible !== true && (
-                  <EditableText
-                    key={item.key}
-                    onClick={() => this.handleClick(item)}>
-                    {item.title}
-                  </EditableText>
-                )
-              }
-            />
-          </View>
-        )*/}
         <TitleText>Your Notes</TitleText>
         <NewButton title="Add a new folder" onPress={this.addFolder} />
         {Object.values(this.props.getFolders()).map((subArray, index) => {
           return (
-            <View key={subArray[0] ? subArray[0].key + index : index}>
-              <FolderContainer>
-                <CollapseFolder
-                  onClick={() =>
-                    this.openFolder(subArray[0] && subArray[0].key + index)
-                  }>
-                  {subArray[0] &&
-                    (this.state.open.indexOf(subArray[0].key + index) === -1
-                      ? 'v '
-                      : '> ')}
-                </CollapseFolder>
-                <FolderText
-                  editable={!!this.state.edit}
-                  onClick={() => this.handleClick()}
-                  onDragOver={e => this.onDragOver(e)}
-                  onDrop={e =>
-                    this.onDrop(
-                      e,
-                      subArray[0] ? subArray[0].folder : this.state.addFolder,
-                    )
-                  }
-                  onChangeText={text => this.updateFolder(text)}
-                  onSubmitEditing={() => {
-                    subArray[0] &&
-                      this.props.updateFolders(
-                        this.state.newFolder,
-                        subArray[0].folder,
-                      )
-                    this.setState({ edit: '' })
-                  }}
-                  defaultValue={subArray[0] && subArray[0].folder}
-                />
-                <FolderFlatList
-                  open={
-                    subArray[0] &&
-                    this.state.open.indexOf(subArray[0].key + index)
-                  }
-                  data={subArray}
-                  renderItem={({ item }) => {
-                    return (
-                      item.invisible !== true && (
-                        <EditableText
-                          draggable
-                          onDragStart={e => this.onDragStart(e, item.key)}
-                          onClick={() => this.handleClick(item)}>
-                          {item.title}
-                        </EditableText>
-                      )
-                    )
-                  }}
-                />
-              </FolderContainer>
+            <View key={subArray[0].key}>
+              <Folder
+                data={subArray}
+                openFolder={this.openFolder}
+                folderID={subArray[0].key}
+                folderName={subArray[0].folder}
+                edit={!!this.state.edit}
+                open={this.state.open.indexOf(subArray[0].key)}
+                dragStart={this.onDragStart}
+                handleClick={this.handleClick}
+              />
             </View>
           )
         })}
-        {/*<FolderContainer>
-          <CollapseFolder onClick={() => this.openFolder('all notes')}>
-            {this.state.open.indexOf('all notes') === -1 ? 'v ' : '> '}
-          </CollapseFolder>
-          <FolderText editable={false} defaultValue={'all notes'} />
-          <FolderFlatList
-            open={this.state.open.indexOf('all notes')}
-            data={notes}
-            renderItem={({ item }) => {
-              return (
-                item.invisible !== true && (
-                  <EditableText
-                    draggable
-                    onDragStart={e => this.onDragStart(e, item.key)}
-                    onClick={() => this.handleClick(item)}>
-                    {item.title}
-                  </EditableText>
-                )
-              )
-            }}
-          />
-        </FolderContainer>*/}
         <Folder
           data={notes}
           openFolder={this.openFolder}
           folderName={'all notes'}
+          folderID={6520250516}
           edit={false}
-          open={this.state.open.indexOf('all notes')}
+          open={this.state.open.indexOf(6520250516)}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
         />
@@ -287,8 +196,9 @@ class LeftNav extends Component<Props> {
           data={[]}
           openFolder={this.openFolder}
           folderName={'archive'}
+          folderID={65202505614}
           edit={false}
-          open={this.state.open.indexOf('archive')}
+          open={this.state.open.indexOf(65202505614)}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
         />
