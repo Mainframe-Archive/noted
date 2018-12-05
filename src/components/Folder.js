@@ -45,7 +45,8 @@ type Props = {
   edit: boolean,
   handleClick: Note => void,
   onDragOver?: Event => void,
-  onDrop?: Event => void,
+  onDrop?: (Event, string) => void,
+  archive?: Event => void,
   onChangeText?: string => void,
   onSubmitEditing?: () => void,
 }
@@ -61,8 +62,12 @@ const Folder = (props: Props) => {
         defaultValue={props.folderName}
         onClick={() => props.handleClick()}
         onDragOver={props.onDragOver && (e => props.onDragOver(e))}
-        onDrop={props.onDrop && (e => props.onDrop(e, props.folderName))}
-        onChangeText={props.onChangeTextt && (text => props.onChangeText(text))}
+        onDrop={
+          props.archive
+            ? e => props.archive(e, props.folderName)
+            : props.onDrop && (e => props.onDrop(e, props.folderName))
+        }
+        onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
       />
       <FolderFlatList

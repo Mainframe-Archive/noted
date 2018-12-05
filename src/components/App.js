@@ -6,7 +6,7 @@ import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 // import MainframeSDK from '@mainframe/sdk'
 
-import { getNotes, setNotes } from '../localStorage'
+import { getNotes, setNotes, archiveNote } from '../localStorage'
 import { type Note } from '../types'
 
 import { Provider } from '../hocs/Context'
@@ -94,12 +94,14 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
-  deleteNote = (): void => {
+  deleteNote = (note?: Note) => {
     console.log(
       'please note: delete not fully functional yet until integration with web3',
     )
     const copy = this.state.notes.slice()
-    const index = _.findIndex(copy, { key: this.state.note.key })
+    const index = _.findIndex(copy, {
+      key: note ? note.key : this.state.note.key,
+    })
     copy.splice(index, 1)
     setNotes(copy)
 
@@ -110,6 +112,11 @@ class App extends Component<{}, State> {
       },
       notes: copy,
     })
+  }
+
+  archiveNote = (note: Note) => {
+    archiveNote(note)
+    this.deleteNote(note)
   }
 
   setInitialFalse = () => {
@@ -147,11 +154,6 @@ class App extends Component<{}, State> {
           folders[note.folder] = [note]
         }
       }
-      // if (folders['all notes'] !== undefined) {
-      //   folders['all notes'] = [...folders['all notes'], note]
-      // } else {
-      //   folders['all notes'] = [note]
-      // }
       return folders
     })
     return folders
@@ -165,6 +167,7 @@ class App extends Component<{}, State> {
             ...this.state,
             getFolders: this.getFolderArray,
             updateFolders: this.updateFolderNames,
+            archive: this.archiveNote,
             key: this.state.note.key,
             update: this.updateActiveNote,
             save: this.saveNote,

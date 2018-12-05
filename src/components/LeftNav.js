@@ -7,7 +7,7 @@ import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
-
+import { getArchive } from '../localStorage'
 import Folder from './Folder'
 import SearchBar from './Search'
 
@@ -56,6 +56,13 @@ class LeftNav extends Component<Props> {
     addFolder: '',
     newFolder: '',
     open: [],
+    archive: [],
+  }
+
+  componentDidMount() {
+    getArchive().then(result => {
+      this.setState({ archive: result })
+    })
   }
 
   addFolder = () => {
@@ -88,6 +95,12 @@ class LeftNav extends Component<Props> {
     }
   }
 
+  getFromArchive = (key: string) => {
+    const note = this.state.archive.find(note => note.key === key)
+    console.log(note)
+    return note
+  }
+
   updateText = text => {
     this.setState({ newTitle: text })
   }
@@ -106,13 +119,25 @@ class LeftNav extends Component<Props> {
 
   onDrop = (e, folder) => {
     const key = e.dataTransfer.getData('key')
-    const note = Object.assign({}, this.props.getNote(key))
+    const note = Object.assign(
+      {},
+      this.props.getNote(key) !== undefined
+        ? this.props.getNote(key)
+        : this.getFromArchive(key),
+    )
     note.folder = folder
     this.props.update(note, true)
   }
 
+  archiveNote = e => {
+    const key = e.dataTransfer.getData('key')
+    const note = Object.assign({}, this.props.getNote(key))
+    this.props.archive(note)
+  }
+
   render() {
     const notes = Object.values(this.props.notes).flat()
+
     return (
       <Container>
         <SearchContainer>
@@ -168,14 +193,16 @@ class LeftNav extends Component<Props> {
           handleClick={this.handleClick}
         />
         <Folder
-          data={[]}
+          data={this.state.archive}
           openFolder={this.openFolder}
           folderName={'archive'}
           folderID={'65202505614'}
           edit={false}
           open={this.state.open.indexOf('65202505614')}
+          onDragOver={this.onDragOver}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
+          archive={this.archiveNote}
         />
       </Container>
     )
