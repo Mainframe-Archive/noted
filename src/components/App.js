@@ -147,11 +147,11 @@ class App extends Component<{}, State> {
           folders[note.folder] = [note]
         }
       }
-      if (folders['all notes'] !== undefined) {
-        folders['all notes'] = [...folders['all notes'], note]
-      } else {
-        folders['all notes'] = [note]
-      }
+      // if (folders['all notes'] !== undefined) {
+      //   folders['all notes'] = [...folders['all notes'], note]
+      // } else {
+      //   folders['all notes'] = [note]
+      // }
       return folders
     })
     return folders

@@ -101,7 +101,6 @@ class LeftNav extends Component<Props> {
     const copy = this.state.open.slice()
     const index = copy.indexOf(folder)
     index === -1 ? copy.push(folder) : copy.splice(index, 1)
-    console.log(copy)
     this.setState({
       open: copy,
     })
@@ -149,6 +148,8 @@ class LeftNav extends Component<Props> {
 
   render() {
     const ind = Object.keys(this.props.getFolders()).indexOf('all notes')
+    const notes = Object.values(this.props.getFolders())
+    console.log(notes)
     return (
       <Container>
         <SearchContainer>
@@ -164,31 +165,35 @@ class LeftNav extends Component<Props> {
             title="Add new note"
           />
         </SearchContainer>
-        <TitleText>Your Recent Notes</TitleText>
-        <FlatList
-          data={
-            this.props.notes.length < 5
-              ? this.props.notes
-                  .sort((a, b) => {
-                    return b.date - a.date
-                  })
-                  .slice(0, this.props.notes.length)
-              : this.props.notes
-                  .sort((a, b) => {
-                    return b.date - a.date
-                  })
-                  .slice(0, 5)
-          }
-          renderItem={({ item }) =>
-            item.invisible !== true && (
-              <EditableText
-                key={item.key}
-                onClick={() => this.handleClick(item)}>
-                {item.title}
-              </EditableText>
-            )
-          }
-        />
+        {!this.props.initial && (
+          <View>
+            <TitleText>Your Recent Notes</TitleText>
+            <FlatList
+              data={
+                this.props.notes.length < 5
+                  ? this.props.notes
+                      .sort((a, b) => {
+                        return b.date - a.date
+                      })
+                      .slice(0, this.props.notes.length)
+                  : this.props.notes
+                      .sort((a, b) => {
+                        return b.date - a.date
+                      })
+                      .slice(0, 5)
+              }
+              renderItem={({ item }) =>
+                item.invisible !== true && (
+                  <EditableText
+                    key={item.key}
+                    onClick={() => this.handleClick(item)}>
+                    {item.title}
+                  </EditableText>
+                )
+              }
+            />
+          </View>
+        )}
         <TitleText>Your Notes</TitleText>
         <NewButton title="Add a new folder" onPress={this.addFolder} />
         {Object.values(this.props.getFolders()).map((subArray, index) => {
@@ -254,6 +259,29 @@ class LeftNav extends Component<Props> {
             </View>
           )
         })}
+        <FolderContainer>
+          <CollapseFolder onClick={() => this.openFolder('all notes')}>
+            {this.state.open.indexOf('all notes') === -1 ? 'v ' : '> '}
+          </CollapseFolder>
+          <FolderText
+            editable={false}
+            onClick={() => this.handleClick()}
+            defaultValue={'all notes'}
+          />
+          <FolderFlatList
+            open={this.state.open.indexOf('all notes')}
+            data={notes}
+            renderItem={({ item }) => {
+              return (
+                item.invisible !== true && (
+                  <EditableText onClick={() => this.handleClick(item)}>
+                    {item.title}
+                  </EditableText>
+                )
+              )
+            }}
+          />
+        </FolderContainer>
       </Container>
     )
   }
