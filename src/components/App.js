@@ -25,8 +25,6 @@ type State = {
 }
 
 class App extends Component<{}, State> {
-  interval: IntervalID
-
   state: State = {
     note: {
       key: uuidv4(),
@@ -37,7 +35,6 @@ class App extends Component<{}, State> {
     apiVersion: '',
     archive: [],
     initial: false,
-    autosaved: false,
   }
 
   async componentDidMount() {
@@ -52,18 +49,7 @@ class App extends Component<{}, State> {
     getArchive().then(result => {
       this.setState({ archive: _.toArray(result) })
     })
-    this.interval = setInterval(() => {
-      if (this.state.note.content || this.state.note.title) {
-        this.setState({ autosaved: true })
-        this.saveNote()
-      }
-    }, 10000)
     // this.setState({ apiVersion: await this.state.mf.apiVersion() })
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval)
-    this.setState({ autosaved: false })
   }
 
   getNoteFromKey = (key: string): ?Note => {
@@ -161,7 +147,6 @@ class App extends Component<{}, State> {
       notes: copy,
       note: {
         key: uuidv4(),
-        title: 'untitled',
         date: new Date().getTime(),
       },
     })
@@ -189,7 +174,6 @@ class App extends Component<{}, State> {
         <Provider
           value={{
             ...this.state,
-            autosave: this.state.autosaved,
             getFolders: this.getFolderArray,
             updateFolders: this.updateFolderNames,
             updateArchive: this.archiveNote,

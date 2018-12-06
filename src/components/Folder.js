@@ -82,7 +82,7 @@ const Folder = (props: Props) => {
                 draggable
                 onDragStart={e => props.dragStart(e, item.key)}
                 onClick={() => props.handleClick(item)}>
-                {item.title}
+                {item.title ? item.title : 'untitled'}
               </Text>
             )
           )
