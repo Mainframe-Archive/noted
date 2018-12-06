@@ -96,7 +96,6 @@ class LeftNav extends Component<Props, State> {
           this.setState({
             edit: true,
           })
-        } else {
         }
         this.count = 0
       }, 250)
@@ -132,9 +131,8 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.getFromArchive(key),
     )
-    if (!this.props.getNote(key)) {
-      this.props.updateArchive(note)
-    }
+    !this.props.getNote(key) && this.props.updateArchive(note)
+
     note.folder = folder
     this.props.update(note, true)
   }
