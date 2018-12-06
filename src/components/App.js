@@ -162,7 +162,7 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
-  getFolderArray = (): Array<Object> => {
+  getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.map(note => {
       if (note.folder !== undefined) {
