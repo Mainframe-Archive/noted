@@ -21,7 +21,7 @@ type Props = {
 }
 
 type State = {
-  edit: string,
+  edit: boolean,
   newTitle: string,
   addFolder: string,
   newFolder: string,
@@ -66,7 +66,7 @@ class LeftNav extends Component<Props, State> {
   }
 
   state = {
-    edit: '',
+    edit: false,
     newTitle: '',
     addFolder: '',
     newFolder: '',
@@ -94,7 +94,7 @@ class LeftNav extends Component<Props, State> {
       this.timeout = setTimeout(() => {
         if (this.count === 2) {
           this.setState({
-            edit: item && item.key,
+            edit: true,
           })
         } else {
         }
@@ -128,11 +128,11 @@ class LeftNav extends Component<Props, State> {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign(
       {},
-      this.props.getNote(key) !== undefined
+      this.props.getNote(key)
         ? this.props.getNote(key)
         : this.getFromArchive(key),
     )
-    if (this.props.getNote(key) === undefined) {
+    if (!this.props.getNote(key)) {
       this.props.updateArchive(note)
     }
     note.folder = folder
@@ -181,9 +181,9 @@ class LeftNav extends Component<Props, State> {
                         this.state.newFolder,
                         subArray[0].folder,
                       )
-                    this.setState({ edit: '' })
+                    this.setState({ edit: false })
                   }}
-                  edit={!!this.state.edit}
+                  edit={this.state.edit}
                   open={this.state.open.indexOf(subArray[0].key)}
                   dragStart={this.onDragStart}
                   handleClick={this.handleClick}
