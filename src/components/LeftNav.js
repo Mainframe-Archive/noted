@@ -4,12 +4,12 @@ import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
+import _ from 'lodash'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 import Folder from './Folder'
 import SearchBar from './Search'
-
 type Props = {
   notes: Array<Note>,
   update: Note => void,
@@ -116,6 +116,12 @@ class LeftNav extends Component<Props> {
         ? this.props.getNote(key)
         : this.getFromArchive(key),
     )
+    if (this.props.getNote(key) === undefined) {
+      // const copy = this.props.archive.slice()
+      // const index = _.findIndex(copy, { key: note.key })
+      // copy.splice(index, 1)
+      this.props.updateArchive(note)
+    }
     note.folder = folder
     this.props.update(note, true)
   }

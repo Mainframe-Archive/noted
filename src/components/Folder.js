@@ -64,7 +64,7 @@ const Folder = (props: Props) => {
         onDragOver={props.onDragOver && (e => props.onDragOver(e))}
         onDrop={
           props.archive
-            ? e => props.archive(e, props.folderName)
+            ? e => props.archive(e)
             : props.onDrop && (e => props.onDrop(e, props.folderName))
         }
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
