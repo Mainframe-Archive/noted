@@ -41,6 +41,7 @@ type Props = {
   data: Array<Note>,
   folderID: string,
   folderName: string,
+  folderDraggable: boolean,
   open: number,
   edit: boolean,
   handleClick: Note => void,
@@ -58,6 +59,7 @@ const Folder = (props: Props) => {
         {props.open === -1 ? 'v ' : '> '}
       </CollapseFolder>
       <FolderText
+        draggable={props.folderDraggable}
         editable={props.edit}
         defaultValue={props.folderName}
         onClick={() => props.handleClick()}

@@ -21,6 +21,7 @@ type State = {
   // mf: MainframeSDK,
   apiVersion: string,
   initial: boolean,
+  archive: Array<Note>,
 }
 
 class App extends Component<{}, State> {
@@ -46,7 +47,7 @@ class App extends Component<{}, State> {
       }
     })
     getArchive().then(result => {
-      this.setState({ archive: result })
+      this.setState({ archive: _.toArray(result) })
     })
     // this.interval = setInterval(() => {
     //   console.log('auto saved')
@@ -59,9 +60,9 @@ class App extends Component<{}, State> {
     // clearInterval(this.interval)
   }
 
-  getNoteFromKey = (key: string): Note => {
+  getNoteFromKey = (key: string): ?Note => {
     const note = this.state.notes.find(note => note.key === key)
-    return note
+    return note ? note : null
   }
 
   updateActiveNote = (note: Note, save?: boolean): void => {
@@ -76,6 +77,8 @@ class App extends Component<{}, State> {
     // I think of this as a 'soft save'
     // i.e. when we change folder I dont call save
     // because I don't want the date to change
+    // and also because a call to update + save is
+    // sometimes necessary & messes with state.
     if (save) {
       setNotes(copy)
     }
@@ -159,7 +162,7 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
-  getFolderArray = () => {
+  getFolderArray = (): Array<Object> => {
     const folders = []
     this.state.notes.map(note => {
       if (note.folder !== undefined) {
