@@ -5,6 +5,7 @@ import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 import MainframeSDK from '@mainframe/sdk'
+import '@morpheus-ui/fonts'
 
 import { getNotes, setNotes } from '../localStorage'
 import { type Note } from '../types'

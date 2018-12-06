@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "@morpheus-ui/core": "^0.0.1",
+    "@morpheus-ui/fonts": "^0.0.1",
     "draft-js": "^0.10.5",
     "lodash": "^4.17.11",
     "react": "^16.6.0",
