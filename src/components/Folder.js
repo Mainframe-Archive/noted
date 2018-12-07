@@ -32,7 +32,7 @@ const FolderText = styled.TextInput`
 const FolderFlatList = styled.FlatList`
   display: block;
   ${props =>
-    props.open !== -1 &&
+    !props.isOpen &&
     css`
       display: none;
     `}
@@ -42,9 +42,10 @@ type Props = {
   folderID: string,
   folderName: string,
   folderDraggable: boolean,
-  open: number,
-  edit: boolean,
+  isOpen: boolean,
+  isBeingEdited: boolean,
   handleClick: Note => void,
+  handleDoubleClick: () => void,
   onDragOver?: Event => void,
   onDrop?: (Event, string) => void,
   archive?: Event => void,
@@ -56,13 +57,13 @@ const Folder = (props: Props) => {
   return (
     <FolderContainer>
       <CollapseFolder onClick={() => props.openFolder(props.folderID)}>
-        {props.open === -1 ? 'v ' : '> '}
+        {props.isOpen ? 'v ' : '> '}
       </CollapseFolder>
       <FolderText
         draggable={props.folderDraggable}
-        editable={props.edit}
+        editable={props.isBeingEdited}
         defaultValue={props.folderName}
-        onClick={() => props.handleClick()}
+        onDoubleClick={props.handleDoubleClick}
         onDragOver={props.onDragOver && (e => props.onDragOver(e))}
         onDrop={
           props.archive
@@ -73,7 +74,7 @@ const Folder = (props: Props) => {
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
       />
       <FolderFlatList
-        open={props.open}
+        isOpen={props.isOpen}
         data={props.data}
         renderItem={({ item }) => {
           return (

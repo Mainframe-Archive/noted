@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
-import MainframeSDK from '@mainframe/sdk'
+// import MainframeSDK from '@mainframe/sdk'
 
 import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
 import { type Note } from '../types'
@@ -18,7 +18,7 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
-  mf: MainframeSDK,
+  // mf: MainframeSDK,
   apiVersion: string,
   initial: boolean,
   archive: Array<Note>,
@@ -31,7 +31,7 @@ class App extends Component<{}, State> {
       date: new Date().getTime(),
     },
     notes: _.toArray(NOTES),
-    mf: new MainframeSDK(),
+    // mf: new MainframeSDK(),
     apiVersion: '',
     archive: [],
     initial: false,
@@ -49,7 +49,7 @@ class App extends Component<{}, State> {
     getArchive().then(result => {
       this.setState({ archive: _.toArray(result) })
     })
-    this.setState({ apiVersion: await this.state.mf.apiVersion() })
+    // this.setState({ apiVersion: await this.state.mf.apiVersion() })
   }
 
   getNoteFromKey = (key: string): ?Note => {
@@ -57,22 +57,13 @@ class App extends Component<{}, State> {
     return note ? note : null
   }
 
-  updateActiveNote = (note: Note, save?: boolean): void => {
+  updateActiveNote = (note: Note): void => {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
       copy.splice(copy.length, 0, note)
     } else {
       copy.splice(index, 1, note)
-    }
-
-    // I think of this as a 'soft save'
-    // i.e. when we change folder I dont call save
-    // because I don't want the date to change
-    // and also because a call to update + save is
-    // sometimes necessary & messes with state.
-    if (save) {
-      setNotes(copy)
     }
 
     this.setState({
@@ -94,6 +85,22 @@ class App extends Component<{}, State> {
     })
 
     setNotes(copy)
+  }
+
+  updateAndSave = (note: Note): void => {
+    const copy = this.state.notes.slice()
+    const index = _.findIndex(copy, { key: note.key })
+    if (index === -1) {
+      copy.splice(copy.length, 0, note)
+    } else {
+      copy.splice(index, 1, note)
+    }
+    setNotes(copy)
+
+    this.setState({
+      note: note,
+      notes: copy,
+    })
   }
 
   deleteNote = (note?: Note) => {
@@ -133,15 +140,14 @@ class App extends Component<{}, State> {
     this.setState({ initial: false })
   }
 
-  updateFolderNames = (newFolder: string, oldFolder: string) => {
+  changeFolderNames = (newFolder: string, oldFolder: string) => {
     const copy = this.state.notes.slice()
-    this.state.notes.map(note => {
+    this.state.notes.forEach(note => {
       if (note.folder === oldFolder) {
         note.folder = newFolder
         const index = _.findIndex(copy, { key: note.key })
         copy.splice(index, 1, note)
       }
-      return copy
     })
     this.setState({
       notes: copy,
@@ -155,7 +161,7 @@ class App extends Component<{}, State> {
 
   getFolderArray = (): Array<any> => {
     const folders = []
-    this.state.notes.map(note => {
+    this.state.notes.forEach(note => {
       if (note.folder !== undefined) {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]
@@ -163,7 +169,6 @@ class App extends Component<{}, State> {
           folders[note.folder] = [note]
         }
       }
-      return folders
     })
     return folders
   }
@@ -175,11 +180,12 @@ class App extends Component<{}, State> {
           value={{
             ...this.state,
             getFolders: this.getFolderArray,
-            updateFolders: this.updateFolderNames,
+            updateFolders: this.changeFolderNames,
             updateArchive: this.archiveNote,
             archive: this.state.archive,
             key: this.state.note.key,
             update: this.updateActiveNote,
+            updateAndSave: this.updateAndSave,
             save: this.saveNote,
             delete: this.deleteNote,
             getNote: this.getNoteFromKey,
