@@ -4,7 +4,7 @@ import React, { Component, type Node } from 'react'
 import { ThemeProvider } from 'styled-components/native'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
-// import MainframeSDK from '@mainframe/sdk'
+import MainframeSDK from '@mainframe/sdk'
 
 import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
 import { type Note } from '../types'
@@ -18,7 +18,7 @@ import Home from './Home'
 type State = {
   note: Note,
   notes: Array<Note>,
-  // mf: MainframeSDK,
+  mf: MainframeSDK,
   apiVersion: string,
   initial: boolean,
   archive: Array<Note>,
@@ -32,7 +32,7 @@ class App extends Component<{}, State> {
       folder: '',
     },
     notes: _.toArray(NOTES),
-    // mf: new MainframeSDK(),
+    mf: new MainframeSDK(),
     apiVersion: '',
     archive: [],
     initial: false,
@@ -50,7 +50,7 @@ class App extends Component<{}, State> {
     getArchive().then(result => {
       this.setState({ archive: _.toArray(result) })
     })
-    // this.setState({ apiVersion: await this.state.mf.apiVersion() })
+    this.setState({ apiVersion: await this.state.mf.apiVersion() })
   }
 
   getNoteFromKey = (key: string): ?Note => {
