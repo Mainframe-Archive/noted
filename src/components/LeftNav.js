@@ -8,6 +8,7 @@ import { type Note } from '../types'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 import Folder from './Folder'
+import Notes from './Notes'
 import SearchBar from './Search'
 
 type Props = {
@@ -25,13 +26,26 @@ type State = {
   newTitle: string,
   addFolder: string,
   newFolder: string,
-  open: Array<string>,
+  open: string,
 }
 
 const Container = screenSize(styled.View`
-  width: 300px;
+  width: 500px;
   height: 100%;
-  background-color: ${props => props.theme.blue};
+  background-color: #a6a6a6;
+  padding: ${props => props.theme.spacing};
+  display: flex;
+  flex-direction: row;
+  ${props =>
+    props.screenWidth <= 900 &&
+    css`
+      width: 50px;
+    `};
+`)
+
+const SidebarContainer = screenSize(styled.View`
+  width: 200px;
+  background-color: #a6a6a6;
   padding: ${props => props.theme.spacing};
   ${props =>
     props.screenWidth <= 900 &&
@@ -70,25 +84,24 @@ class LeftNav extends Component<Props, State> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
-    open: [],
+    open: '',
   }
 
   addFolder = () => {
     this.props.update({ key: uuidv4(), invisible: true, folder: 'new folder' })
   }
 
-  openFolder = folder => {
-    const copy = this.state.open.slice()
-    const index = copy.indexOf(folder)
-    index === -1 ? copy.push(folder) : copy.splice(index, 1)
-    this.setState({
-      open: copy,
-    })
-  }
-
   handleClick = item => {
     if (item) {
       this.props.update(item)
+    }
+  }
+
+  folderClick = folderId => {
+    if (folderId) {
+      this.setState({
+        open: folderId,
+      })
     } else {
       this.count++
       this.timeout = setTimeout(() => {
@@ -144,10 +157,62 @@ class LeftNav extends Component<Props, State> {
   }
 
   render() {
+    console.log(this.state.open)
     return (
       <Container>
-        <SearchContainer>
-          <SearchBar data={this.props.notes} />
+        <SidebarContainer>
+          <NewButton title="Add a new folder" onPress={this.addFolder} />
+          <SearchContainer>
+            <SearchBar data={this.props.notes} />
+          </SearchContainer>
+          {Object.values(this.props.getFolders()).map(
+            (subArray: Array<Note>, index: number) => {
+              return (
+                <View key={subArray[0].key}>
+                  <Folder
+                    openFolder={this.openFolder}
+                    folderID={subArray[0].key}
+                    folderName={subArray[0].folder && subArray[0].folder}
+                    onDragOver={this.onDragOver}
+                    onDrop={this.onDrop}
+                    onChangeText={this.updateFolder}
+                    onSubmitEditing={() => {
+                      subArray[0].folder &&
+                        this.props.updateFolders(
+                          this.state.newFolder,
+                          subArray[0].folder,
+                        )
+                      this.setState({ edit: false })
+                    }}
+                    edit={this.state.edit}
+                    open={this.state.open === subArray[0].key}
+                    handleClick={this.folderClick}
+                  />
+                </View>
+              )
+            },
+          )}
+          <Folder
+            openFolder={this.openFolder}
+            folderName={'all notes'}
+            folderID={'all notes'}
+            edit={false}
+            open={this.state.open === 'all notes'}
+            handleClick={this.folderClick}
+          />
+          <Folder
+            openFolder={this.openFolder}
+            folderName={'archive'}
+            folderID={'archive'}
+            edit={false}
+            open={this.state.open === 'archive'}
+            onDragOver={this.onDragOver}
+            archive={this.archiveNote}
+            handleClick={this.folderClick}
+          />
+        </SidebarContainer>
+        <SidebarContainer>
+          <TitleText>Your Notes</TitleText>
           <NewButton
             onPress={() =>
               this.props.update({
@@ -157,60 +222,39 @@ class LeftNav extends Component<Props, State> {
             }
             title="Add new note"
           />
-        </SearchContainer>
-        <TitleText>Your Notes</TitleText>
-        <NewButton title="Add a new folder" onPress={this.addFolder} />
-        {Object.values(this.props.getFolders()).map(
-          (subArray: Array<Note>, index: number) => {
-            return (
-              <View key={subArray[0].key}>
-                <Folder
-                  data={subArray}
-                  openFolder={this.openFolder}
-                  folderID={subArray[0].key}
-                  folderName={subArray[0].folder && subArray[0].folder}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  onChangeText={this.updateFolder}
-                  onSubmitEditing={() => {
-                    subArray[0].folder &&
-                      this.props.updateFolders(
-                        this.state.newFolder,
-                        subArray[0].folder,
-                      )
-                    this.setState({ edit: false })
-                  }}
-                  edit={this.state.edit}
-                  open={this.state.open.indexOf(subArray[0].key)}
-                  dragStart={this.onDragStart}
-                  handleClick={this.handleClick}
-                />
-              </View>
-            )
-          },
-        )}
-        <Folder
-          data={this.props.notes}
-          openFolder={this.openFolder}
-          folderName={'all notes'}
-          folderID={'all notes'}
-          edit={false}
-          open={this.state.open.indexOf('all notes')}
-          dragStart={this.onDragStart}
-          handleClick={this.handleClick}
-        />
-        <Folder
-          data={this.props.archive}
-          openFolder={this.openFolder}
-          folderName={'archive'}
-          folderID={'archive'}
-          edit={false}
-          open={this.state.open.indexOf('archive')}
-          onDragOver={this.onDragOver}
-          dragStart={this.onDragStart}
-          handleClick={this.handleClick}
-          archive={this.archiveNote}
-        />
+          {Object.values(this.props.getFolders()).map(
+            (subArray: Array<Note>, index: number) => {
+              return (
+                <View key={subArray[0].key}>
+                  <Notes
+                    data={subArray}
+                    folderID={subArray[0].key}
+                    folderName={subArray[0].folder && subArray[0].folder}
+                    open={this.state.open === subArray[0].key}
+                    dragStart={this.onDragStart}
+                    handleClick={this.handleClick}
+                  />
+                </View>
+              )
+            },
+          )}
+          <Notes
+            data={this.props.notes}
+            folderID={'all notes'}
+            folderName={'all notes'}
+            open={this.state.open === 'all notes'}
+            dragStart={this.onDragStart}
+            handleClick={this.handleClick}
+          />
+          <Notes
+            data={this.props.archive}
+            folderName={'archive'}
+            folderID={'archive'}
+            open={this.state.open === 'archive'}
+            dragStart={this.onDragStart}
+            handleClick={this.handleClick}
+          />
+        </SidebarContainer>
       </Container>
     )
   }

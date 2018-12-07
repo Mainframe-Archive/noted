@@ -24,7 +24,7 @@ type Props = {
 const Container = screenSize(styled.View`
   width: 300px;
   height: 100%;
-  background-color: ${props => props.theme.blue};
+  background-color: #a6a6a6;
   padding: ${props => props.theme.spacing};
   ${props =>
     props.screenWidth <= 900 &&

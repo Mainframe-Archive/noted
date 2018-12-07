@@ -1,24 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
+import { convertFromRaw } from 'draft-js'
 import { type Note } from '../types'
-
-const Text = styled.Text`
-  font-size: 14px;
-  color: ${props => props.theme.white};
-  margin-left: 10px;
-  margin-bottom: 5px;
-  cursor: pointer;
-  display: block;
-`
 
 const FolderContainer = styled.View`
   display: inline;
-`
-
-const CollapseFolder = styled.Text`
-  color: ${props => props.theme.white};
-  font-weight: bold;
-  cursor: pointer;
 `
 
 const FolderText = styled.TextInput`
@@ -29,20 +15,11 @@ const FolderText = styled.TextInput`
   cursor: pointer;
 `
 
-const FolderFlatList = styled.FlatList`
-  display: block;
-  ${props =>
-    props.open !== -1 &&
-    css`
-      display: none;
-    `}
-`
 type Props = {
   data: Array<Note>,
   folderID: string,
   folderName: string,
   folderDraggable: boolean,
-  open: number,
   edit: boolean,
   handleClick: Note => void,
   onDragOver?: Event => void,
@@ -55,14 +32,11 @@ type Props = {
 const Folder = (props: Props) => {
   return (
     <FolderContainer>
-      <CollapseFolder onClick={() => props.openFolder(props.folderID)}>
-        {props.open === -1 ? 'v ' : '> '}
-      </CollapseFolder>
       <FolderText
         draggable={props.folderDraggable}
         editable={props.edit}
         defaultValue={props.folderName}
-        onClick={() => props.handleClick()}
+        onClick={() => props.handleClick(props.folderID)}
         onDragOver={props.onDragOver && (e => props.onDragOver(e))}
         onDrop={
           props.archive
@@ -71,22 +45,6 @@ const Folder = (props: Props) => {
         }
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
-      />
-      <FolderFlatList
-        open={props.open}
-        data={props.data}
-        renderItem={({ item }) => {
-          return (
-            item.invisible !== true && (
-              <Text
-                draggable
-                onDragStart={e => props.dragStart(e, item.key)}
-                onClick={() => props.handleClick(item)}>
-                {item.title ? item.title : 'untitled'}
-              </Text>
-            )
-          )
-        }}
       />
     </FolderContainer>
   )

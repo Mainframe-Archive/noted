@@ -3,7 +3,7 @@ import { FlatList } from 'react-native-web'
 import styled from 'styled-components/native'
 
 const SuggestionText = styled.Text`
-  color: ${props => props.theme.blue};
+  color: #a6a6a6;
   font-size: 14px;
   padding: 5px;
   cursor: pointer;
