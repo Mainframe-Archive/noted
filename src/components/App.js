@@ -29,6 +29,7 @@ class App extends Component<{}, State> {
     note: {
       key: uuidv4(),
       date: new Date().getTime(),
+      folder: '',
     },
     notes: _.toArray(NOTES),
     // mf: new MainframeSDK(),
@@ -57,22 +58,13 @@ class App extends Component<{}, State> {
     return note ? note : null
   }
 
-  updateActiveNote = (note: Note, save?: boolean): void => {
+  updateActiveNote = (note: Note): void => {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
       copy.splice(copy.length, 0, note)
     } else {
       copy.splice(index, 1, note)
-    }
-
-    // I think of this as a 'soft save'
-    // i.e. when we change folder I dont call save
-    // because I don't want the date to change
-    // and also because a call to update + save is
-    // sometimes necessary & messes with state.
-    if (save) {
-      setNotes(copy)
     }
 
     this.setState({
@@ -96,6 +88,22 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
+  updateAndSave = (note: Note): void => {
+    const copy = this.state.notes.slice()
+    const index = _.findIndex(copy, { key: note.key })
+    if (index === -1) {
+      copy.splice(copy.length, 0, note)
+    } else {
+      copy.splice(index, 1, note)
+    }
+    setNotes(copy)
+
+    this.setState({
+      note: note,
+      notes: copy,
+    })
+  }
+
   deleteNote = (note?: Note) => {
     console.log(
       'please note: delete not fully functional yet until integration with web3',
@@ -111,6 +119,7 @@ class App extends Component<{}, State> {
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
+        folder: '',
       },
       notes: copy,
     })
@@ -133,21 +142,21 @@ class App extends Component<{}, State> {
     this.setState({ initial: false })
   }
 
-  updateFolderNames = (newFolder: string, oldFolder: string) => {
+  changeFolderNames = (newFolder: string, oldFolder: string) => {
     const copy = this.state.notes.slice()
-    this.state.notes.map(note => {
+    this.state.notes.forEach(note => {
       if (note.folder === oldFolder) {
         note.folder = newFolder
         const index = _.findIndex(copy, { key: note.key })
         copy.splice(index, 1, note)
       }
-      return copy
     })
     this.setState({
       notes: copy,
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
+        folder: '',
       },
     })
     setNotes(copy)
@@ -155,15 +164,14 @@ class App extends Component<{}, State> {
 
   getFolderArray = (): Array<any> => {
     const folders = []
-    this.state.notes.map(note => {
-      if (note.folder !== undefined) {
+    this.state.notes.forEach(note => {
+      if (note.folder !== '') {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]
         } else {
           folders[note.folder] = [note]
         }
       }
-      return folders
     })
     return folders
   }
@@ -175,11 +183,12 @@ class App extends Component<{}, State> {
           value={{
             ...this.state,
             getFolders: this.getFolderArray,
-            updateFolders: this.updateFolderNames,
+            updateFolders: this.changeFolderNames,
             updateArchive: this.archiveNote,
             archive: this.state.archive,
             key: this.state.note.key,
             update: this.updateActiveNote,
+            updateAndSave: this.updateAndSave,
             save: this.saveNote,
             delete: this.deleteNote,
             getNote: this.getNoteFromKey,

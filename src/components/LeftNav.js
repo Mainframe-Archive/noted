@@ -14,6 +14,7 @@ import SearchBar from './Search'
 type Props = {
   notes: Array<Note>,
   update: (Note, ?boolean) => void,
+  updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
   updateFolders: (string, string) => void,
@@ -115,7 +116,13 @@ class LeftNav extends Component<Props, State> {
     }
   }
 
-  getFromArchive = (key: string) => {
+  handleDoubleClick = () => {
+    this.setState({
+      edit: true,
+    })
+  }
+
+  findInArchive = (key: string) => {
     const note = this.props.archive.find(note => note.key === key)
     return note
   }
@@ -142,12 +149,12 @@ class LeftNav extends Component<Props, State> {
       {},
       this.props.getNote(key)
         ? this.props.getNote(key)
-        : this.getFromArchive(key),
+        : this.findInArchive(key),
     )
     !this.props.getNote(key) && this.props.updateArchive(note)
 
     note.folder = folder
-    this.props.update(note, true)
+    this.props.updateAndSave(note)
   }
 
   archiveNote = e => {
@@ -218,6 +225,7 @@ class LeftNav extends Component<Props, State> {
               this.props.update({
                 key: uuidv4(),
                 date: new Date().getTime(),
+                folder: '',
               })
             }
             title="Add new note"
