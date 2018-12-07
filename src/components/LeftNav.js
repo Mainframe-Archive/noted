@@ -164,18 +164,15 @@ class LeftNav extends Component<Props, State> {
                   data={subArray}
                   openFolder={this.openFolder}
                   folderID={folderDataFromNote.key}
-                  folderName={
-                    folderDataFromNote.folder && folderDataFromNote.folder
-                  }
+                  folderName={folderDataFromNote.folder}
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                   onChangeText={this.updateFolder}
                   onSubmitEditing={() => {
-                    folderDataFromNote.folder &&
-                      this.props.updateFolders(
-                        this.state.newFolder,
-                        folderDataFromNote.folder,
-                      )
+                    this.props.updateFolders(
+                      this.state.newFolder,
+                      folderDataFromNote.folder,
+                    )
                     this.setState({ edit: false })
                   }}
                   isBeingEdited={this.state.edit}

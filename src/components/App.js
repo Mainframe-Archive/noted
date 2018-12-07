@@ -66,8 +66,13 @@ class App extends Component<{}, State> {
       copy.splice(index, 1, note)
     }
 
+    const noteWithFolder = Object.assign({}, note)
+    if (note.folder === undefined) {
+      noteWithFolder.folder = ''
+    }
+
     this.setState({
-      note: note,
+      note: noteWithFolder !== note ? noteWithFolder : note,
       notes: copy,
     })
   }
@@ -162,7 +167,8 @@ class App extends Component<{}, State> {
   getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
-      if (note.folder !== undefined) {
+      console.log(note.folder)
+      if (note.folder !== '') {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]
         } else {
