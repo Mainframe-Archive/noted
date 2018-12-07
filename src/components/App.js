@@ -29,6 +29,7 @@ class App extends Component<{}, State> {
     note: {
       key: uuidv4(),
       date: new Date().getTime(),
+      folder: '',
     },
     notes: _.toArray(NOTES),
     // mf: new MainframeSDK(),
@@ -66,13 +67,8 @@ class App extends Component<{}, State> {
       copy.splice(index, 1, note)
     }
 
-    const noteWithFolder = Object.assign({}, note)
-    if (note.folder === undefined) {
-      noteWithFolder.folder = ''
-    }
-
     this.setState({
-      note: noteWithFolder !== note ? noteWithFolder : note,
+      note: note,
       notes: copy,
     })
   }
@@ -123,6 +119,7 @@ class App extends Component<{}, State> {
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
+        folder: '',
       },
       notes: copy,
     })
@@ -159,6 +156,7 @@ class App extends Component<{}, State> {
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
+        folder: '',
       },
     })
     setNotes(copy)
@@ -167,7 +165,6 @@ class App extends Component<{}, State> {
   getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
-      console.log(note.folder)
       if (note.folder !== '') {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]

@@ -148,6 +148,7 @@ class LeftNav extends Component<Props, State> {
               this.props.update({
                 key: uuidv4(),
                 date: new Date().getTime(),
+                folder: '',
               })
             }
             title="Add new note"
