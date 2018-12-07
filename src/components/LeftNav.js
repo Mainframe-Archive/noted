@@ -13,6 +13,7 @@ import SearchBar from './Search'
 type Props = {
   notes: Array<Note>,
   update: (Note, ?boolean) => void,
+  updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
   updateFolders: (string, string) => void,
@@ -173,7 +174,7 @@ class LeftNav extends Component<Props, State> {
                     folderDataFromNote.folder &&
                       this.props.updateFolders(
                         this.state.newFolder,
-                        subArray[0].folder,
+                        folderDataFromNote.folder,
                       )
                     this.setState({ edit: false })
                   }}
