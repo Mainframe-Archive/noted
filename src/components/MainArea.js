@@ -19,6 +19,7 @@ import screenSize from '../hocs/ScreenSize'
 
 type State = {
   editorState: EditorState,
+  autosaved: boolean,
 }
 
 type Props = {
@@ -46,6 +47,9 @@ const Title = styled.TextInput`
   padding-bottom: ${props => props.theme.spacing};
   color: ${props => props.theme.darkGray};
 `
+const Text = styled.Text`
+  font-size: 14px;
+`
 
 const ButtonContainer = styled.View`
   max-width: 130px;
@@ -63,12 +67,29 @@ const DeleteButton = styled.Button`
 `
 
 class MainArea extends Component<Props, State> {
+  interval: IntervalID
+
   state: State = {
+    autosaved: false,
     editorState: EditorState.createWithContent(
       this.props.note.content
         ? convertFromRaw(JSON.parse(this.props.note.content))
         : ContentState.createFromText('start typing...'),
     ),
+  }
+
+  componentDidMount() {
+    this.interval = setInterval(() => {
+      if (this.props.note.content || this.props.note.title) {
+        this.setState({ autosaved: true })
+        this.props.save()
+      }
+    }, 10000)
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval)
+    this.setState({ autosaved: false })
   }
 
   onEditorChange = editorState => {
@@ -90,6 +111,7 @@ class MainArea extends Component<Props, State> {
   }
 
   render() {
+    const d = new Date()
     return (
       <Container>
         <Title
@@ -100,6 +122,15 @@ class MainArea extends Component<Props, State> {
           <SaveButton onPress={this.props.save} title="Save" />
           <DeleteButton onPress={this.props.delete} title="Delete" />
         </ButtonContainer>
+        <Text>
+          {this.state.autosaved &&
+            'auto saved at: ' +
+              d.getHours() +
+              ':' +
+              d.getMinutes() +
+              ':' +
+              d.getSeconds()}
+        </Text>
         <EditorContainer>
           <Editor
             editorState={this.state.editorState}
