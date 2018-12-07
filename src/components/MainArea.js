@@ -94,7 +94,14 @@ class MainArea extends Component<Props, State> {
           />
         </EditorContainer>
         <ButtonContainer>
-          <Button onPress={this.props.save} title="Save" titleColor="white" backgroundColor="red" borderColor="red" />
+          <Button 
+            onPress={this.props.save} 
+            title="Save" 
+            titleColor="white" 
+            backgroundColor="#DA1157" 
+            borderColor="#DA1157" 
+            borderHoverColor="#DA1157"
+            backgroundHoverColor="white"/>
           <Button onPress={this.props.delete} title="Delete" />
         </ButtonContainer>
       </Container>

@@ -89,9 +89,12 @@ class LeftNav extends Component<Props> {
             })
           }
           title="Add new note"
-          backgroundColor="blue"
-          borderColor="blue"
+          borderColor="#00A7E7"
+          borderHoverColor="#00A7E7"
+          backgroundColor="#00A7E7"
+          backgroundHoverColor="white"
           titleColor="white"
+          titleHoverColor="#00A7E7"
         />
       </Container>
     )
