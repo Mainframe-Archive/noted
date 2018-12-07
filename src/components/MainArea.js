@@ -32,7 +32,7 @@ type Props = {
 
 const Container = screenSize(styled.View`
   flex: 1;
-  background-color: ${props => props.theme.gray};
+  background-color: ${props => props.theme.white};
   padding: ${props => props.theme.spacing};
 `)
 

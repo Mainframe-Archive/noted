@@ -1,6 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components/native'
-import { convertFromRaw } from 'draft-js'
+import styled from 'styled-components/native'
 import { type Note } from '../types'
 
 const FolderContainer = styled.View`
@@ -9,7 +8,7 @@ const FolderContainer = styled.View`
 
 const FolderText = styled.TextInput`
   font-size: 15px;
-  color: ${props => props.theme.white};
+  color: ${props => props.theme.black};
   margin-bottom: 5px;
   margin-top: 10px;
   cursor: pointer;

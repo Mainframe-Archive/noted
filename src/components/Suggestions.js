@@ -12,7 +12,6 @@ const SuggestionText = styled.Text`
 const Container = styled.View`
   background-color: #fff;
   border-radius: 5px;
-  opacity: 0.7;
 `
 
 const Suggestions = props => {

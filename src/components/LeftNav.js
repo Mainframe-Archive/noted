@@ -32,7 +32,7 @@ type State = {
 const Container = screenSize(styled.View`
   width: 500px;
   height: 100%;
-  background-color: #a6a6a6;
+  background-color: #f9f9f9;
   padding: ${props => props.theme.spacing};
   display: flex;
   flex-direction: row;
@@ -45,7 +45,7 @@ const Container = screenSize(styled.View`
 
 const SidebarContainer = screenSize(styled.View`
   width: 200px;
-  background-color: #a6a6a6;
+  background-color: #f9f9f9;
   padding: ${props => props.theme.spacing};
   ${props =>
     props.screenWidth <= 900 &&
@@ -56,7 +56,7 @@ const SidebarContainer = screenSize(styled.View`
 
 const TitleText = styled.Text`
   font-size: 18px;
-  color: ${props => props.theme.white};
+  color: ${props => props.theme.black};
   margin-bottom: 20px;
 `
 
