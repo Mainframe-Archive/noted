@@ -3,6 +3,7 @@
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
+import { Button, TextField } from '@morpheus-ui/core'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
@@ -148,7 +149,7 @@ class LeftNav extends Component<Props, State> {
       <Container>
         <SearchContainer>
           <SearchBar data={this.props.notes} />
-          <NewButton
+          <Button
             onPress={() =>
               this.props.update({
                 key: uuidv4(),
@@ -156,10 +157,11 @@ class LeftNav extends Component<Props, State> {
               })
             }
             title="Add new note"
+            trace={true}
           />
         </SearchContainer>
         <TitleText>Your Notes</TitleText>
-        <NewButton title="Add a new folder" onPress={this.addFolder} />
+        <Button title="Add a new folder" onPress={this.addFolder} />
         {Object.values(this.props.getFolders()).map(
           (subArray: Array<Note>, index: number) => {
             return (

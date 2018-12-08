@@ -1,10 +1,12 @@
 // @flow
 
 import React, { Component, type Node } from 'react'
-import { ThemeProvider } from 'styled-components/native'
+import { ThemeProvider as NativeThemeProvider } from 'styled-components/native'
+import { ThemeProvider as ComponentsThemeProvider } from '@morpheus-ui/core'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 import MainframeSDK from '@mainframe/sdk'
+import '@morpheus-ui/fonts'
 
 import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
 import { type Note } from '../types'
@@ -170,27 +172,29 @@ class App extends Component<{}, State> {
 
   render(): Node {
     return (
-      <ThemeProvider theme={theme}>
-        <Provider
-          value={{
-            ...this.state,
-            getFolders: this.getFolderArray,
-            updateFolders: this.updateFolderNames,
-            updateArchive: this.archiveNote,
-            archive: this.state.archive,
-            key: this.state.note.key,
-            update: this.updateActiveNote,
-            save: this.saveNote,
-            delete: this.deleteNote,
-            getNote: this.getNoteFromKey,
-          }}>
-          <Home
-            initial={this.state.initial}
-            apiVersion={this.state.apiVersion}
-            setInitialFalse={this.setInitialFalse}
-          />
-        </Provider>
-      </ThemeProvider>
+      <NativeThemeProvider theme={theme.native}>
+        <ComponentsThemeProvider theme={theme.components} >
+          <Provider
+            value={{
+              ...this.state,
+              getFolders: this.getFolderArray,
+              updateFolders: this.updateFolderNames,
+              updateArchive: this.archiveNote,
+              archive: this.state.archive,
+              key: this.state.note.key,
+              update: this.updateActiveNote,
+              save: this.saveNote,
+              delete: this.deleteNote,
+              getNote: this.getNoteFromKey,
+            }}>
+            <Home
+              initial={this.state.initial}
+              apiVersion={this.state.apiVersion}
+              setInitialFalse={this.setInitialFalse}
+            />
+          </Provider>
+        </ComponentsThemeProvider>
+      </NativeThemeProvider>
     )
   }
 }
