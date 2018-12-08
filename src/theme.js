@@ -13,7 +13,12 @@ export default {
     Button: {
       default: {
         backgroundColor: colors.lightBlue,
+        borderColor: colors.lightBlue,
         titleColor: colors.white,
+
+        backgroundHoverColor: colors.white,
+        borderHoverColor: colors.white,
+        titleHoverColor: colors.darkGray,
       }
     },
   },
