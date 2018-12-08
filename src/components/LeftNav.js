@@ -14,6 +14,7 @@ import SearchBar from './Search'
 type Props = {
   notes: Array<Note>,
   update: (Note, ?boolean) => void,
+  updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
   updateFolders: (string, string) => void,
@@ -88,22 +89,16 @@ class LeftNav extends Component<Props, State> {
   }
 
   handleClick = item => {
-    if (item) {
-      this.props.update(item)
-    } else {
-      this.count++
-      this.timeout = setTimeout(() => {
-        if (this.count === 2) {
-          this.setState({
-            edit: true,
-          })
-        }
-        this.count = 0
-      }, 250)
-    }
+    this.props.update(item)
   }
 
-  getFromArchive = (key: string) => {
+  handleDoubleClick = () => {
+    this.setState({
+      edit: true,
+    })
+  }
+
+  findInArchive = (key: string) => {
     const note = this.props.archive.find(note => note.key === key)
     return note
   }
@@ -130,12 +125,12 @@ class LeftNav extends Component<Props, State> {
       {},
       this.props.getNote(key)
         ? this.props.getNote(key)
-        : this.getFromArchive(key),
+        : this.findInArchive(key),
     )
     !this.props.getNote(key) && this.props.updateArchive(note)
 
     note.folder = folder
-    this.props.update(note, true)
+    this.props.updateAndSave(note)
   }
 
   archiveNote = e => {
@@ -154,6 +149,7 @@ class LeftNav extends Component<Props, State> {
               this.props.update({
                 key: uuidv4(),
                 date: new Date().getTime(),
+                folder: '',
               })
             }
             title="Add new note"
@@ -164,28 +160,33 @@ class LeftNav extends Component<Props, State> {
         <Button title="Add a new folder" onPress={this.addFolder} />
         {Object.values(this.props.getFolders()).map(
           (subArray: Array<Note>, index: number) => {
+            const folderDataFromNote = subArray[0]
             return (
-              <View key={subArray[0].key}>
+              <View key={folderDataFromNote.key}>
                 <Folder
                   data={subArray}
                   openFolder={this.openFolder}
-                  folderID={subArray[0].key}
-                  folderName={subArray[0].folder && subArray[0].folder}
+                  folderID={folderDataFromNote.key}
+                  folderName={folderDataFromNote.folder}
                   onDragOver={this.onDragOver}
                   onDrop={this.onDrop}
                   onChangeText={this.updateFolder}
                   onSubmitEditing={() => {
-                    subArray[0].folder &&
-                      this.props.updateFolders(
-                        this.state.newFolder,
-                        subArray[0].folder,
-                      )
+                    this.props.updateFolders(
+                      this.state.newFolder,
+                      folderDataFromNote.folder,
+                    )
                     this.setState({ edit: false })
                   }}
-                  edit={this.state.edit}
-                  open={this.state.open.indexOf(subArray[0].key)}
+                  isBeingEdited={this.state.edit}
+                  isOpen={
+                    this.state.open.indexOf(folderDataFromNote.key) === -1
+                      ? false
+                      : true
+                  }
                   dragStart={this.onDragStart}
                   handleClick={this.handleClick}
+                  handleDoubleClick={this.handleDoubleClick}
                 />
               </View>
             )
@@ -196,21 +197,23 @@ class LeftNav extends Component<Props, State> {
           openFolder={this.openFolder}
           folderName={'all notes'}
           folderID={'all notes'}
-          edit={false}
-          open={this.state.open.indexOf('all notes')}
+          isBeingEdited={false}
+          isOpen={this.state.open.indexOf('all notes') === -1 ? false : true}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
+          handleDoubleClick={this.handleDoubleClick}
         />
         <Folder
           data={this.props.archive}
           openFolder={this.openFolder}
           folderName={'archive'}
           folderID={'archive'}
-          edit={false}
-          open={this.state.open.indexOf('archive')}
+          isBeingEdited={false}
+          isOpen={this.state.open.indexOf('archive') === -1 ? false : true}
           onDragOver={this.onDragOver}
           dragStart={this.onDragStart}
           handleClick={this.handleClick}
+          handleDoubleClick={this.handleDoubleClick}
           archive={this.archiveNote}
         />
       </Container>

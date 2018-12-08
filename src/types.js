@@ -6,6 +6,6 @@ export type Note = {
   title?: string,
   content?: string,
   date?: number,
-  folder?: string,
+  folder: string,
   invisible?: boolean,
 }
