@@ -8,8 +8,8 @@ const FolderContainer = styled.View`
 `
 
 const FolderText = styled.TextInput`
+  color: ${props => props.theme.mediumGray};
   font-size: 15px;
-  color: ${props => props.theme.black};
   margin-bottom: 5px;
   margin-top: 10px;
   cursor: pointer;
@@ -19,6 +19,8 @@ const FolderText = styled.TextInput`
     css`
       border-left: 6px solid ${props => props.theme.yellow};
       margin-left: -6px;
+      font-weight: bold;
+      color: ${props => props.theme.black};
     `}
 `
 

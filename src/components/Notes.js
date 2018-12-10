@@ -10,16 +10,16 @@ const NoteContainer = styled.View`
       background-color: ${props => props.theme.lightYellow};
     `}
   padding: 10px 0;
-  border-bottom: 1px solid ${props => props.theme.mediumGray};
+  border-bottom: 1px solid #e3e3e3;
   cursor: pointer;
 `
 const FolderFlatList = styled.FlatList`
   display: block;
-  padding: ${props => props.theme.spacing} 0px;
+  padding: ${props => props.theme.spacing};
 `
 const Text = styled.Text`
   font-size: 14px;
-  color: ${props => props.theme.black};
+  color: ${props => props.theme.darkGray};
   font-weight: bold;
   margin-left: 10px;
   margin-bottom: 5px;
@@ -28,7 +28,7 @@ const Text = styled.Text`
 `
 const NotePreview = styled.Text`
   font-size: 12px;
-  color: ${props => props.theme.black};
+  color: ${props => props.theme.darkGray};
   margin-left: 10px;
   margin-bottom: 5px;
 `
@@ -76,6 +76,7 @@ const Notes = (props: Props) => {
                 <NoteDate>
                   {date.toString().replace(/\sGMT-\d{4,}\s\(\w{3,}\)/gi, '')}
                 </NoteDate>
+                <NotePreview>{item.folder}</NotePreview>
               </NoteContainer>
             )
           )

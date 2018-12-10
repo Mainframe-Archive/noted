@@ -216,16 +216,13 @@ class LeftNav extends Component<Props, State> {
               />
             </View>
             <NewButtonContainer>
-              <Button title="Add a new folder" onPress={this.addFolder} />
+              <Button title="NEW FOLDER" onPress={this.addFolder} />
             </NewButtonContainer>
           </SidebarContainer>
         )}
         <SidebarContainer showFolders={this.props.showFolders}>
           <NewButtonContainer>
-            <Button
-              onPress={this.props.setFoldersVisible}
-              title="Show Folders"
-            />
+            <Button onPress={this.props.setFoldersVisible} title="FOLDERS" />
             <Button
               onPress={() =>
                 this.props.update({
@@ -234,7 +231,7 @@ class LeftNav extends Component<Props, State> {
                   folder: '',
                 })
               }
-              title="Add new note"
+              title="NEW NOTE"
             />
           </NewButtonContainer>
           <SearchContainer>
