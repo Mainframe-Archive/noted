@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react'
 import styled from 'styled-components/native'
+import { Button } from '@morpheus-ui/core'
 import { Editor } from 'react-draft-wysiwyg'
 import {
   EditorState,
@@ -58,14 +59,6 @@ const ButtonContainer = styled.View`
   justify-content: space-between;
 `
 
-const SaveButton = styled.Button`
-  flex: 1;
-`
-
-const DeleteButton = styled.Button`
-  flex: 1;
-`
-
 class MainArea extends Component<Props, State> {
   interval: IntervalID
 
@@ -115,8 +108,8 @@ class MainArea extends Component<Props, State> {
     return (
       <Container>
         <ButtonContainer>
-          <SaveButton onPress={this.props.save} title="Save" />
-          <DeleteButton onPress={this.props.delete} title="Delete" />
+          <Button onPress={this.props.save} title="Save" />
+          <Button onPress={this.props.delete} title="Delete" />
         </ButtonContainer>
         <Text>
           {this.state.autosaved &&

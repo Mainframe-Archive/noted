@@ -2,7 +2,8 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { View, Animated } from 'react-native-web'
+import { View } from 'react-native-web'
+import { Button } from '@morpheus-ui/core'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
@@ -77,8 +78,8 @@ const SearchContainer = styled.View`
   padding: ${props => props.theme.spacing};
 `
 
-const NewButton = styled.Button`
-  flex: 1;
+const NewButtonContainer = styled.View`
+  margin-bottom: 100px;
 `
 
 class LeftNav extends Component<Props, State> {
@@ -213,18 +214,24 @@ class LeftNav extends Component<Props, State> {
                 handleDoubleClick={this.handleDoubleClick}
               />
             </View>
-            <NewButton title="Add a new folder" onPress={this.addFolder} />
+            <NewButtonContainer>
+            <Button title="Add a new folder" onPress={this.addFolder} />
+            </NewButtonContainer>
+
           </SidebarContainer>
         )}
         <SidebarContainer showFolders={this.props.showFolders}>
-          <NewButton
+        <NewButtonContainer>
+          <Button
             onPress={this.props.setFoldersVisible}
             title="Show Folders"
           />
+          </NewButtonContainer>
           <SearchContainer>
             <SearchBar data={this.props.notes} />
           </SearchContainer>
-          <NewButton
+          <NewButtonContainer>
+          <Button
             onPress={() =>
               this.props.update({
                 key: uuidv4(),
@@ -234,6 +241,7 @@ class LeftNav extends Component<Props, State> {
             }
             title="Add new note"
           />
+          </NewButtonContainer>
           {Object.values(this.props.getFolders()).map(
             (subArray: Array<Note>, index: number) => {
               return (
