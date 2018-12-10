@@ -39,6 +39,7 @@ const Search = styled.TextInput`
   font-size: 12px;
   border-radius: 4px;
   padding: 5px 10px;
+  border: 1px solid ${props => props.theme.blue};
 `
 
 class SearchBar extends Component<Props, State> {

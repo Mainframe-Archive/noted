@@ -1,10 +1,15 @@
 import React from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { convertFromRaw } from 'draft-js'
 import { type Note } from '../types'
 
 const NoteContainer = styled.View`
-  /* background-color: #ffffcc; */
+  border-radius: 5px;
+  ${props =>
+    props.isOpen &&
+    css`
+      background-color: #ffd953;
+    `}
   padding: 10px 0;
   cursor: pointer;
 `
@@ -29,23 +34,29 @@ const NotePreview = styled.Text`
 
 type Props = {
   data: Array<Note>,
-  folderID: string,
   folderName: string,
-  open: boolean,
+  activeNote: Note,
+  isOpen: boolean,
   handleClick: Note => void,
   dragStart: (Event, string) => void,
 }
 
 const Notes = (props: Props) => {
+  console.log(props.activeNote.folder)
+  console.log(props.folderName)
+  console.log(props.isOpen)
   return (
-    props.open && (
+    (props.activeNote.folder === props.folderName || props.isOpen) && (
       <FolderFlatList
-        open={props.open}
+        isOpen={props.isOpen}
         data={props.data}
         renderItem={({ item }) => {
           return (
             item.invisible !== true && (
-              <NoteContainer onClick={() => props.handleClick(item)}>
+              <NoteContainer
+                //u left off here
+                // isOpen={props.activeNote.key === }
+                onClick={() => props.handleClick(item)}>
                 <Text draggable onDragStart={e => props.dragStart(e, item.key)}>
                   {item.title ? item.title : 'untitled'}
                 </Text>
