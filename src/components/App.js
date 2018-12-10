@@ -58,7 +58,7 @@ class App extends Component<{}, State> {
     return note ? note : null
   }
 
-  updateActiveNote = (note: Note, onceFound?: Array<Note>): void => {
+  updateActiveNote = (note: Note, onceFound?: (Array<Note>) => void): void => {
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
@@ -67,7 +67,7 @@ class App extends Component<{}, State> {
       copy.splice(index, 1, note)
     }
 
-    onceFound(copy)
+    onceFound && onceFound(copy)
 
     this.setState({
       note: note,
