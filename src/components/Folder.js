@@ -5,12 +5,6 @@ import { type Note } from '../types'
 const FolderContainer = styled.View`
   display: inline;
   padding: 0 5px;
-  border-radius: 5px;
-  ${props =>
-    props.isOpen &&
-    css`
-      background-color: #ffd953;
-    `}
 `
 
 const FolderText = styled.TextInput`
@@ -19,6 +13,12 @@ const FolderText = styled.TextInput`
   margin-bottom: 5px;
   margin-top: 10px;
   cursor: pointer;
+  padding-left: 10px;
+  ${props =>
+    props.isopen &&
+    css`
+      border-left: 6px solid #ffd953;
+    `}
 `
 
 type Props = {
@@ -37,8 +37,9 @@ type Props = {
 
 const Folder = (props: Props) => {
   return (
-    <FolderContainer isOpen={props.isOpen}>
+    <FolderContainer>
       <FolderText
+        isopen={props.isOpen}
         draggable={props.folderDraggable}
         editable={props.isBeingEdited}
         defaultValue={props.folderName}

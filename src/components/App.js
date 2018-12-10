@@ -22,6 +22,7 @@ type State = {
   apiVersion: string,
   initial: boolean,
   archive: Array<Note>,
+  activeFolder: string,
 }
 
 class App extends Component<{}, State> {
@@ -36,6 +37,8 @@ class App extends Component<{}, State> {
     apiVersion: '',
     archive: [],
     initial: false,
+    activeFolder: '',
+    showFolders: false,
   }
 
   async componentDidMount() {
@@ -176,6 +179,20 @@ class App extends Component<{}, State> {
     return folders
   }
 
+  setActiveFolder = folderId => {
+    if (folderId) {
+      this.setState({
+        activeFolder: folderId,
+      })
+    }
+  }
+
+  setShowFolders = () => {
+    this.setState({
+      showFolders: true,
+    })
+  }
+
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
@@ -184,6 +201,8 @@ class App extends Component<{}, State> {
             ...this.state,
             getFolders: this.getFolderArray,
             updateFolders: this.changeFolderNames,
+            setActiveFolder: this.setActiveFolder,
+            setShowFolders: this.setShowFolders,
             updateArchive: this.archiveNote,
             archive: this.state.archive,
             key: this.state.note.key,

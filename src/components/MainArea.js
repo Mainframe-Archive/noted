@@ -114,10 +114,6 @@ class MainArea extends Component<Props, State> {
     const d = new Date()
     return (
       <Container>
-        <Title
-          value={this.props.note.title ? this.props.note.title : 'untitled'}
-          onChangeText={this.onTitleChange}
-        />
         <ButtonContainer>
           <SaveButton onPress={this.props.save} title="Save" />
           <DeleteButton onPress={this.props.delete} title="Delete" />
@@ -132,6 +128,10 @@ class MainArea extends Component<Props, State> {
               d.getSeconds()}
         </Text>
         <EditorContainer>
+          <Title
+            value={this.props.note.title ? this.props.note.title : 'untitled'}
+            onChangeText={this.onTitleChange}
+          />
           <Editor
             editorState={this.state.editorState}
             onEditorStateChange={this.onEditorChange}

@@ -4,17 +4,18 @@ import { convertFromRaw } from 'draft-js'
 import { type Note } from '../types'
 
 const NoteContainer = styled.View`
-  border-radius: 5px;
   ${props =>
     props.isOpen &&
     css`
-      background-color: #ffd953;
+      background-color: #fcecb0;
     `}
   padding: 10px 0;
+  border-bottom: 1px solid #d8d8d8;
   cursor: pointer;
 `
 const FolderFlatList = styled.FlatList`
   display: block;
+  padding: ${props => props.theme.spacing} 0px;
 `
 const Text = styled.Text`
   font-size: 14px;
@@ -42,11 +43,8 @@ type Props = {
 }
 
 const Notes = (props: Props) => {
-  console.log(props.activeNote.folder)
-  console.log(props.folderName)
-  console.log(props.isOpen)
   return (
-    (props.activeNote.folder === props.folderName || props.isOpen) && (
+    props.isOpen && (
       <FolderFlatList
         isOpen={props.isOpen}
         data={props.data}
@@ -54,8 +52,7 @@ const Notes = (props: Props) => {
           return (
             item.invisible !== true && (
               <NoteContainer
-                //u left off here
-                // isOpen={props.activeNote.key === }
+                isOpen={props.activeNote.key === item.key}
                 onClick={() => props.handleClick(item)}>
                 <Text draggable onDragStart={e => props.dragStart(e, item.key)}>
                   {item.title ? item.title : 'untitled'}
