@@ -92,19 +92,6 @@ class App extends Component<{}, State> {
 
   updateAndSave = (note: Note): void => {
     this.updateActiveNote(note, setNotes)
-    // const copy = this.state.notes.slice()
-    // const index = _.findIndex(copy, { key: note.key })
-    // if (index === -1) {
-    //   copy.splice(copy.length, 0, note)
-    // } else {
-    //   copy.splice(index, 1, note)
-    // }
-    // setNotes(copy)
-    //
-    // this.setState({
-    //   note: note,
-    //   notes: copy,
-    // })
   }
 
   deleteNote = (note?: Note) => {
