@@ -33,7 +33,7 @@ type State = {
 const Container = screenSize(styled.View`
   width: 250px;
   height: 100%;
-  background-color: #f9f9f9;
+  background-color: ${props => props.theme.gray};
   display: flex;
   flex-direction: row;
   ${props =>
@@ -50,7 +50,7 @@ const Container = screenSize(styled.View`
 
 const SidebarContainer = screenSize(styled.View`
   width: 100%;
-  background-color: #f9f9f9;
+  background-color: ${props => props.theme.gray};
   ${props =>
     props.screenWidth <= 900 &&
     css`
@@ -79,7 +79,9 @@ const SearchContainer = styled.View`
 `
 
 const NewButtonContainer = styled.View`
-  margin-bottom: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 `
 
 class LeftNav extends Component<Props, State> {
@@ -96,7 +98,6 @@ class LeftNav extends Component<Props, State> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
-    fadeAnim: new Animated.Value(0), // Initial value for opacity: 0
   }
 
   addFolder = () => {
@@ -215,33 +216,30 @@ class LeftNav extends Component<Props, State> {
               />
             </View>
             <NewButtonContainer>
-            <Button title="Add a new folder" onPress={this.addFolder} />
+              <Button title="Add a new folder" onPress={this.addFolder} />
             </NewButtonContainer>
-
           </SidebarContainer>
         )}
         <SidebarContainer showFolders={this.props.showFolders}>
-        <NewButtonContainer>
-          <Button
-            onPress={this.props.setFoldersVisible}
-            title="Show Folders"
-          />
+          <NewButtonContainer>
+            <Button
+              onPress={this.props.setFoldersVisible}
+              title="Show Folders"
+            />
+            <Button
+              onPress={() =>
+                this.props.update({
+                  key: uuidv4(),
+                  date: new Date().getTime(),
+                  folder: '',
+                })
+              }
+              title="Add new note"
+            />
           </NewButtonContainer>
           <SearchContainer>
             <SearchBar data={this.props.notes} />
           </SearchContainer>
-          <NewButtonContainer>
-          <Button
-            onPress={() =>
-              this.props.update({
-                key: uuidv4(),
-                date: new Date().getTime(),
-                folder: '',
-              })
-            }
-            title="Add new note"
-          />
-          </NewButtonContainer>
           {Object.values(this.props.getFolders()).map(
             (subArray: Array<Note>, index: number) => {
               return (

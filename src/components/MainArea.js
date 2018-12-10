@@ -37,6 +37,12 @@ const Container = screenSize(styled.View`
   padding: ${props => props.theme.spacing};
 `)
 
+const ButtonTitleContainer = screenSize(styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`)
+
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
   background-color: ${props => props.theme.white};
@@ -48,13 +54,14 @@ const Title = styled.TextInput`
   padding-bottom: ${props => props.theme.spacing};
   color: ${props => props.theme.darkGray};
 `
+
 const Text = styled.Text`
   font-size: 14px;
 `
 
 const ButtonContainer = styled.View`
-  max-width: 130px;
-  margin-bottom: 30px;
+  width: 130px;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
 `
@@ -107,10 +114,6 @@ class MainArea extends Component<Props, State> {
     const d = new Date()
     return (
       <Container>
-        <ButtonContainer>
-          <Button onPress={this.props.save} title="Save" />
-          <Button onPress={this.props.delete} title="Delete" />
-        </ButtonContainer>
         <Text>
           {this.state.autosaved &&
             'auto saved at: ' +
@@ -121,10 +124,16 @@ class MainArea extends Component<Props, State> {
               d.getSeconds()}
         </Text>
         <EditorContainer>
-          <Title
-            value={this.props.note.title ? this.props.note.title : 'untitled'}
-            onChangeText={this.onTitleChange}
-          />
+          <ButtonTitleContainer>
+            <Title
+              value={this.props.note.title ? this.props.note.title : 'untitled'}
+              onChangeText={this.onTitleChange}
+            />
+            <ButtonContainer>
+              <Button onPress={this.props.save} title="Save" />
+              <Button onPress={this.props.delete} title="Delete" />
+            </ButtonContainer>
+          </ButtonTitleContainer>
           <Editor
             editorState={this.state.editorState}
             onEditorStateChange={this.onEditorChange}

@@ -7,10 +7,10 @@ const NoteContainer = styled.View`
   ${props =>
     props.isOpen &&
     css`
-      background-color: #fcecb0;
+      background-color: ${props => props.theme.lightYellow};
     `}
   padding: 10px 0;
-  border-bottom: 1px solid #d8d8d8;
+  border-bottom: 1px solid ${props => props.theme.mediumGray};
   cursor: pointer;
 `
 const FolderFlatList = styled.FlatList`
@@ -32,6 +32,12 @@ const NotePreview = styled.Text`
   margin-left: 10px;
   margin-bottom: 5px;
 `
+const NoteDate = styled.Text`
+  font-size: 12px;
+  color: ${props => props.theme.mediumGray};
+  margin-left: 10px;
+  margin-bottom: 5px;
+`
 
 type Props = {
   data: Array<Note>,
@@ -49,6 +55,7 @@ const Notes = (props: Props) => {
         isOpen={props.isOpen}
         data={props.data}
         renderItem={({ item }) => {
+          const date = new Date(item.date)
           return (
             item.invisible !== true && (
               <NoteContainer
@@ -62,9 +69,13 @@ const Notes = (props: Props) => {
                     ? item.content &&
                       convertFromRaw(JSON.parse(item.content))
                         .getPlainText()
-                        .substring(0, 15)
+                        .replace(/[\n\r]/g, ' ')
+                        .substring(0, 25)
                     : 'start typing...'}
                 </NotePreview>
+                <NoteDate>
+                  {date.toString().replace(/\sGMT-\d{4,}\s\(\w{3,}\)/gi, '')}
+                </NoteDate>
               </NoteContainer>
             )
           )

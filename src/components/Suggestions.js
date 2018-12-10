@@ -3,14 +3,14 @@ import { FlatList } from 'react-native-web'
 import styled from 'styled-components/native'
 
 const SuggestionText = styled.Text`
-  color: #a6a6a6;
+  color: ${props => props.theme.darkGray};
   font-size: 14px;
   padding: 5px;
   cursor: pointer;
 `
 
 const Container = styled.View`
-  background-color: #fff;
+  background-color: ${props => props.theme.white};
   border-radius: 5px;
 `
 

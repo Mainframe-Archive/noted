@@ -39,7 +39,7 @@ class App extends Component<{}, State> {
     apiVersion: '',
     archive: [],
     initial: false,
-    activeFolder: '',
+    activeFolder: 'all notes',
     showFolders: false,
   }
 
@@ -197,34 +197,33 @@ class App extends Component<{}, State> {
 
   render(): Node {
     return (
-<NativeThemeProvider theme={theme.native}>
-  <ComponentsThemeProvider theme={theme.components} >
-        <Provider
-          value={{
-            ...this.state,
-            getFolders: this.getFolderArray,
-            updateFolders: this.changeFolderNames,
-            setActiveFolder: this.setActiveFolder,
-            setFoldersVisible: this.setFoldersVisible,
-            updateArchive: this.archiveNote,
-            archive: this.state.archive,
-            key: this.state.note.key,
-            update: this.updateActiveNote,
-            updateAndSave: this.updateAndSave,
-            save: this.saveNote,
-            delete: this.deleteNote,
-            getNote: this.getNoteFromKey,
-          }}>
-          <Home
-            initial={this.state.initial}
-            apiVersion={this.state.apiVersion}
-            setInitialFalse={this.setInitialFalse}
-          />
-        </Provider>
+      <NativeThemeProvider theme={theme.native}>
+        <ComponentsThemeProvider theme={theme.components}>
+          <Provider
+            value={{
+              ...this.state,
+              getFolders: this.getFolderArray,
+              updateFolders: this.changeFolderNames,
+              setActiveFolder: this.setActiveFolder,
+              setFoldersVisible: this.setFoldersVisible,
+              updateArchive: this.archiveNote,
+              archive: this.state.archive,
+              key: this.state.note.key,
+              update: this.updateActiveNote,
+              updateAndSave: this.updateAndSave,
+              save: this.saveNote,
+              delete: this.deleteNote,
+              getNote: this.getNoteFromKey,
+            }}>
+            <Home
+              initial={this.state.initial}
+              apiVersion={this.state.apiVersion}
+              setInitialFalse={this.setInitialFalse}
+            />
+          </Provider>
         </ComponentsThemeProvider>
       </NativeThemeProvider>
-
-          )
+    )
   }
 }
 
