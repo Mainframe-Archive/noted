@@ -187,7 +187,7 @@ class App extends Component<{}, State> {
     }
   }
 
-  setShowFolders = () => {
+  setFoldersVisible = () => {
     this.setState({
       showFolders: true,
     })
@@ -202,7 +202,7 @@ class App extends Component<{}, State> {
             getFolders: this.getFolderArray,
             updateFolders: this.changeFolderNames,
             setActiveFolder: this.setActiveFolder,
-            setShowFolders: this.setShowFolders,
+            setFoldersVisible: this.setFoldersVisible,
             updateArchive: this.archiveNote,
             archive: this.state.archive,
             key: this.state.note.key,

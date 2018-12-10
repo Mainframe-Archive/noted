@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { View } from 'react-native-web'
+import { View, Animated } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note } from '../types'
 import applyContext from '../hocs/Context'
@@ -95,6 +95,7 @@ class LeftNav extends Component<Props, State> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
+    fadeAnim: new Animated.Value(0), // Initial value for opacity: 0
   }
 
   addFolder = () => {
@@ -216,7 +217,10 @@ class LeftNav extends Component<Props, State> {
           </SidebarContainer>
         )}
         <SidebarContainer showFolders={this.props.showFolders}>
-          <NewButton onPress={this.props.setShowFolders} title="Show Folders" />
+          <NewButton
+            onPress={this.props.setFoldersVisible}
+            title="Show Folders"
+          />
           <SearchContainer>
             <SearchBar data={this.props.notes} />
           </SearchContainer>
