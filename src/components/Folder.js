@@ -17,8 +17,8 @@ const FolderText = styled.TextInput`
   ${props =>
     props.isopen &&
     css`
-      border-left: 6px solid ${props => props.theme.yellow};
-      margin-left: -6px;
+      border-left: 9px solid ${props => props.theme.yellow};
+      margin-left: -9px;
       font-weight: bold;
       color: ${props => props.theme.black};
     `}

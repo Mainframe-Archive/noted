@@ -124,6 +124,7 @@ class App extends Component<{}, State> {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
+      note.folder = 'archive'
       copy.splice(copy.length, 0, note)
     } else {
       copy.splice(index, 1)
@@ -160,7 +161,7 @@ class App extends Component<{}, State> {
   getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
-      if (note.folder !== '') {
+      if (note.folder !== '' && note.folder !== 'archive') {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]
         } else {

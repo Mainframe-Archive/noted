@@ -5,8 +5,8 @@ const colors = {
   blue: '#1f3464',
   lightBlue: '#00a7e7',
   red: '#da1157',
-  lightGray: '#f1f1f1',
-  gray: '#f2f2f2',
+  lightGray: '#f7f7f7',
+  gray: '#f1f1f1',
   mediumGray: '#B5B5B5',
   darkGray: '#232323',
 }
@@ -20,16 +20,7 @@ export default {
 
         backgroundHoverColor: colors.yellow,
         borderHoverColor: colors.yellow,
-        titleHoverColor: colors.white,
-      },
-      light: {
-        backgroundColor: colors.yellow,
-        borderColor: colors.yellow,
-        titleColor: colors.black,
-
-        backgroundHoverColor: colors.yellow,
-        borderHoverColor: colors.yellow,
-        titleHoverColor: colors.white,
+        titleHoverColor: colors.black,
       },
     },
   },

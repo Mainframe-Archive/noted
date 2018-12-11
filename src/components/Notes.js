@@ -9,7 +9,7 @@ const NoteContainer = styled.View`
     css`
       background-color: ${props => props.theme.lightYellow};
     `}
-    padding: ${props => props.theme.spacing};
+  padding: 10px ${props => props.theme.spacing};
   border-bottom: 1px solid #e3e3e3;
   cursor: pointer;
 `

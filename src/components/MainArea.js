@@ -80,7 +80,10 @@ class MainArea extends Component<Props, State> {
 
   componentDidMount() {
     this.interval = setInterval(() => {
-      if (this.props.note.content || this.props.note.title) {
+      if (
+        (this.props.note.content || this.props.note.title) &&
+        this.props.note.folder !== 'archive'
+      ) {
         this.setState({ autosaved: true })
         this.props.save()
       }
@@ -129,10 +132,12 @@ class MainArea extends Component<Props, State> {
               value={this.props.note.title ? this.props.note.title : 'untitled'}
               onChangeText={this.onTitleChange}
             />
-            <ButtonContainer>
-              <Button onPress={this.props.delete} title="DELETE" light />
-              <Button onPress={this.props.save} title="SAVE" />
-            </ButtonContainer>
+            {this.props.note.folder !== 'archive' && (
+              <ButtonContainer>
+                <Button onPress={this.props.delete} title="DELETE" light />
+                <Button onPress={this.props.save} title="SAVE" />
+              </ButtonContainer>
+            )}
           </ButtonTitleContainer>
           <Editor
             editorState={this.state.editorState}

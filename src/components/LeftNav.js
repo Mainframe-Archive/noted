@@ -33,7 +33,7 @@ type State = {
 const Container = screenSize(styled.View`
   width: 250px;
   height: 100%;
-  background-color: ${props => props.theme.gray};
+  background-color: ${props => props.theme.lightGray};
   display: flex;
   flex-direction: row;
   ${props =>
@@ -50,11 +50,16 @@ const Container = screenSize(styled.View`
 
 const SidebarContainer = screenSize(styled.View`
   width: 100%;
-  background-color: ${props => props.theme.gray};
+  background-color: ${props => props.theme.lightGray};
   ${props =>
     props.screenWidth <= 900 &&
     css`
       width: 50px;
+    `};
+  ${props =>
+    props.showFolders &&
+    css`
+      width: 55%;
     `};
   ${props =>
     props.folder &&
@@ -62,13 +67,9 @@ const SidebarContainer = screenSize(styled.View`
       padding: ${props => props.theme.spacing};
       display: flex;
       justify-content: space-between;
-      background-color: #e8e5e5;
+      background-color: #e9e9e9;
       height: 100%;
-    `};
-  ${props =>
-    props.showFolders &&
-    css`
-      width: 50%;
+      width: 45%;
     `};
 `)
 
@@ -145,7 +146,7 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.findInArchive(key),
     )
-    !this.props.getNote(key) && this.props.updateArchive(note)
+    note.folder === 'archive' && this.props.updateArchive(note)
 
     note.folder = folder
     this.props.updateAndSave(note)
