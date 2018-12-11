@@ -25,6 +25,7 @@ type State = {
   initial: boolean,
   archive: Array<Note>,
   activeFolder: string,
+  showFolders: boolean,
 }
 
 class App extends Component<{}, State> {
@@ -176,7 +177,7 @@ class App extends Component<{}, State> {
     return folders
   }
 
-  setActiveFolder = folderId => {
+  setActiveFolder = (folderId: string) => {
     this.setState({
       activeFolder: folderId,
     })

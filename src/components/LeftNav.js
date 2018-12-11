@@ -13,12 +13,17 @@ import Notes from './Notes'
 import SearchBar from './Search'
 
 type Props = {
+  note: Note,
   notes: Array<Note>,
   update: (Note, ?boolean) => void,
   updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
   updateFolders: (string, string) => void,
+  showFolders: boolean,
+  setActiveFolder: string => void,
+  setFoldersVisible: () => void,
+  activeFolder: string,
   getFolders: () => Array<Note>,
   getNote: string => Note,
 }
@@ -102,7 +107,12 @@ class LeftNav extends Component<Props, State> {
   }
 
   addFolder = () => {
-    this.props.update({ key: uuidv4(), invisible: true, folder: 'new folder' })
+    this.props.update({
+      key: uuidv4(),
+      invisible: true,
+      folder: 'new folder',
+      date: new Date().getTime(),
+    })
   }
 
   handleClick = item => {

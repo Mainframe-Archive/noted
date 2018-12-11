@@ -5,7 +5,7 @@ export type Note = {
   key: string,
   title?: string,
   content?: string,
-  date?: number,
+  date: number,
   folder: string,
   invisible?: boolean,
 }
