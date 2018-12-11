@@ -183,9 +183,9 @@ class App extends Component<{}, State> {
   }
 
   setFoldersVisible = () => {
-    this.setState({
-      showFolders: true,
-    })
+    this.setState(prevState => ({
+      showFolders: !prevState.showFolders,
+    }))
   }
 
   render(): Node {
