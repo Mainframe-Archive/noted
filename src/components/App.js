@@ -161,7 +161,11 @@ class App extends Component<{}, State> {
   getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
-      if (note.folder !== '' && note.folder !== 'archive') {
+      if (
+        note.folder !== '' &&
+        note.folder !== 'archive' &&
+        note.folder !== 'all notes'
+      ) {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]
         } else {
@@ -173,11 +177,9 @@ class App extends Component<{}, State> {
   }
 
   setActiveFolder = folderId => {
-    if (folderId) {
-      this.setState({
-        activeFolder: folderId,
-      })
-    }
+    this.setState({
+      activeFolder: folderId,
+    })
   }
 
   setFoldersVisible = () => {

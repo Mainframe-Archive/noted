@@ -106,9 +106,7 @@ class LeftNav extends Component<Props, State> {
   }
 
   handleClick = item => {
-    if (item) {
-      this.props.update(item)
-    }
+    this.props.update(item)
   }
 
   handleDoubleClick = () => {
@@ -168,6 +166,8 @@ class LeftNav extends Component<Props, State> {
                 folderName={'all notes'}
                 folderID={'all notes'}
                 isBeingEdited={false}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
                 isOpen={this.props.activeFolder === 'all notes'}
                 handleClick={() => this.props.setActiveFolder('all notes')}
                 handleDoubleClick={this.handleDoubleClick}
@@ -211,6 +211,7 @@ class LeftNav extends Component<Props, State> {
                 isBeingEdited={false}
                 isOpen={this.props.activeFolder === 'archive'}
                 onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
                 archive={this.archiveNote}
                 handleClick={() => this.props.setActiveFolder('archive')}
                 handleDoubleClick={this.handleDoubleClick}
