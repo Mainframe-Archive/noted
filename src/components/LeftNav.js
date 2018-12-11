@@ -244,7 +244,7 @@ class LeftNav extends Component<Props, State> {
               return (
                 <View key={subArray[0].key}>
                   <Notes
-                    data={subArray}
+                    data={subArray.sort((a, b) => b.date - a.date)}
                     folderName={subArray[0].folder && subArray[0].folder}
                     activeNote={this.props.note}
                     isOpen={this.props.activeFolder === subArray[0].key}
@@ -256,7 +256,7 @@ class LeftNav extends Component<Props, State> {
             },
           )}
           <Notes
-            data={this.props.notes}
+            data={this.props.notes.sort((a, b) => b.date - a.date)}
             folderName={'all notes'}
             activeNote={this.props.note}
             isOpen={this.props.activeFolder === 'all notes'}
@@ -264,7 +264,7 @@ class LeftNav extends Component<Props, State> {
             handleClick={this.handleClick}
           />
           <Notes
-            data={this.props.archive}
+            data={this.props.archive.sort((a, b) => b.date - a.date)}
             folderName={'archive'}
             activeNote={this.props.note}
             isOpen={this.props.activeFolder === 'archive'}

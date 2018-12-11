@@ -51,7 +51,6 @@ const Notes = (props: Props) => {
   return (
     props.isOpen && (
       <FolderFlatList
-        isOpen={props.isOpen}
         data={props.data}
         renderItem={({ item }) => {
           const date = new Date(item.date)
