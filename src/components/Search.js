@@ -22,20 +22,18 @@ type Props = {
 }
 
 const Container = screenSize(styled.View`
-  flex: 1;
   height: 100%;
   background-color: ${props => props.theme.lightGray};
   padding: ${props => props.theme.spacing};
   ${props =>
     props.screenWidth <= 900 &&
     css`
-      width: 50px;
+      padding: 0;
     `};
 `)
 
 const Search = styled.TextInput`
   background-color: ${props => props.theme.white};
-  flex: 1;
   font-size: 12px;
   border-radius: 4px;
   padding: 5px 10px;
