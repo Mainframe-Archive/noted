@@ -130,8 +130,8 @@ class MainArea extends Component<Props, State> {
               onChangeText={this.onTitleChange}
             />
             <ButtonContainer>
+              <Button onPress={this.props.delete} title="DELETE" light />
               <Button onPress={this.props.save} title="SAVE" />
-              <Button onPress={this.props.delete} title="DELETE" />
             </ButtonContainer>
           </ButtonTitleContainer>
           <Editor

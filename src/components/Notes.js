@@ -9,13 +9,12 @@ const NoteContainer = styled.View`
     css`
       background-color: ${props => props.theme.lightYellow};
     `}
-  padding: 10px 0;
+    padding: ${props => props.theme.spacing};
   border-bottom: 1px solid #e3e3e3;
   cursor: pointer;
 `
 const FolderFlatList = styled.FlatList`
   display: block;
-  padding: ${props => props.theme.spacing};
 `
 const Text = styled.Text`
   font-size: 14px;

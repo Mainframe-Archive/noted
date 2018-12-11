@@ -22,6 +22,15 @@ export default {
         borderHoverColor: colors.yellow,
         titleHoverColor: colors.white,
       },
+      light: {
+        backgroundColor: colors.yellow,
+        borderColor: colors.yellow,
+        titleColor: colors.black,
+
+        backgroundHoverColor: colors.yellow,
+        borderHoverColor: colors.yellow,
+        titleHoverColor: colors.white,
+      },
     },
   },
   native: {
