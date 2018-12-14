@@ -159,13 +159,28 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
+  isEmptyFolder = folder => {
+    if (folder === '') {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  isSystemFolder = folder => {
+    if (folder === 'archive' || folder === 'all notes') {
+      return true
+    } else {
+      return false
+    }
+  }
+
   getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
       if (
-        note.folder !== '' &&
-        note.folder !== 'archive' &&
-        note.folder !== 'all notes'
+        !this.isEmptyFolder(note.folder) &&
+        !this.isSystemFolder(note.folder)
       ) {
         if (folders[note.folder]) {
           folders[note.folder] = [...folders[note.folder], note]
@@ -183,7 +198,7 @@ class App extends Component<{}, State> {
     })
   }
 
-  setFoldersVisible = () => {
+  toggleFoldersVisibility = () => {
     this.setState(prevState => ({
       showFolders: !prevState.showFolders,
     }))
@@ -199,7 +214,7 @@ class App extends Component<{}, State> {
               getFolders: this.getFolderArray,
               updateFolders: this.changeFolderNames,
               setActiveFolder: this.setActiveFolder,
-              setFoldersVisible: this.setFoldersVisible,
+              toggleFoldersVisibility: this.toggleFoldersVisibility,
               updateArchive: this.archiveNote,
               archive: this.state.archive,
               key: this.state.note.key,

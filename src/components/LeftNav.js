@@ -22,7 +22,7 @@ type Props = {
   updateFolders: (string, string) => void,
   showFolders: boolean,
   setActiveFolder: string => void,
-  setFoldersVisible: () => void,
+  toggleFoldersVisibility: () => void,
   activeFolder: string,
   getFolders: () => Array<Note>,
   getNote: string => Note,
@@ -234,7 +234,10 @@ class LeftNav extends Component<Props, State> {
         )}
         <SidebarContainer showFolders={this.props.showFolders}>
           <NewButtonContainer>
-            <Button onPress={this.props.setFoldersVisible} title="FOLDERS" />
+            <Button
+              onPress={this.props.toggleFoldersVisibility}
+              title="FOLDERS"
+            />
             <Button
               onPress={() =>
                 this.props.update({

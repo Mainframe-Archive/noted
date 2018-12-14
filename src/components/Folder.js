@@ -15,7 +15,7 @@ const FolderText = styled.TextInput`
   cursor: pointer;
   padding-left: 10px;
   ${props =>
-    props.isopen &&
+    props.isOpen &&
     css`
       border-left: 9px solid ${props => props.theme.yellow};
       margin-left: -9px;
@@ -42,7 +42,7 @@ const Folder = (props: Props) => {
   return (
     <FolderContainer>
       <FolderText
-        isopen={props.isOpen}
+        isOpen={props.isOpen}
         draggable={props.folderDraggable}
         editable={props.isBeingEdited}
         defaultValue={props.folderName}
