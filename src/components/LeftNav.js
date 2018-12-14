@@ -110,7 +110,7 @@ class LeftNav extends Component<Props, State> {
     this.props.update({
       key: uuidv4(),
       invisible: true,
-      folder: 'new folder',
+      folder: { name: 'new folder', type: 'normal' },
       date: new Date().getTime(),
     })
   }
@@ -154,9 +154,14 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.findInArchive(key),
     )
-    note.folder === 'archive' && this.props.updateArchive(note)
+    note.folder.type === 'archive' && this.props.updateArchive(note)
 
-    note.folder = folder
+    note.folder.name = folder
+    folder === 'archive'
+      ? (note.folder.type = 'archive')
+      : folder === 'all notes'
+      ? (note.folder.type = 'all')
+      : (note.folder.type = 'normal')
     this.props.updateAndSave(note)
   }
 
@@ -178,8 +183,10 @@ class LeftNav extends Component<Props, State> {
                 isBeingEdited={false}
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
-                isOpen={this.props.activeFolder === 'all notes'}
-                handleClick={() => this.props.setActiveFolder('all notes')}
+                isOpen={this.props.activeFolder.name === 'all notes'}
+                handleClick={() =>
+                  this.props.setActiveFolder({ name: 'all notes', type: 'all' })
+                }
                 handleDoubleClick={this.handleDoubleClick}
               />
               {Object.values(this.props.getFolders()).map(
@@ -190,7 +197,8 @@ class LeftNav extends Component<Props, State> {
                       <Folder
                         folderID={folderDataFromNote.key}
                         folderName={
-                          folderDataFromNote.folder && subArray[0].folder
+                          folderDataFromNote.folder.name &&
+                          subArray[0].folder.name
                         }
                         onDragOver={this.onDragOver}
                         onDrop={this.onDrop}
@@ -198,16 +206,20 @@ class LeftNav extends Component<Props, State> {
                         onSubmitEditing={() => {
                           this.props.updateFolders(
                             this.state.newFolder,
-                            folderDataFromNote.folder,
+                            folderDataFromNote.folder.name,
                           )
                           this.setState({ edit: false })
                         }}
                         isBeingEdited={this.state.edit}
                         isOpen={
-                          this.props.activeFolder === folderDataFromNote.key
+                          this.props.activeFolder.name ===
+                          folderDataFromNote.folder.name
                         }
                         handleClick={() =>
-                          this.props.setActiveFolder(folderDataFromNote.key)
+                          this.props.setActiveFolder({
+                            name: folderDataFromNote.folder.name,
+                            type: folderDataFromNote.folder.type,
+                          })
                         }
                         handleDoubleClick={this.handleDoubleClick}
                       />
@@ -219,11 +231,16 @@ class LeftNav extends Component<Props, State> {
                 folderName={'archive'}
                 folderID={'archive'}
                 isBeingEdited={false}
-                isOpen={this.props.activeFolder === 'archive'}
+                isOpen={this.props.activeFolder.type === 'archive'}
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
                 archive={this.archiveNote}
-                handleClick={() => this.props.setActiveFolder('archive')}
+                handleClick={() =>
+                  this.props.setActiveFolder({
+                    name: 'archive',
+                    type: 'archive',
+                  })
+                }
                 handleDoubleClick={this.handleDoubleClick}
               />
             </View>
@@ -243,7 +260,7 @@ class LeftNav extends Component<Props, State> {
                 this.props.update({
                   key: uuidv4(),
                   date: new Date().getTime(),
-                  folder: '',
+                  folder: { name: '', type: 'empty' },
                 })
               }
               title="NEW NOTE"
@@ -258,9 +275,13 @@ class LeftNav extends Component<Props, State> {
                 <View key={subArray[0].key}>
                   <Notes
                     data={subArray.sort((a, b) => b.date - a.date)}
-                    folderName={subArray[0].folder && subArray[0].folder}
+                    folderName={
+                      subArray[0].folder.name && subArray[0].folder.name
+                    }
                     activeNote={this.props.note}
-                    isOpen={this.props.activeFolder === subArray[0].key}
+                    isOpen={
+                      this.props.activeFolder.name === subArray[0].folder.name
+                    }
                     dragStart={this.onDragStart}
                     handleClick={this.handleClick}
                   />
@@ -272,7 +293,7 @@ class LeftNav extends Component<Props, State> {
             data={this.props.notes.sort((a, b) => b.date - a.date)}
             folderName={'all notes'}
             activeNote={this.props.note}
-            isOpen={this.props.activeFolder === 'all notes'}
+            isOpen={this.props.activeFolder.type === 'all'}
             dragStart={this.onDragStart}
             handleClick={this.handleClick}
           />
@@ -280,7 +301,7 @@ class LeftNav extends Component<Props, State> {
             data={this.props.archive.sort((a, b) => b.date - a.date)}
             folderName={'archive'}
             activeNote={this.props.note}
-            isOpen={this.props.activeFolder === 'archive'}
+            isOpen={this.props.activeFolder.type === 'archive'}
             dragStart={this.onDragStart}
             handleClick={this.handleClick}
           />

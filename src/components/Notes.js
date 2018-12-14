@@ -79,7 +79,7 @@ const Notes = (props: Props) => {
                   {date.toString().replace(/\sGMT-\d{4,}\s\(\w{3,}\)/gi, '')}
                 </NoteDate>
                 <NotePreview>
-                  {item.folder !== 'all notes' && item.folder}
+                  {item.folder.type !== 'all' && item.folder.name}
                 </NotePreview>
               </NoteContainer>
             )

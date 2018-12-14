@@ -82,7 +82,7 @@ class MainArea extends Component<Props, State> {
     this.interval = setInterval(() => {
       if (
         (this.props.note.content || this.props.note.title) &&
-        this.props.note.folder !== 'archive'
+        this.props.note.folder.name !== 'archive'
       ) {
         this.setState({ autosaved: true })
         this.props.save()
