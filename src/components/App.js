@@ -160,15 +160,15 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
-  isEmptyFolder = folder => {
-    if (folder.type === 'empty') {
+  isEmptyFolder = (folder: Folder) => {
+    if (folder.type === 'empty' || !folder.name) {
       return true
     } else {
       return false
     }
   }
 
-  isSystemFolder = folder => {
+  isSystemFolder = (folder: Folder) => {
     if (folder.type === 'archive' || folder.type === 'all') {
       return true
     } else {

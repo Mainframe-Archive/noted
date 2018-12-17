@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
-import { type Note } from '../types'
+import { type Note, type Folder as FolderType } from '../types'
 
 const FolderContainer = styled.View`
   display: inline;
@@ -26,7 +26,7 @@ const FolderText = styled.TextInput`
 
 type Props = {
   folderID: string,
-  folderName: string,
+  folder: FolderType,
   isOpen: boolean,
   isBeingEdited: boolean,
   handleClick: Note => void,
@@ -45,14 +45,15 @@ const Folder = (props: Props) => {
         isOpen={props.isOpen}
         draggable={props.folderDraggable}
         editable={props.isBeingEdited}
-        defaultValue={props.folderName}
+        defaultValue={props.folder.name}
         onDoubleClick={props.handleDoubleClick}
         onClick={() => props.handleClick(props.folderID)}
         onDragOver={props.onDragOver && (e => props.onDragOver(e))}
         onDrop={
           props.archive
             ? e => props.archive(e)
-            : props.onDrop && (e => props.onDrop(e, props.folderName))
+            : props.onDrop &&
+              (e => props.onDrop(e, props.folder.name, props.folder.type))
         }
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
