@@ -9,21 +9,21 @@ const colors = {
 }
 
 export default {
-  components: {
-    Button: {
-      default: {
-        backgroundColor: colors.lightBlue,
-        borderColor: colors.lightBlue,
-        titleColor: colors.white,
+  Button: {
+    default: {
+      backgroundColor: colors.lightBlue,
+      borderColor: colors.lightBlue,
+      titleColor: colors.white,
 
-        backgroundHoverColor: colors.white,
-        borderHoverColor: colors.white,
-        titleHoverColor: colors.darkGray,
-      }
+      backgroundHoverColor: colors.white,
+      borderHoverColor: colors.white,
+      titleHoverColor: colors.darkGray,
     },
   },
-  native: {
+
+  // Special property used as styles where `styled-components` ThemeProvider would be used
+  styled: {
     ...colors,
     spacing: '20px',
-  }
+  },
 }
