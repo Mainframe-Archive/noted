@@ -87,10 +87,12 @@ class MainArea extends Component<Props, State> {
 
   componentDidMount() {
     this.interval = setInterval(() => {
-      if (
+      const onlySaveDirtyNote =
         (this.props.note.content || this.props.note.title) &&
-        this.props.note.folder.name !== 'archive'
-      ) {
+        this.props.note.folder.type !== 'archive' &&
+        !this.props.initial
+
+      if (onlySaveDirtyNote) {
         this.setState({ autosaved: true })
         this.props.save()
       }

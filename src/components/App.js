@@ -7,9 +7,14 @@ import uuidv4 from 'uuid/v4'
 import MainframeSDK from '@mainframe/sdk'
 import '@morpheus-ui/fonts'
 
+import {
+  EditorState,
+  ContentState,
+  convertFromRaw,
+  convertToRaw,
+} from 'draft-js'
 import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
 import { type Note, type Folder } from '../types'
-
 import { Provider } from '../hocs/Context'
 
 import theme from '../theme'
@@ -20,12 +25,15 @@ type State = {
   note: Note,
   notes: Array<Note>,
   mf: MainframeSDK,
-  apiVersion: string,
   initial: boolean,
+  apiVersion: string,
   archive: Array<Note>,
   activeFolder: Folder,
   showFolders: boolean,
 }
+
+const initialContent =
+  'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem mollis aliquam ut porttitor. Mattis aliquam faucibus purus in. Est velit egestas dui id ornare arcu. Dui vivamus arcu felis bibendum ut tristique. Vulputate ut pharetra sit amet aliquam id diam maecenas ultricies. Viverra accumsan in nisl nisi scelerisque. Sed libero enim sed faucibus turpis in eu. Scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam. Duis at consectetur lorem donec massa sapien faucibus et molestie. Sit amet risus nullam eget felis eget. Donec massa sapien faucibus et molestie ac.'
 
 class App extends Component<{}, State> {
   state: State = {
@@ -36,9 +44,9 @@ class App extends Component<{}, State> {
     },
     notes: _.toArray(NOTES),
     mf: new MainframeSDK(),
+    initial: false,
     apiVersion: '',
     archive: [],
-    initial: false,
     activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
   }
@@ -46,8 +54,21 @@ class App extends Component<{}, State> {
   async componentDidMount() {
     getNotes().then(result => {
       if (result === undefined || result.length === 0) {
-        this.setState({ notes: _.toArray(NOTES), initial: true })
-        setNotes(NOTES)
+        const content = ContentState.createFromText(initialContent)
+        let noteContent = convertToRaw(content)
+        noteContent = JSON.stringify(noteContent)
+        const initialNote = {
+          key: uuidv4(),
+          date: new Date().getTime(),
+          title: 'Welcome to Noted',
+          content: noteContent,
+          folder: { name: '', type: 'empty' },
+        }
+        this.setState({
+          notes: [initialNote],
+          note: initialNote,
+          initial: true,
+        })
       } else {
         this.setState({ notes: _.toArray(result) })
       }
@@ -77,6 +98,7 @@ class App extends Component<{}, State> {
     this.setState({
       note: note,
       notes: copy,
+      initial: false,
     })
   }
 
@@ -90,6 +112,7 @@ class App extends Component<{}, State> {
     this.setState({
       note: note,
       notes: copy,
+      initial: false,
     })
 
     setNotes(copy)
@@ -133,10 +156,6 @@ class App extends Component<{}, State> {
     this.setState({ archive: copy })
     archiveNotes(copy)
     this.deleteNote(note)
-  }
-
-  setInitialFalse = () => {
-    this.setState({ initial: false })
   }
 
   changeFolderNames = (newFolder: string, oldFolder: string) => {
@@ -223,11 +242,7 @@ class App extends Component<{}, State> {
             delete: this.deleteNote,
             getNote: this.getNoteFromKey,
           }}>
-          <Home
-            initial={this.state.initial}
-            apiVersion={this.state.apiVersion}
-            setInitialFalse={this.setInitialFalse}
-          />
+          <Home apiVersion={this.state.apiVersion} />
         </Provider>
       </ThemeProvider>
     )
