@@ -14,13 +14,12 @@ const colors = {
 export default {
   Button: {
     default: {
-      backgroundColor: colors.lightBlue,
-      borderColor: colors.lightBlue,
-      titleColor: colors.white,
+      borderColor: colors.yellow,
+      titleColor: colors.yellow,
 
-      backgroundHoverColor: colors.white,
-      borderHoverColor: colors.white,
-      titleHoverColor: colors.darkGray,
+      backgroundHoverColor: colors.yellow,
+      borderHoverColor: colors.yellow,
+      titleHoverColor: colors.white,
     },
     yellow: {
       backgroundColor: colors.yellow,
