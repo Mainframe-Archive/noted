@@ -20,7 +20,7 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@morpheus-ui/core": "^0.0.4",
+    "@morpheus-ui/core": "^0.0.9",
     "@morpheus-ui/fonts": "^0.0.1",
     "constant-mirror": "^1.1.1",
     "draft-js": "^0.10.5",
