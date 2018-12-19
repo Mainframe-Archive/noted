@@ -46,6 +46,8 @@ const ButtonTitleContainer = screenSize(styled.View`
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
   background-color: ${props => props.theme.white};
+  max-height: 100vh;
+  overflow-y: auto;
   flex: 1;
 `
 
@@ -135,7 +137,11 @@ class MainArea extends Component<Props, State> {
             {this.props.note.folder !== 'archive' && (
               <ButtonContainer>
                 <Button onPress={this.props.delete} title="DELETE" />
-                <Button onPress={this.props.save} title="SAVE" />
+                <Button
+                  onPress={this.props.save}
+                  title="SAVE"
+                  variant="yellow"
+                />
               </ButtonContainer>
             )}
           </ButtonTitleContainer>

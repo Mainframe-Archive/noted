@@ -162,14 +162,16 @@ class LeftNav extends Component<Props, State> {
     //   : folder === 'all notes'
     //   ? (note.folder.type = 'all')
     //   : (note.folder.type = 'normal')
-
     switch (targetFolder.type) {
-      case 'archive' || 'all':
-        note.folder.type = targetFolder.tyoe
+      case 'all':
+      case 'archive':
+        note.folder.type = targetFolder.type
         break
       default:
         note.folder.type = 'normal'
     }
+
+    console.log(note)
     this.props.updateAndSave(note)
   }
 
@@ -180,7 +182,13 @@ class LeftNav extends Component<Props, State> {
   }
 
   render() {
-    console.log(Object.values(this.props.getFolders()))
+    // console.log(
+    //   Object.values(this.props.getFolders()).sort((a, b) => {
+    //     if (a[0].date < b[0].date) return -1
+    //     if (a[0].date > b[0].date) return -1
+    //     return 0
+    //   }),
+    // )
     return (
       <Container showFolders={this.props.showFolders}>
         {this.props.showFolders && (

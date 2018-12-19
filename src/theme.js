@@ -20,7 +20,14 @@ export default {
 
         backgroundHoverColor: colors.yellow,
         borderHoverColor: colors.yellow,
-        titleHoverColor: colors.black,
+        titleHoverColor: colors.white,
+      },
+      yellow: {
+        backgroundColor: colors.yellow,
+        borderColor: colors.yellow,
+        titleColor: colors.black,
+
+        titleHoverColor: colors.white,
       },
     },
   },

@@ -32,7 +32,7 @@ type Props = {
   handleClick: Note => void,
   handleDoubleClick: () => void,
   onDragOver?: Event => void,
-  onDrop?: (Event, string) => void,
+  onDrop?: (Event, FolderType) => void,
   archive?: Event => void,
   onChangeText?: string => void,
   onSubmitEditing?: () => void,
@@ -53,7 +53,11 @@ const Folder = (props: Props) => {
           props.archive
             ? e => props.archive(e)
             : props.onDrop &&
-              (e => props.onDrop(e, props.folder.name, props.folder.type))
+              (e =>
+                props.onDrop(e, {
+                  name: props.folder.name,
+                  type: props.folder.type,
+                }))
         }
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
