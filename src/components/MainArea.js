@@ -143,7 +143,11 @@ class MainArea extends Component<Props, State> {
             />
             {this.props.note.folder !== 'archive' && (
               <ButtonContainer>
-                <Button onPress={this.props.delete} title="DELETE" />
+                <Button
+                  onPress={this.props.delete}
+                  title="DELETE"
+                  variant="borderless"
+                />
                 <Button
                   onPress={this.props.save}
                   title="SAVE"
