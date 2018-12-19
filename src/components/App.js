@@ -1,15 +1,14 @@
 // @flow
 
 import React, { Component, type Node } from 'react'
-import { ThemeProvider as NativeThemeProvider } from 'styled-components/native'
-import { ThemeProvider as ComponentsThemeProvider } from '@morpheus-ui/core'
+import { ThemeProvider } from '@morpheus-ui/core'
 import _ from 'lodash'
 import uuidv4 from 'uuid/v4'
 import MainframeSDK from '@mainframe/sdk'
 import '@morpheus-ui/fonts'
 
 import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
-import { type Note } from '../types'
+import { type Note, type Folder } from '../types'
 
 import { Provider } from '../hocs/Context'
 
@@ -24,7 +23,7 @@ type State = {
   apiVersion: string,
   initial: boolean,
   archive: Array<Note>,
-  activeFolder: string,
+  activeFolder: Folder,
   showFolders: boolean,
 }
 
@@ -33,14 +32,14 @@ class App extends Component<{}, State> {
     note: {
       key: uuidv4(),
       date: new Date().getTime(),
-      folder: '',
+      folder: { name: '', type: 'empty' },
     },
     notes: _.toArray(NOTES),
     mf: new MainframeSDK(),
     apiVersion: '',
     archive: [],
     initial: false,
-    activeFolder: 'all notes',
+    activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
   }
 
@@ -115,7 +114,7 @@ class App extends Component<{}, State> {
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
-        folder: '',
+        folder: { name: '', type: 'empty' },
       },
       notes: copy,
     })
@@ -125,7 +124,8 @@ class App extends Component<{}, State> {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
-      note.folder = 'archive'
+      note.folder.name = 'archive'
+      note.folder.type = 'archive'
       copy.splice(copy.length, 0, note)
     } else {
       copy.splice(index, 1)
@@ -142,8 +142,8 @@ class App extends Component<{}, State> {
   changeFolderNames = (newFolder: string, oldFolder: string) => {
     const copy = this.state.notes.slice()
     this.state.notes.forEach(note => {
-      if (note.folder === oldFolder) {
-        note.folder = newFolder
+      if (note.folder.name === oldFolder) {
+        note.folder.name = newFolder
         const index = _.findIndex(copy, { key: note.key })
         copy.splice(index, 1, note)
       }
@@ -153,37 +153,52 @@ class App extends Component<{}, State> {
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
-        folder: '',
+        folder: { name: '', type: 'empty' },
       },
     })
     setNotes(copy)
+  }
+
+  isEmptyFolder = (folder: Folder) => {
+    if (folder.type === 'empty' || !folder.name) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  isSystemFolder = (folder: Folder) => {
+    if (folder.type === 'archive' || folder.type === 'all') {
+      return true
+    } else {
+      return false
+    }
   }
 
   getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
       if (
-        note.folder !== '' &&
-        note.folder !== 'archive' &&
-        note.folder !== 'all notes'
+        !this.isEmptyFolder(note.folder) &&
+        !this.isSystemFolder(note.folder)
       ) {
-        if (folders[note.folder]) {
-          folders[note.folder] = [...folders[note.folder], note]
+        if (folders[note.folder.name]) {
+          folders[note.folder.name] = [...folders[note.folder.name], note]
         } else {
-          folders[note.folder] = [note]
+          folders[note.folder.name] = [note]
         }
       }
     })
     return folders
   }
 
-  setActiveFolder = (folderId: string) => {
+  setActiveFolder = (folder: Folder) => {
     this.setState({
-      activeFolder: folderId,
+      activeFolder: folder,
     })
   }
 
-  setFoldersVisible = () => {
+  toggleFoldersVisibility = () => {
     this.setState(prevState => ({
       showFolders: !prevState.showFolders,
     }))
@@ -191,32 +206,30 @@ class App extends Component<{}, State> {
 
   render(): Node {
     return (
-      <NativeThemeProvider theme={theme.native}>
-        <ComponentsThemeProvider theme={theme.components}>
-          <Provider
-            value={{
-              ...this.state,
-              getFolders: this.getFolderArray,
-              updateFolders: this.changeFolderNames,
-              setActiveFolder: this.setActiveFolder,
-              setFoldersVisible: this.setFoldersVisible,
-              updateArchive: this.archiveNote,
-              archive: this.state.archive,
-              key: this.state.note.key,
-              update: this.updateActiveNote,
-              updateAndSave: this.updateAndSave,
-              save: this.saveNote,
-              delete: this.deleteNote,
-              getNote: this.getNoteFromKey,
-            }}>
-            <Home
-              initial={this.state.initial}
-              apiVersion={this.state.apiVersion}
-              setInitialFalse={this.setInitialFalse}
-            />
-          </Provider>
-        </ComponentsThemeProvider>
-      </NativeThemeProvider>
+      <ThemeProvider theme={theme}>
+        <Provider
+          value={{
+            ...this.state,
+            getFolders: this.getFolderArray,
+            updateFolders: this.changeFolderNames,
+            setActiveFolder: this.setActiveFolder,
+            toggleFoldersVisibility: this.toggleFoldersVisibility,
+            updateArchive: this.archiveNote,
+            archive: this.state.archive,
+            key: this.state.note.key,
+            update: this.updateActiveNote,
+            updateAndSave: this.updateAndSave,
+            save: this.saveNote,
+            delete: this.deleteNote,
+            getNote: this.getNoteFromKey,
+          }}>
+          <Home
+            initial={this.state.initial}
+            apiVersion={this.state.apiVersion}
+            setInitialFalse={this.setInitialFalse}
+          />
+        </Provider>
+      </ThemeProvider>
     )
   }
 }

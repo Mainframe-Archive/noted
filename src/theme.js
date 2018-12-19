@@ -12,19 +12,26 @@ const colors = {
 }
 
 export default {
-  components: {
-    Button: {
-      default: {
-        borderColor: colors.yellow,
-        titleColor: colors.yellow,
+  Button: {
+    default: {
+      borderColor: colors.yellow,
+      titleColor: colors.yellow,
 
-        backgroundHoverColor: colors.yellow,
-        borderHoverColor: colors.yellow,
-        titleHoverColor: colors.black,
-      },
+      backgroundHoverColor: colors.yellow,
+      borderHoverColor: colors.yellow,
+      titleHoverColor: colors.white,
+    },
+    yellow: {
+      backgroundColor: colors.yellow,
+      borderColor: colors.yellow,
+      titleColor: colors.black,
+
+      titleHoverColor: colors.white,
     },
   },
-  native: {
+
+  // Special property used as styles where `styled-components` ThemeProvider would be used
+  styled: {
     ...colors,
     spacing: '20px',
   },

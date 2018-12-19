@@ -52,7 +52,7 @@ class InitialState extends Component<Props> {
               this.props.update({
                 key: uuidv4(),
                 date: new Date().getTime(),
-                folder: '',
+                folder: { name: '', type: 'empty' },
               })
             }}
             title="Add new note"

@@ -47,6 +47,14 @@ type Props = {
   dragStart: (Event, string) => void,
 }
 
+const contentPreview = content => {
+  const newContent = convertFromRaw(JSON.parse(content))
+    .getPlainText()
+    .replace(/[\n\r]/g, ' ')
+    .substring(0, 25)
+  return newContent
+}
+
 const Notes = (props: Props) => {
   return (
     props.isOpen && (
@@ -64,18 +72,14 @@ const Notes = (props: Props) => {
                 </Text>
                 <NotePreview>
                   {item.content
-                    ? item.content &&
-                      convertFromRaw(JSON.parse(item.content))
-                        .getPlainText()
-                        .replace(/[\n\r]/g, ' ')
-                        .substring(0, 25)
+                    ? item.content && contentPreview(item.content)
                     : 'start typing...'}
                 </NotePreview>
                 <NoteDate>
                   {date.toString().replace(/\sGMT-\d{4,}\s\(\w{3,}\)/gi, '')}
                 </NoteDate>
                 <NotePreview>
-                  {item.folder !== 'all notes' && item.folder}
+                  {item.folder.type !== 'all' && item.folder.name}
                 </NotePreview>
               </NoteContainer>
             )

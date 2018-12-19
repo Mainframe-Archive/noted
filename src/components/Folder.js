@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
-import { type Note } from '../types'
+import { type Note, type Folder as FolderType } from '../types'
 import screenSize from '../hocs/ScreenSize'
 
 const FolderContainer = styled.View`
@@ -16,7 +16,7 @@ const FolderText = screenSize(styled.TextInput`
   cursor: pointer;
   padding-left: 10px;
   ${props =>
-    props.isopen &&
+    props.isOpen &&
     css`
       border-left: 9px solid ${props => props.theme.yellow};
       margin-left: -9px;
@@ -35,13 +35,13 @@ const FolderText = screenSize(styled.TextInput`
 
 type Props = {
   folderID: string,
-  folderName: string,
+  folder: FolderType,
   isOpen: boolean,
   isBeingEdited: boolean,
   handleClick: Note => void,
   handleDoubleClick: () => void,
   onDragOver?: Event => void,
-  onDrop?: (Event, string) => void,
+  onDrop?: (Event, FolderType) => void,
   archive?: Event => void,
   onChangeText?: string => void,
   onSubmitEditing?: () => void,
@@ -51,17 +51,22 @@ const Folder = (props: Props) => {
   return (
     <FolderContainer>
       <FolderText
-        isopen={props.isOpen}
+        isOpen={props.isOpen}
         draggable={props.folderDraggable}
         editable={props.isBeingEdited}
-        defaultValue={props.folderName}
+        defaultValue={props.folder.name}
         onDoubleClick={props.handleDoubleClick}
         onClick={() => props.handleClick(props.folderID)}
         onDragOver={props.onDragOver && (e => props.onDragOver(e))}
         onDrop={
           props.archive
             ? e => props.archive(e)
-            : props.onDrop && (e => props.onDrop(e, props.folderName))
+            : props.onDrop &&
+              (e =>
+                props.onDrop(e, {
+                  name: props.folder.name,
+                  type: props.folder.type,
+                }))
         }
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
