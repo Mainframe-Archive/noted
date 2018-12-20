@@ -196,8 +196,8 @@ class LeftNav extends Component<Props, State> {
         note.folder.type = targetFolder.type
         break
       case 'archive':
-        note.folder.type = targetFolder.type
         this.props.updateArchive(note)
+        note.folder.type = targetFolder.type
         break
       default:
         note.folder.type = 'normal'

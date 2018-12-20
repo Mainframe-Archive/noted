@@ -142,12 +142,15 @@ class App extends Component<{}, State> {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
+      console.log('here')
       note.folder.name = 'archive'
       note.folder.type = 'archive'
       copy.splice(copy.length, 0, note)
     } else {
+      console.log('ou ici')
       copy.splice(index, 1)
     }
+    console.log(note)
     this.setState({ archive: copy })
     archiveNotes(copy)
     this.deleteNote(note)
