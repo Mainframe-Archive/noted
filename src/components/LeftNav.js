@@ -44,12 +44,23 @@ const Container = screenSize(styled.View`
   ${props =>
     props.screenWidth <= 900 &&
     css`
-      width: 100px;
+      width: 150px;
     `};
   ${props =>
     props.showFolders &&
     css`
       width: 500px;
+    `};
+  ${props =>
+    props.screenWidth <= 900 &&
+    props.showFolders &&
+    css`
+      width: 300px;
+    `};
+  ${props =>
+    props.screenWidth <= 700 &&
+    css`
+      width: 0;
     `};
 `)
 
@@ -59,7 +70,8 @@ const SidebarContainer = screenSize(styled.View`
   ${props =>
     props.screenWidth <= 900 &&
     css`
-      width: 50px;
+      padding: 0px;
+      width: 90%;
     `};
   ${props =>
     props.showFolders &&
@@ -76,19 +88,41 @@ const SidebarContainer = screenSize(styled.View`
       height: 100%;
       width: 45%;
     `};
+  ${props =>
+    props.screenWidth <= 900 &&
+    props.folder &&
+    css`
+      padding: 0px;
+    `};
+  ${props =>
+    props.screenWidth <= 700 &&
+    css`
+      width: 0;
+    `};
 `)
 
-const SearchContainer = styled.View`
+const SearchContainer = screenSize(styled.View`
   display: flex;
   align-items: center;
   padding: ${props => props.theme.spacing};
-`
+  ${props =>
+    props.screenWidth <= 900 &&
+    css`
+      margin-bottom: ${props => props.theme.spacing};
+    `};
+`)
 
-const NewButtonContainer = styled.View`
+const NewButtonContainer = screenSize(styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-`
+  ${props =>
+    props.screenWidth <= 900 &&
+    css`
+      flex-direction: column;
+      align-items: center;
+    `};
+`)
 
 class LeftNav extends Component<Props, State> {
   count: number

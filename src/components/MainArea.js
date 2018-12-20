@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { Button } from '@morpheus-ui/core'
 import { Editor } from 'react-draft-wysiwyg'
 import {
@@ -31,16 +31,21 @@ type Props = {
   delete: () => void,
 }
 
-const Container = screenSize(styled.View`
+const Container = styled.View`
   flex: 1;
   background-color: ${props => props.theme.white};
   padding: ${props => props.theme.spacing};
-`)
+`
 
 const ButtonTitleContainer = screenSize(styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  ${props =>
+    props.screenWidth <= 1100 &&
+    css`
+      flex-direction: column;
+    `};
 `)
 
 const EditorContainer = styled.View`
