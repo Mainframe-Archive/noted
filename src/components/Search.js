@@ -22,9 +22,9 @@ type Props = {
 }
 
 const Container = screenSize(styled.View`
-  width: 300px;
+  flex: 1;
   height: 100%;
-  background-color: ${props => props.theme.blue};
+  background-color: ${props => props.theme.lightGray};
   padding: ${props => props.theme.spacing};
   ${props =>
     props.screenWidth <= 900 &&
@@ -34,11 +34,12 @@ const Container = screenSize(styled.View`
 `)
 
 const Search = styled.TextInput`
-  background-color: #fff;
+  background-color: ${props => props.theme.white};
   flex: 1;
   font-size: 12px;
   border-radius: 4px;
   padding: 5px 10px;
+  border: 1px solid ${props => props.theme.blue};
 `
 
 class SearchBar extends Component<Props, State> {

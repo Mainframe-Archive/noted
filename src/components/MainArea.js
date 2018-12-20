@@ -33,13 +33,21 @@ type Props = {
 
 const Container = screenSize(styled.View`
   flex: 1;
-  background-color: ${props => props.theme.gray};
+  background-color: ${props => props.theme.white};
   padding: ${props => props.theme.spacing};
+`)
+
+const ButtonTitleContainer = screenSize(styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `)
 
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
   background-color: ${props => props.theme.white};
+  max-height: 100vh;
+  overflow-y: auto;
   flex: 1;
 `
 
@@ -48,13 +56,14 @@ const Title = styled.TextInput`
   padding-bottom: ${props => props.theme.spacing};
   color: ${props => props.theme.darkGray};
 `
+
 const Text = styled.Text`
   font-size: 14px;
 `
 
 const ButtonContainer = styled.View`
-  max-width: 130px;
-  margin-bottom: 30px;
+  width: 130px;
+  display: flex;
   flex-direction: row;
   justify-content: space-between;
 `
@@ -73,7 +82,10 @@ class MainArea extends Component<Props, State> {
 
   componentDidMount() {
     this.interval = setInterval(() => {
-      if (this.props.note.content || this.props.note.title) {
+      if (
+        (this.props.note.content || this.props.note.title) &&
+        this.props.note.folder.name !== 'archive'
+      ) {
         this.setState({ autosaved: true })
         this.props.save()
       }
@@ -107,14 +119,6 @@ class MainArea extends Component<Props, State> {
     const d = new Date()
     return (
       <Container>
-        <Title
-          value={this.props.note.title ? this.props.note.title : 'untitled'}
-          onChangeText={this.onTitleChange}
-        />
-        <ButtonContainer>
-          <Button onPress={this.props.save} title="Save" />
-          <Button onPress={this.props.delete} title="Delete" />
-        </ButtonContainer>
         <Text>
           {this.state.autosaved &&
             'auto saved at: ' +
@@ -125,6 +129,22 @@ class MainArea extends Component<Props, State> {
               d.getSeconds()}
         </Text>
         <EditorContainer>
+          <ButtonTitleContainer>
+            <Title
+              value={this.props.note.title ? this.props.note.title : 'untitled'}
+              onChangeText={this.onTitleChange}
+            />
+            {this.props.note.folder !== 'archive' && (
+              <ButtonContainer>
+                <Button onPress={this.props.delete} title="DELETE" />
+                <Button
+                  onPress={this.props.save}
+                  title="SAVE"
+                  variant="yellow"
+                />
+              </ButtonContainer>
+            )}
+          </ButtonTitleContainer>
           <Editor
             editorState={this.state.editorState}
             onEditorStateChange={this.onEditorChange}

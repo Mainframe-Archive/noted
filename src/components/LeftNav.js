@@ -5,19 +5,25 @@ import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
 import { Button } from '@morpheus-ui/core'
 import uuidv4 from 'uuid/v4'
-import { type Note } from '../types'
+import { type Note, type Folder as FolderType } from '../types'
 import applyContext from '../hocs/Context'
 import screenSize from '../hocs/ScreenSize'
 import Folder from './Folder'
+import Notes from './Notes'
 import SearchBar from './Search'
 
 type Props = {
+  note: Note,
   notes: Array<Note>,
   update: (Note, ?boolean) => void,
   updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
   updateFolders: (string, string) => void,
+  showFolders: boolean,
+  setActiveFolder: FolderType => void,
+  toggleFoldersVisibility: () => void,
+  activeFolder: FolderType,
   getFolders: () => Array<Note>,
   getNote: string => Note,
 }
@@ -27,34 +33,61 @@ type State = {
   newTitle: string,
   addFolder: string,
   newFolder: string,
-  open: Array<string>,
 }
 
 const Container = screenSize(styled.View`
-  width: 300px;
+  width: 250px;
   height: 100%;
-  background-color: ${props => props.theme.blue};
-  padding: ${props => props.theme.spacing};
+  background-color: ${props => props.theme.lightGray};
+  display: flex;
+  flex-direction: row;
+  ${props =>
+    props.screenWidth <= 900 &&
+    css`
+      width: 100px;
+    `};
+  ${props =>
+    props.showFolders &&
+    css`
+      width: 500px;
+    `};
+`)
+
+const SidebarContainer = screenSize(styled.View`
+  width: 100%;
+  background-color: ${props => props.theme.lightGray};
   ${props =>
     props.screenWidth <= 900 &&
     css`
       width: 50px;
     `};
+  ${props =>
+    props.showFolders &&
+    css`
+      width: 55%;
+    `};
+  ${props =>
+    props.folder &&
+    css`
+      padding: ${props => props.theme.spacing};
+      display: flex;
+      justify-content: space-between;
+      background-color: #e9e9e9;
+      height: 100%;
+      width: 45%;
+    `};
 `)
-
-const TitleText = styled.Text`
-  font-size: 18px;
-  color: ${props => props.theme.white};
-  margin-bottom: 20px;
-`
 
 const SearchContainer = styled.View`
   display: flex;
   align-items: center;
+  padding: ${props => props.theme.spacing};
 `
 
 const NewButtonContainer = styled.View`
-  margin-bottom: 100px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 `
 
 class LeftNav extends Component<Props, State> {
@@ -71,19 +104,14 @@ class LeftNav extends Component<Props, State> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
-    open: [],
   }
 
   addFolder = () => {
-    this.props.update({ key: uuidv4(), invisible: true, folder: 'new folder' })
-  }
-
-  openFolder = folder => {
-    const copy = this.state.open.slice()
-    const index = copy.indexOf(folder)
-    index === -1 ? copy.push(folder) : copy.splice(index, 1)
-    this.setState({
-      open: copy,
+    this.props.update({
+      key: uuidv4(),
+      invisible: true,
+      folder: { name: 'new folder', type: 'normal' },
+      date: new Date().getTime(),
     })
   }
 
@@ -118,7 +146,7 @@ class LeftNav extends Component<Props, State> {
     e.dataTransfer.setData('key', key)
   }
 
-  onDrop = (e, folder) => {
+  onDrop = (e, targetFolder) => {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign(
       {},
@@ -126,9 +154,21 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.findInArchive(key),
     )
-    !this.props.getNote(key) && this.props.updateArchive(note)
 
-    note.folder = folder
+    note.folder.name = targetFolder.name
+
+    switch (targetFolder.type) {
+      case 'all':
+        note.folder.type = targetFolder.type
+        break
+      case 'archive':
+        note.folder.type = targetFolder.type
+        this.props.updateArchive(note)
+        break
+      default:
+        note.folder.type = 'normal'
+    }
+
     this.props.updateAndSave(note)
   }
 
@@ -140,82 +180,139 @@ class LeftNav extends Component<Props, State> {
 
   render() {
     return (
-      <Container>
-        <SearchContainer>
-          <SearchBar data={this.props.notes} />
+      <Container showFolders={this.props.showFolders}>
+        {this.props.showFolders && (
+          <SidebarContainer folder showFolders={this.props.showFolders}>
+            <View>
+              <Folder
+                folder={{ name: 'all notes', type: 'all' }}
+                folderID={'all notes'}
+                isBeingEdited={false}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+                isOpen={this.props.activeFolder.name === 'all notes'}
+                handleClick={() =>
+                  this.props.setActiveFolder({ name: 'all notes', type: 'all' })
+                }
+                handleDoubleClick={this.handleDoubleClick}
+              />
+              {Object.values(this.props.getFolders()).map(
+                (subArray: Array<Note>, index: number) => {
+                  const folderDataFromNote = subArray[0]
+                  return (
+                    <View key={folderDataFromNote.key}>
+                      <Folder
+                        folderID={folderDataFromNote.key}
+                        folder={{
+                          name: folderDataFromNote.folder.name,
+                          type: 'normal',
+                        }}
+                        onDragOver={this.onDragOver}
+                        onDrop={this.onDrop}
+                        onChangeText={this.updateFolder}
+                        onSubmitEditing={() => {
+                          this.props.updateFolders(
+                            this.state.newFolder,
+                            folderDataFromNote.folder.name,
+                          )
+                          this.setState({ edit: false })
+                        }}
+                        isBeingEdited={this.state.edit}
+                        isOpen={
+                          this.props.activeFolder.name ===
+                          folderDataFromNote.folder.name
+                        }
+                        handleClick={() =>
+                          this.props.setActiveFolder({
+                            name: folderDataFromNote.folder.name,
+                            type: folderDataFromNote.folder.type,
+                          })
+                        }
+                        handleDoubleClick={this.handleDoubleClick}
+                      />
+                    </View>
+                  )
+                },
+              )}
+              <Folder
+                folder={{ name: 'archive', type: 'archive' }}
+                folderID={'archive'}
+                isBeingEdited={false}
+                isOpen={this.props.activeFolder.type === 'archive'}
+                onDragOver={this.onDragOver}
+                onDrop={this.onDrop}
+                archive={this.archiveNote}
+                handleClick={() =>
+                  this.props.setActiveFolder({
+                    name: 'archive',
+                    type: 'archive',
+                  })
+                }
+                handleDoubleClick={this.handleDoubleClick}
+              />
+            </View>
+            <NewButtonContainer>
+              <Button title="NEW FOLDER" onPress={this.addFolder} />
+            </NewButtonContainer>
+          </SidebarContainer>
+        )}
+        <SidebarContainer showFolders={this.props.showFolders}>
           <NewButtonContainer>
+            <Button
+              onPress={this.props.toggleFoldersVisibility}
+              title="FOLDERS"
+            />
             <Button
               onPress={() =>
                 this.props.update({
                   key: uuidv4(),
                   date: new Date().getTime(),
-                  folder: '',
+                  folder: { name: '', type: 'empty' },
                 })
               }
-              title="Add new note"
+              title="NEW NOTE"
             />
           </NewButtonContainer>
-        </SearchContainer>
-        <TitleText>Your Notes</TitleText>
-        <Button title="Add a new folder" onPress={this.addFolder} />
-        {Object.values(this.props.getFolders()).map(
-          (subArray: Array<Note>, index: number) => {
-            const folderDataFromNote = subArray[0]
-            return (
-              <View key={folderDataFromNote.key}>
-                <Folder
-                  data={subArray}
-                  openFolder={this.openFolder}
-                  folderID={folderDataFromNote.key}
-                  folderName={folderDataFromNote.folder}
-                  onDragOver={this.onDragOver}
-                  onDrop={this.onDrop}
-                  onChangeText={this.updateFolder}
-                  onSubmitEditing={() => {
-                    this.props.updateFolders(
-                      this.state.newFolder,
-                      folderDataFromNote.folder,
-                    )
-                    this.setState({ edit: false })
-                  }}
-                  isBeingEdited={this.state.edit}
-                  isOpen={
-                    this.state.open.indexOf(folderDataFromNote.key) === -1
-                      ? false
-                      : true
-                  }
-                  dragStart={this.onDragStart}
-                  handleClick={this.handleClick}
-                  handleDoubleClick={this.handleDoubleClick}
-                />
-              </View>
-            )
-          },
-        )}
-        <Folder
-          data={this.props.notes}
-          openFolder={this.openFolder}
-          folderName={'all notes'}
-          folderID={'all notes'}
-          isBeingEdited={false}
-          isOpen={this.state.open.indexOf('all notes') === -1 ? false : true}
-          dragStart={this.onDragStart}
-          handleClick={this.handleClick}
-          handleDoubleClick={this.handleDoubleClick}
-        />
-        <Folder
-          data={this.props.archive}
-          openFolder={this.openFolder}
-          folderName={'archive'}
-          folderID={'archive'}
-          isBeingEdited={false}
-          isOpen={this.state.open.indexOf('archive') === -1 ? false : true}
-          onDragOver={this.onDragOver}
-          dragStart={this.onDragStart}
-          handleClick={this.handleClick}
-          handleDoubleClick={this.handleDoubleClick}
-          archive={this.archiveNote}
-        />
+          <SearchContainer>
+            <SearchBar data={this.props.notes} />
+          </SearchContainer>
+          {Object.values(this.props.getFolders()).map(
+            (subArray: Array<Note>, index: number) => {
+              return (
+                <View key={subArray[0].key}>
+                  <Notes
+                    data={subArray.sort((a, b) => b.date - a.date)}
+                    folderName={
+                      subArray[0].folder.name && subArray[0].folder.name
+                    }
+                    activeNote={this.props.note}
+                    isOpen={
+                      this.props.activeFolder.name === subArray[0].folder.name
+                    }
+                    dragStart={this.onDragStart}
+                    handleClick={this.handleClick}
+                  />
+                </View>
+              )
+            },
+          )}
+          <Notes
+            data={this.props.notes.sort((a, b) => b.date - a.date)}
+            folderName={'all notes'}
+            activeNote={this.props.note}
+            isOpen={this.props.activeFolder.type === 'all'}
+            dragStart={this.onDragStart}
+            handleClick={this.handleClick}
+          />
+          <Notes
+            data={this.props.archive.sort((a, b) => b.date - a.date)}
+            folderName={'archive'}
+            activeNote={this.props.note}
+            isOpen={this.props.activeFolder.type === 'archive'}
+            dragStart={this.onDragStart}
+            handleClick={this.handleClick}
+          />
+        </SidebarContainer>
       </Container>
     )
   }
