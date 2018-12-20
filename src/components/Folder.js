@@ -25,7 +25,7 @@ const FolderText = screenSize(styled.TextInput`
     `}
   ${props =>
     props.screenWidth <= 900 &&
-    props.isopen &&
+    props.isOpen &&
     css`
       border-left: 5px solid ${props => props.theme.yellow};
       margin-left: -5px;
