@@ -7,12 +7,7 @@ import uuidv4 from 'uuid/v4'
 import MainframeSDK from '@mainframe/sdk'
 import '@morpheus-ui/fonts'
 
-import {
-  EditorState,
-  ContentState,
-  convertFromRaw,
-  convertToRaw,
-} from 'draft-js'
+import { ContentState, convertToRaw } from 'draft-js'
 import { getNotes, setNotes, archiveNotes, getArchive } from '../localStorage'
 import { type Note, type Folder } from '../types'
 import { Provider } from '../hocs/Context'
