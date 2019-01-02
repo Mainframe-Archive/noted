@@ -141,7 +141,6 @@ class App extends Component<{}, State> {
   updateArchive = (note: Note) => {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
-
     if (index === -1) {
       note.folder.name = 'archive'
       note.folder.type = 'archive'

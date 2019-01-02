@@ -7,9 +7,7 @@ import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 
 type Props = {
-  initial: boolean,
   apiVersion: string,
-  setInitialFalse: () => void,
 }
 
 const Root = styled.View`

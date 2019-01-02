@@ -26,6 +26,7 @@ type State = {
 type Props = {
   note: Note,
   notes: Array<Note>,
+  initial: boolean,
   update: (note: Note) => void,
   save: () => void,
   delete: () => void,
@@ -87,12 +88,12 @@ class MainArea extends Component<Props, State> {
 
   componentDidMount() {
     this.interval = setInterval(() => {
-      const onlySaveDirtyNote =
+      const onlyAutoSaveDirtyNote =
         (this.props.note.content || this.props.note.title) &&
         this.props.note.folder.type !== 'archive' &&
         !this.props.initial
 
-      if (onlySaveDirtyNote) {
+      if (onlyAutoSaveDirtyNote) {
         this.setState({ autosaved: true })
         this.props.save()
       }
