@@ -138,12 +138,10 @@ class App extends Component<{}, State> {
     })
   }
 
-  archiveNote = (note: Note) => {
+  updateArchive = (note: Note) => {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
-    console.log(copy)
-    console.log(note.key)
-    console.log(index)
+
     if (index === -1) {
       note.folder.name = 'archive'
       note.folder.type = 'archive'
@@ -231,7 +229,7 @@ class App extends Component<{}, State> {
             updateFolders: this.changeFolderNames,
             setActiveFolder: this.setActiveFolder,
             toggleFoldersVisibility: this.toggleFoldersVisibility,
-            updateArchive: this.archiveNote,
+            updateArchive: this.updateArchive,
             archive: this.state.archive,
             key: this.state.note.key,
             update: this.updateActiveNote,
