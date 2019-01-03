@@ -25,6 +25,7 @@ type State = {
   archive: Array<Note>,
   activeFolder: Folder,
   showFolders: boolean,
+  showRenameModal: boolean,
 }
 
 const initialContent =
@@ -44,6 +45,7 @@ class App extends Component<{}, State> {
     archive: [],
     activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
+    showRenameModal: false,
   }
 
   async componentDidMount() {
@@ -154,23 +156,31 @@ class App extends Component<{}, State> {
   }
 
   changeFolderNames = (newFolder: string, oldFolder: string) => {
-    const copy = this.state.notes.slice()
-    this.state.notes.forEach(note => {
-      if (note.folder.name === oldFolder) {
-        note.folder.name = newFolder
-        const index = _.findIndex(copy, { key: note.key })
-        copy.splice(index, 1, note)
+    const folderNames = Object.keys(this.getFolders())
+    folderNames.forEach(folderName => {
+      if (newFolder === folderName) {
+        this.setState({ showRenameModal: true })
       }
     })
-    this.setState({
-      notes: copy,
-      note: {
-        key: uuidv4(),
-        date: new Date().getTime(),
-        folder: { name: '', type: 'empty' },
-      },
-    })
-    setNotes(copy)
+    if (!this.state.showRenameModal) {
+      const copy = this.state.notes.slice()
+      this.state.notes.forEach(note => {
+        if (note.folder.name === oldFolder) {
+          note.folder.name = newFolder
+          const index = _.findIndex(copy, { key: note.key })
+          copy.splice(index, 1, note)
+        }
+      })
+      this.setState({
+        notes: copy,
+        note: {
+          key: uuidv4(),
+          date: new Date().getTime(),
+          folder: { name: '', type: 'empty' },
+        },
+      })
+      setNotes(copy)
+    }
   }
 
   isEmptyFolder = (folder: Folder) => {
