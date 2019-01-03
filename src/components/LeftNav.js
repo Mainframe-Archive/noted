@@ -141,10 +141,28 @@ class LeftNav extends Component<Props, State> {
   }
 
   addFolder = () => {
+    const folders = Object.keys(this.props.getFolders())
+    const regex = /new folder(\d*)/
+    let nextFolderNumber = 0
+    folders.forEach(folderName => {
+      const match = folderName.match(regex)
+      if (match) {
+        if (match[1]) {
+          nextFolderNumber = Math.max(parseInt(match[1]) + 1, nextFolderNumber)
+        } else {
+          nextFolderNumber = Math.max(1, nextFolderNumber)
+        }
+        console.log(nextFolderNumber)
+      }
+    })
+    console.log(nextFolderNumber)
     this.props.update({
       key: uuidv4(),
       invisible: true,
-      folder: { name: 'new folder', type: 'normal' },
+      folder: {
+        name: nextFolderNumber ? 'new folder' + nextFolderNumber : 'new folder',
+        type: 'normal',
+      },
       date: new Date().getTime(),
     })
   }
