@@ -14,6 +14,7 @@ import { Provider } from '../hocs/Context'
 
 import theme from '../theme'
 import NOTES from '../notes.json'
+import ConfirmationModal from './ConfirmationModal'
 import Home from './Home'
 
 type State = {
@@ -156,13 +157,14 @@ class App extends Component<{}, State> {
   }
 
   changeFolderNames = (newFolder: string, oldFolder: string) => {
-    const folderNames = Object.keys(this.getFolders())
+    const folderNames = Object.keys(this.getFolderArray())
+    let rememberRenameBool = false
     folderNames.forEach(folderName => {
       if (newFolder === folderName) {
-        this.setState({ showRenameModal: true })
+        rememberRenameBool = true
       }
     })
-    if (!this.state.showRenameModal) {
+    if (!rememberRenameBool) {
       const copy = this.state.notes.slice()
       this.state.notes.forEach(note => {
         if (note.folder.name === oldFolder) {
@@ -178,8 +180,13 @@ class App extends Component<{}, State> {
           date: new Date().getTime(),
           folder: { name: '', type: 'empty' },
         },
+        showRenameModal: rememberRenameBool,
       })
       setNotes(copy)
+    } else {
+      this.setState({
+        showRenameModal: rememberRenameBool,
+      })
     }
   }
 
@@ -228,6 +235,17 @@ class App extends Component<{}, State> {
     }))
   }
 
+  closeRenameModal = () => {
+    this.setState({ showRenameModal: false })
+  }
+
+  discardChanges = () => {
+    this.setState({
+      showRenameModal: false,
+      showFolders: false,
+    })
+  }
+
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
@@ -248,6 +266,14 @@ class App extends Component<{}, State> {
             getNote: this.getNoteFromKey,
           }}>
           <Home apiVersion={this.state.apiVersion} />
+          <ConfirmationModal
+            show={this.state.showRenameModal}
+            question={'Please rename the folder.'}
+            confirmationOption={'discard changes'}
+            confirmationFunction={this.discardChanges}
+            cancelOption={'cancel'}
+            close={this.closeRenameModal}
+          />
         </Provider>
       </ThemeProvider>
     )
