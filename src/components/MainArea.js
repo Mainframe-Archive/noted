@@ -26,6 +26,7 @@ type State = {
 type Props = {
   note: Note,
   notes: Array<Note>,
+  initial: boolean,
   update: (note: Note) => void,
   save: () => void,
   delete: () => void,
@@ -87,10 +88,12 @@ class MainArea extends Component<Props, State> {
 
   componentDidMount() {
     this.interval = setInterval(() => {
-      if (
+      const onlyAutoSaveDirtyNote =
         (this.props.note.content || this.props.note.title) &&
-        this.props.note.folder.name !== 'archive'
-      ) {
+        this.props.note.folder.type !== 'archive' &&
+        !this.props.initial
+
+      if (onlyAutoSaveDirtyNote) {
         this.setState({ autosaved: true })
         this.props.save()
       }
@@ -141,7 +144,11 @@ class MainArea extends Component<Props, State> {
             />
             {this.props.note.folder !== 'archive' && (
               <ButtonContainer>
-                <Button onPress={this.props.delete} title="DELETE" />
+                <Button
+                  onPress={this.props.delete}
+                  title="DELETE"
+                  variant="borderless"
+                />
                 <Button
                   onPress={this.props.save}
                   title="SAVE"

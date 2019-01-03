@@ -28,6 +28,15 @@ export default {
 
       titleHoverColor: colors.white,
     },
+    borderless: {
+      backgroundColor: colors.white,
+      borderColor: colors.white,
+      titleColor: colors.black,
+
+      backgroundHoverColor: colors.white,
+      borderHoverColor: colors.yellow,
+      titleHoverColor: colors.yellow,
+    },
   },
 
   // Special property used as styles where `styled-components` ThemeProvider would be used

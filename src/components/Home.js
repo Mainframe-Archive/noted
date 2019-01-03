@@ -5,12 +5,9 @@ import styled from 'styled-components/native'
 
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
-import InitialState from './InitialState'
 
 type Props = {
-  initial: boolean,
   apiVersion: string,
-  setInitialFalse: () => void,
 }
 
 const Root = styled.View`
@@ -32,11 +29,7 @@ class Home extends Component<Props> {
       <Root>
         <LeftNav />
         <SdkVersion>Mainframe SDK Version: {this.props.apiVersion}</SdkVersion>
-        {this.props.initial ? (
-          <InitialState setInitialFalse={this.props.setInitialFalse} />
-        ) : (
-          <MainArea />
-        )}
+        <MainArea />
       </Root>
     )
   }
