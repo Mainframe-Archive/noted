@@ -203,6 +203,16 @@ class App extends Component<{}, State> {
         }
       }
     })
+    console.log(folders)
+    folders.sort((a, b) => {
+      let nameA = a[0].folder.name.toLowerCase(),
+        nameB = b[0].folder.name.toLowerCase()
+      console.log(nameA)
+      if (nameA < nameB) return -1
+      if (nameA > nameB) return 1
+      return 0
+    })
+    console.log(folders)
     return folders
   }
 
