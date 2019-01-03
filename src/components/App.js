@@ -47,6 +47,7 @@ class App extends Component<{}, State> {
     activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
     showRenameModal: false,
+    renameData: [],
   }
 
   async componentDidMount() {
@@ -181,6 +182,7 @@ class App extends Component<{}, State> {
           folder: { name: '', type: 'empty' },
         },
         showRenameModal: rememberRenameBool,
+        renameData: [newFolder, oldFolder],
       })
       setNotes(copy)
     } else {
@@ -240,9 +242,11 @@ class App extends Component<{}, State> {
   }
 
   discardChanges = () => {
+    this.changeFolderNames(this.state.renameData[0], this.state.renameData[1])
     this.setState({
       showRenameModal: false,
-      showFolders: false,
+      renameData: [],
+      // showFolders: false,
     })
   }
 
