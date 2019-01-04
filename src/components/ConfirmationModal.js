@@ -7,12 +7,12 @@ import { Text } from 'react-native-web'
 import styled from 'styled-components/native'
 
 type Props = {
-  show: () => void,
+  show: boolean,
   close: () => void,
   confirmationFunction: () => void,
-  confirmationOption: String,
-  cancelOption: String,
-  question: String,
+  confirmationOption: string,
+  cancelOption: string,
+  question: string,
 }
 
 const modalStyle = {

@@ -250,7 +250,6 @@ class App extends Component<{}, State> {
     this.setState({
       showRenameModal: false,
       renameDataTuple: [],
-      // showFolders: false,
     })
   }
 
