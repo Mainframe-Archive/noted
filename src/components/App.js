@@ -27,6 +27,7 @@ type State = {
   activeFolder: Folder,
   showFolders: boolean,
   showRenameModal: boolean,
+  renameDataTuple: Array<string>,
 }
 
 const initialContent =
@@ -47,7 +48,7 @@ class App extends Component<{}, State> {
     activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
     showRenameModal: false,
-    renameData: [],
+    renameDataTuple: [],
   }
 
   async componentDidMount() {
@@ -182,7 +183,7 @@ class App extends Component<{}, State> {
           folder: { name: '', type: 'empty' },
         },
         showRenameModal: rememberRenameBool,
-        renameData: [newFolder, oldFolder],
+        renameDataTuple: [newFolder, oldFolder],
       })
       setNotes(copy)
     } else {
@@ -242,10 +243,13 @@ class App extends Component<{}, State> {
   }
 
   discardChanges = () => {
-    this.changeFolderNames(this.state.renameData[0], this.state.renameData[1])
+    this.changeFolderNames(
+      this.state.renameDataTuple[0],
+      this.state.renameDataTuple[1],
+    )
     this.setState({
       showRenameModal: false,
-      renameData: [],
+      renameDataTuple: [],
       // showFolders: false,
     })
   }
