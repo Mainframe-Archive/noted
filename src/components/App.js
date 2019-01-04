@@ -118,16 +118,12 @@ class App extends Component<{}, State> {
   }
 
   deleteNote = (note?: Note) => {
-    console.log(
-      'please note: delete not fully functional yet until integration with web3',
-    )
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, {
       key: note ? note.key : this.state.note.key,
     })
     copy.splice(index, 1)
     setNotes(copy)
-
     this.setState({
       note: {
         key: uuidv4(),
@@ -171,6 +167,38 @@ class App extends Component<{}, State> {
       },
     })
     setNotes(copy)
+  }
+
+  removeFolder = folder => {
+    console.log(folder)
+    const archiveCopy = this.state.archive.slice()
+    const notesCopy = this.state.notes.slice()
+    const archiveTemp = []
+    notesCopy.map(note => {
+      if (note.folder.name === folder) {
+        const index = _.findIndex(notesCopy, {
+          key: note.key,
+        })
+        notesCopy.splice(index, 1)
+        const noteCopy = note
+        noteCopy.folder.name = 'archive'
+        noteCopy.folder.type = 'archive'
+        archiveTemp.push(noteCopy)
+      }
+      return notesCopy
+    })
+
+    archiveCopy.push(...archiveTemp)
+    this.setState({
+      notes: notesCopy,
+      archive: archiveCopy,
+      note: {
+        key: uuidv4(),
+        date: new Date().getTime(),
+        folder: { name: '', type: 'empty' },
+      },
+    })
+    archiveNotes(archiveCopy)
   }
 
   isEmptyFolder = (folder: Folder) => {
@@ -226,6 +254,7 @@ class App extends Component<{}, State> {
             ...this.state,
             getFolders: this.getFolderArray,
             updateFolders: this.changeFolderNames,
+            removeFolder: this.removeFolder,
             setActiveFolder: this.setActiveFolder,
             toggleFoldersVisibility: this.toggleFoldersVisibility,
             updateArchive: this.updateArchive,

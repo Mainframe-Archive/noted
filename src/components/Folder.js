@@ -41,6 +41,7 @@ type Props = {
   handleClick: Note => void,
   handleDoubleClick: () => void,
   onDragOver?: Event => void,
+  onDragStart?: (Event, string) => void,
   onDrop?: (Event, FolderType) => void,
   archive?: Event => void,
   onChangeText?: string => void,
@@ -53,6 +54,9 @@ const Folder = (props: Props) => {
       <FolderText
         isOpen={props.isOpen}
         draggable={props.folderDraggable}
+        onDragStart={
+          props.onDragStart && (e => props.onDragStart(e, props.folder))
+        }
         editable={props.isBeingEdited}
         defaultValue={props.folder.name}
         onDoubleClick={props.handleDoubleClick}

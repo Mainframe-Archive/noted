@@ -180,6 +180,10 @@ class LeftNav extends Component<Props, State> {
     e.dataTransfer.setData('key', key)
   }
 
+  onFolderDragStart = (e, folder) => {
+    e.dataTransfer.setData('folder', folder.name)
+  }
+
   onDrop = (e, targetFolder) => {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign(
@@ -188,7 +192,7 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.findInArchive(key),
     )
-
+    console.log(note)
     note.folder.name = targetFolder.name
 
     if (targetFolder.type === 'archive' || note.folder.type === 'archive') {
@@ -210,9 +214,14 @@ class LeftNav extends Component<Props, State> {
   }
 
   archiveNote = e => {
-    const key = e.dataTransfer.getData('key')
-    const note = Object.assign({}, this.props.getNote(key))
-    this.props.updateArchive(note)
+    if (e.dataTransfer.getData('folder')) {
+      const target = e.dataTransfer.getData('folder')
+      this.props.removeFolder(target)
+    } else if (e.dataTransfer.getData('key')) {
+      const key = e.dataTransfer.getData('key')
+      const note = Object.assign({}, this.props.getNote(key))
+      this.props.updateArchive(note)
+    }
   }
 
   render() {
@@ -244,6 +253,8 @@ class LeftNav extends Component<Props, State> {
                           name: folderDataFromNote.folder.name,
                           type: 'normal',
                         }}
+                        folderDraggable={true}
+                        onDragStart={this.onFolderDragStart}
                         onDragOver={this.onDragOver}
                         onDrop={this.onDrop}
                         onChangeText={this.updateFolder}
