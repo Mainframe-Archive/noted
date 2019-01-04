@@ -158,13 +158,13 @@ class App extends Component<{}, State> {
 
   changeFolderNames = (newFolder: string, oldFolder: string) => {
     const folderNames = Object.keys(this.getFolderArray())
-    let rememberRenameBool = false
+    let hasRenamingConflict = false
     folderNames.forEach(folderName => {
       if (newFolder === folderName) {
-        rememberRenameBool = true
+        hasRenamingConflict = true
       }
     })
-    if (!rememberRenameBool) {
+    if (!hasRenamingConflict) {
       const copy = this.state.notes.slice()
       this.state.notes.forEach(note => {
         if (note.folder.name === oldFolder) {
@@ -180,12 +180,12 @@ class App extends Component<{}, State> {
           date: new Date().getTime(),
           folder: { name: '', type: 'empty' },
         },
-        showRenameModal: rememberRenameBool,
+        showRenameModal: hasRenamingConflict,
       })
       setNotes(copy)
     } else {
       this.setState({
-        showRenameModal: rememberRenameBool,
+        showRenameModal: hasRenamingConflict,
       })
     }
   }
