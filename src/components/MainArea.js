@@ -21,6 +21,7 @@ import screenSize from '../hocs/ScreenSize'
 type State = {
   editorState: EditorState,
   autosaved: boolean,
+  dirty: boolean,
 }
 
 type Props = {
