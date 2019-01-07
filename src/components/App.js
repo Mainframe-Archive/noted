@@ -157,10 +157,11 @@ class App extends Component<{}, State> {
   }
 
   changeFolderNames = (newFolder: string, oldFolder: string) => {
-    const folderNames = Object.keys(this.getFolderArray())
+    const folders = this.getFolderArray()
     let hasRenamingConflict = false
-    folderNames.forEach(folderName => {
-      if (newFolder === folderName) {
+    folders.forEach(subArray => {
+      const folder = subArray[0].folder.name
+      if (newFolder === folder) {
         hasRenamingConflict = true
       }
     })
@@ -248,8 +249,15 @@ class App extends Component<{}, State> {
   }
 
   discardChanges = () => {
-    this.changeFolderNames('', '')
-    this.setState({ showRenameModal: false })
+    this.setState({
+      showRenameModal: false,
+      activeFolder: { name: 'all notes', type: 'all' },
+      note: {
+        key: uuidv4(),
+        date: new Date().getTime(),
+        folder: { name: '', type: 'empty' },
+      },
+    })
   }
 
   render(): Node {

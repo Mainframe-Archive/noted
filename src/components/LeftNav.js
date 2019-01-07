@@ -233,8 +233,9 @@ class LeftNav extends Component<Props, State> {
                 }
                 handleDoubleClick={this.handleDoubleClick}
               />
-              {Object.values(this.props.getFolders()).map(
-                (subArray: Array<Note>, index: number) => {
+              {this.props
+                .getFolders()
+                .map((subArray: Array<Note>, index: number) => {
                   const folderDataFromNote = subArray[0]
                   return (
                     <View key={folderDataFromNote.key}>
@@ -269,8 +270,7 @@ class LeftNav extends Component<Props, State> {
                       />
                     </View>
                   )
-                },
-              )}
+                })}
               <Folder
                 folder={{ name: 'archive', type: 'archive' }}
                 folderID={'archive'}
@@ -313,8 +313,9 @@ class LeftNav extends Component<Props, State> {
           <SearchContainer>
             <SearchBar data={this.props.notes} />
           </SearchContainer>
-          {Object.values(this.props.getFolders()).map(
-            (subArray: Array<Note>, index: number) => {
+          {this.props
+            .getFolders()
+            .map((subArray: Array<Note>, index: number) => {
               return (
                 <View key={subArray[0].key}>
                   <Notes
@@ -331,8 +332,7 @@ class LeftNav extends Component<Props, State> {
                   />
                 </View>
               )
-            },
-          )}
+            })}
           <Notes
             data={this.props.notes.sort((a, b) => b.date - a.date)}
             folderName={'all notes'}
