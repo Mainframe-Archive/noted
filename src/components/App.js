@@ -188,6 +188,7 @@ class App extends Component<{}, State> {
 
     archiveCopy.push(...archiveTemp)
     archiveNotes(archiveCopy)
+    setNotes(notesCopy)
 
     this.setState({
       notes: notesCopy,
