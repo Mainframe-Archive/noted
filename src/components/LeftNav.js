@@ -185,6 +185,8 @@ class LeftNav extends Component<Props, State> {
   }
 
   onDrop = (e, targetFolder) => {
+    console.log('weird')
+
     const key = e.dataTransfer.getData('key')
     const note = Object.assign(
       {},
@@ -192,7 +194,6 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.findInArchive(key),
     )
-    console.log(note)
     note.folder.name = targetFolder.name
 
     if (targetFolder.type === 'archive' || note.folder.type === 'archive') {
