@@ -170,33 +170,27 @@ class App extends Component<{}, State> {
   }
 
   removeFolder = folder => {
-    this.setState(prevState => {
-      console.log(prevState.notes)
-      let archiveCopy = prevState.archive.slice()
-      let notesCopy = prevState.notes.slice()
-      const archiveTemp = []
-      notesCopy.map(note => {
-        console.log(note)
-        if (note.folder.name === folder) {
-          const index = _.findIndex(notesCopy, {
-            key: note.key,
-          })
-          notesCopy.splice(index, 1)
-          const noteCopy = note
-          noteCopy.folder.name = 'archive'
-          noteCopy.folder.type = 'archive'
-          archiveTemp.push(noteCopy)
-        }
-        return notesCopy
-      })
+    const archiveCopy = this.state.archive.slice()
+    const notesCopy = this.state.notes.slice()
+    const archiveTemp = []
+    this.state.notes.forEach(note => {
+      if (note.folder.name === folder) {
+        const index = _.findIndex(notesCopy, {
+          key: note.key,
+        })
+        notesCopy.splice(index, 1)
+        const noteCopy = note
+        noteCopy.folder.name = 'archive'
+        noteCopy.folder.type = 'archive'
+        archiveTemp.push(noteCopy)
+      }
+    })
 
-      archiveCopy.push(...archiveTemp)
+    archiveCopy.push(...archiveTemp)
+    archiveNotes(archiveCopy)
 
-      console.log(archiveCopy)
-
-      archiveNotes(archiveCopy)
-
-      return {
+    this.setState(
+      {
         notes: notesCopy,
         archive: archiveCopy,
         note: {
@@ -204,8 +198,9 @@ class App extends Component<{}, State> {
           date: new Date().getTime(),
           folder: { name: '', type: 'empty' },
         },
-      }
-    })
+      },
+      () => console.log(this.state),
+    )
   }
 
   isEmptyFolder = (folder: Folder) => {
@@ -254,7 +249,6 @@ class App extends Component<{}, State> {
   }
 
   render(): Node {
-    console.log(this.state.notes)
     return (
       <ThemeProvider theme={theme}>
         <Provider
