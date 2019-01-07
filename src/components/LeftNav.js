@@ -186,8 +186,6 @@ class LeftNav extends Component<Props, State> {
   }
 
   onDrop = (e, targetFolder) => {
-    console.log('weird')
-
     const key = e.dataTransfer.getData('key')
     const note = Object.assign(
       {},
@@ -215,7 +213,7 @@ class LeftNav extends Component<Props, State> {
     this.props.updateAndSave(note)
   }
 
-  archiveNote = e => {
+  archive = e => {
     if (e.dataTransfer.getData('folder')) {
       const target = e.dataTransfer.getData('folder')
       this.props.removeFolder(target)
@@ -291,7 +289,7 @@ class LeftNav extends Component<Props, State> {
                 isOpen={this.props.activeFolder.type === 'archive'}
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
-                archive={this.archiveNote}
+                archive={this.archive}
                 handleClick={() =>
                   this.props.setActiveFolder({
                     name: 'archive',

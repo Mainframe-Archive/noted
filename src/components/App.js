@@ -189,18 +189,15 @@ class App extends Component<{}, State> {
     archiveCopy.push(...archiveTemp)
     archiveNotes(archiveCopy)
 
-    this.setState(
-      {
-        notes: notesCopy,
-        archive: archiveCopy,
-        note: {
-          key: uuidv4(),
-          date: new Date().getTime(),
-          folder: { name: '', type: 'empty' },
-        },
+    this.setState({
+      notes: notesCopy,
+      archive: archiveCopy,
+      note: {
+        key: uuidv4(),
+        date: new Date().getTime(),
+        folder: { name: '', type: 'empty' },
       },
-      () => console.log(this.state),
-    )
+    })
   }
 
   isEmptyFolder = (folder: Folder) => {
