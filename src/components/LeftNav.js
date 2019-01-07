@@ -25,6 +25,7 @@ type Props = {
   toggleFoldersVisibility: () => void,
   activeFolder: FolderType,
   getFolders: () => Array<Note>,
+  removeFolder: FolderType => void,
   getNote: string => Note,
 }
 

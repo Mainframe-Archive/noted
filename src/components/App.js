@@ -169,7 +169,7 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
-  removeFolder = folder => {
+  removeFolder = (folder: Folder) => {
     const archiveCopy = this.state.archive.slice()
     const notesCopy = this.state.notes.slice()
     const archiveTemp = []
