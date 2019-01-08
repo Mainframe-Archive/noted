@@ -19,7 +19,7 @@ type Props = {
   updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
-  updateFolders: (string, string) => void,
+  updateFolders: (string, FolderType) => void,
   showFolders: boolean,
   setActiveFolder: FolderType => void,
   toggleFoldersVisibility: () => void,
@@ -182,7 +182,7 @@ class LeftNav extends Component<Props, State> {
   }
 
   onFolderDragStart = (e, folder) => {
-    e.dataTransfer.setData('folder', folder.name)
+    e.dataTransfer.setData('folder', JSON.stringify(folder))
   }
 
   onDrop = (e, targetFolder) => {
@@ -215,7 +215,7 @@ class LeftNav extends Component<Props, State> {
 
   archive = e => {
     if (e.dataTransfer.getData('folder')) {
-      const target = e.dataTransfer.getData('folder')
+      const target = JSON.parse(e.dataTransfer.getData('folder'))
       this.props.removeFolder(target)
     } else if (e.dataTransfer.getData('key')) {
       const key = e.dataTransfer.getData('key')
@@ -261,7 +261,7 @@ class LeftNav extends Component<Props, State> {
                         onSubmitEditing={() => {
                           this.props.updateFolders(
                             this.state.newFolder,
-                            folderDataFromNote.folder.name,
+                            folderDataFromNote.folder,
                           )
                           this.setState({ edit: false })
                         }}

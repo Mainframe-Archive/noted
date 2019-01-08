@@ -138,8 +138,8 @@ class App extends Component<{}, State> {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
-      note.folder.name = 'archive'
-      note.folder.type = 'archive'
+      const archiveFolder = { name: 'archive', type: 'archive' }
+      note.folder = archiveFolder
       copy.splice(copy.length, 0, note)
     } else {
       copy.splice(index, 1)
@@ -149,15 +149,17 @@ class App extends Component<{}, State> {
     this.deleteNote(note)
   }
 
-  changeFolderNames = (newFolder: string, oldFolder: string) => {
+  changeFolderNames = (newFolder: string, oldFolder: Folder) => {
     const copy = this.state.notes.slice()
-    this.state.notes.forEach(note => {
-      if (note.folder.name === oldFolder) {
-        note.folder.name = newFolder
-        const index = _.findIndex(copy, { key: note.key })
-        copy.splice(index, 1, note)
-      }
+
+    const folderMatch = this.findSameFolder(this.state.notes, oldFolder.name)
+
+    folderMatch.forEach(note => {
+      note.folder.name = newFolder
+      const index = _.findIndex(copy, { key: note.key })
+      copy.splice(index, 1, note)
     })
+
     this.setState({
       notes: copy,
       note: {
@@ -169,21 +171,29 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
+  findSameFolder = (notes: Notes, targetFolder: string) => {
+    const folderMatches = notes.filter(
+      note => note.folder.name === targetFolder,
+    )
+    return folderMatches
+  }
+
   removeFolder = (folder: Folder) => {
     const archiveCopy = this.state.archive.slice()
     const notesCopy = this.state.notes.slice()
     const archiveTemp = []
-    this.state.notes.forEach(note => {
-      if (note.folder.name === folder) {
-        const index = _.findIndex(notesCopy, {
-          key: note.key,
-        })
-        notesCopy.splice(index, 1)
-        const noteCopy = note
-        noteCopy.folder.name = 'archive'
-        noteCopy.folder.type = 'archive'
-        archiveTemp.push(noteCopy)
-      }
+
+    const folderMatch = this.findSameFolder(this.state.notes, folder.name)
+
+    folderMatch.forEach(note => {
+      const index = _.findIndex(notesCopy, {
+        key: note.key,
+      })
+      notesCopy.splice(index, 1)
+      const noteCopy = note
+      const archiveFolder = { name: 'archive', type: 'archive' }
+      noteCopy.folder = archiveFolder
+      archiveTemp.push(noteCopy)
     })
 
     archiveCopy.push(...archiveTemp)
