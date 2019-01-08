@@ -140,11 +140,36 @@ class LeftNav extends Component<Props, State> {
     newFolder: '',
   }
 
+  findMaxStringNumber = (nameArray: Array<string>, regex: RegExp): number => {
+    let currentMax = 0
+    nameArray.forEach(name => {
+      const maxNumberName = name.match(regex)
+      if (maxNumberName) {
+        const getNumber = maxNumberName[1] ? maxNumberName[1] : 0
+        currentMax = Math.max(parseInt(getNumber) + 1, currentMax)
+      }
+    })
+    return currentMax
+  }
+
+  prettifyFolderName = (number: number): string => {
+    const folderName = number !== 0 ? 'new folder ' + number : 'new folder'
+    return folderName
+  }
+
   addFolder = () => {
+    const folderNames = Object.keys(this.props.getFolders())
+    const regex = /new folder\s*(\d*)/
+    const maxFolderNumber = this.findMaxStringNumber(folderNames, regex)
+    const nextFolderName = this.prettifyFolderName(maxFolderNumber)
+
     this.props.update({
       key: uuidv4(),
       invisible: true,
-      folder: { name: 'new folder', type: 'normal' },
+      folder: {
+        name: nextFolderName,
+        type: 'normal',
+      },
       date: new Date().getTime(),
     })
   }
