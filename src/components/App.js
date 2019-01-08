@@ -151,11 +151,11 @@ class App extends Component<{}, State> {
 
   changeFolderNames = (newFolder: string, oldFolder: Folder) => {
     const copy = this.state.notes.slice()
-
-    const folderMatch = this.findSameFolder(this.state.notes, oldFolder.name)
+    const folderMatch = this.findSameFolder(this.state.notes, oldFolder)
 
     folderMatch.forEach(note => {
-      note.folder.name = newFolder
+      const folder = { name: newFolder, type: 'normal' }
+      note.folder = folder
       const index = _.findIndex(copy, { key: note.key })
       copy.splice(index, 1, note)
     })
@@ -168,12 +168,15 @@ class App extends Component<{}, State> {
         folder: { name: '', type: 'empty' },
       },
     })
+
     setNotes(copy)
   }
 
-  findSameFolder = (notes: Array<Note>, targetFolder: string) => {
+  findSameFolder = (notes: Array<Note>, targetFolder: Folder) => {
     const folderMatches = notes.filter(
-      note => note.folder.name === targetFolder,
+      note =>
+        note.folder.name === targetFolder.name &&
+        note.folder.type === targetFolder.type,
     )
     return folderMatches
   }
@@ -183,7 +186,7 @@ class App extends Component<{}, State> {
     const notesCopy = this.state.notes.slice()
     const archiveTemp = []
 
-    const folderMatch = this.findSameFolder(this.state.notes, folder.name)
+    const folderMatch = this.findSameFolder(this.state.notes, folder)
 
     folderMatch.forEach(note => {
       const index = _.findIndex(notesCopy, {
