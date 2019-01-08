@@ -171,7 +171,7 @@ class App extends Component<{}, State> {
     setNotes(copy)
   }
 
-  findSameFolder = (notes: Notes, targetFolder: string) => {
+  findSameFolder = (notes: Array<Note>, targetFolder: string) => {
     const folderMatches = notes.filter(
       note => note.folder.name === targetFolder,
     )
