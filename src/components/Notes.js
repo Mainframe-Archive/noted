@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components/native'
 import { convertFromRaw } from 'draft-js'
 import { type Note } from '../types'
 
-const NoteContainer = styled.View`
+const NoteContainer = styled.Text`
   ${props =>
     props.isOpen &&
     css`
@@ -12,6 +12,8 @@ const NoteContainer = styled.View`
   padding: 10px ${props => props.theme.spacing};
   border-bottom: 1px solid #e3e3e3;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 `
 const FolderFlatList = styled.FlatList`
   display: block;
@@ -65,11 +67,11 @@ const Notes = (props: Props) => {
           return (
             item.invisible !== true && (
               <NoteContainer
+                draggable={true}
+                onDragStart={e => props.dragStart(e, item.key)}
                 isOpen={props.activeNote.key === item.key}
                 onClick={() => props.handleClick(item)}>
-                <Text draggable onDragStart={e => props.dragStart(e, item.key)}>
-                  {item.title ? item.title : 'untitled'}
-                </Text>
+                <Text>{item.title ? item.title : 'untitled'}</Text>
                 <NotePreview>
                   {item.content
                     ? item.content && contentPreview(item.content)
