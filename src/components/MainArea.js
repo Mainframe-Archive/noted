@@ -21,6 +21,7 @@ import screenSize from '../hocs/ScreenSize'
 type State = {
   editorState: EditorState,
   autosaved: boolean,
+  dirty: boolean,
 }
 
 type Props = {
@@ -79,6 +80,7 @@ class MainArea extends Component<Props, State> {
 
   state: State = {
     autosaved: false,
+    dirty: false,
     editorState: EditorState.createWithContent(
       this.props.note.content
         ? convertFromRaw(JSON.parse(this.props.note.content))
@@ -120,6 +122,7 @@ class MainArea extends Component<Props, State> {
   }, 250)
 
   onTitleChange = newTitle => {
+    this.setState({dirty: true})
     this.props.update({ ...this.props.note, title: newTitle })
   }
 
@@ -139,7 +142,7 @@ class MainArea extends Component<Props, State> {
         <EditorContainer>
           <ButtonTitleContainer>
             <Title
-              value={this.props.note.title ? this.props.note.title : 'untitled'}
+              value={this.props.note.title ? this.props.note.title : (this.state.dirty ? '' : 'untitled')}
               onChangeText={this.onTitleChange}
             />
             {this.props.note.folder !== 'archive' && (
