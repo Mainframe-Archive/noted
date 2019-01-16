@@ -19,12 +19,13 @@ type Props = {
   updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
   updateArchive: Note => void,
-  updateFolders: (string, string) => void,
+  updateFolders: (string, FolderType) => void,
   showFolders: boolean,
   setActiveFolder: FolderType => void,
   toggleFoldersVisibility: () => void,
   activeFolder: FolderType,
   getFolders: () => Array<Note>,
+  removeFolder: FolderType => void,
   getNote: string => Note,
 }
 
@@ -180,6 +181,10 @@ class LeftNav extends Component<Props, State> {
     e.dataTransfer.setData('key', key)
   }
 
+  onFolderDragStart = (e, folder) => {
+    e.dataTransfer.setData('folder', JSON.stringify(folder))
+  }
+
   onDrop = (e, targetFolder) => {
     const key = e.dataTransfer.getData('key')
     const note = Object.assign(
@@ -188,7 +193,6 @@ class LeftNav extends Component<Props, State> {
         ? this.props.getNote(key)
         : this.findInArchive(key),
     )
-
     note.folder.name = targetFolder.name
 
     if (targetFolder.type === 'archive' || note.folder.type === 'archive') {
@@ -209,10 +213,15 @@ class LeftNav extends Component<Props, State> {
     this.props.updateAndSave(note)
   }
 
-  archiveNote = e => {
-    const key = e.dataTransfer.getData('key')
-    const note = Object.assign({}, this.props.getNote(key))
-    this.props.updateArchive(note)
+  archive = e => {
+    if (e.dataTransfer.getData('folder')) {
+      const target = JSON.parse(e.dataTransfer.getData('folder'))
+      this.props.removeFolder(target)
+    } else if (e.dataTransfer.getData('key')) {
+      const key = e.dataTransfer.getData('key')
+      const note = Object.assign({}, this.props.getNote(key))
+      this.props.updateArchive(note)
+    }
   }
 
   render() {
@@ -245,13 +254,15 @@ class LeftNav extends Component<Props, State> {
                           name: folderDataFromNote.folder.name,
                           type: 'normal',
                         }}
+                        folderDraggable={true}
+                        onDragStart={this.onFolderDragStart}
                         onDragOver={this.onDragOver}
                         onDrop={this.onDrop}
                         onChangeText={this.updateFolder}
                         onSubmitEditing={() => {
                           this.props.updateFolders(
                             this.state.newFolder,
-                            folderDataFromNote.folder.name,
+                            folderDataFromNote.folder,
                           )
                           this.setState({ edit: false })
                         }}
@@ -278,7 +289,7 @@ class LeftNav extends Component<Props, State> {
                 isOpen={this.props.activeFolder.type === 'archive'}
                 onDragOver={this.onDragOver}
                 onDrop={this.onDrop}
-                archive={this.archiveNote}
+                archive={this.archive}
                 handleClick={() =>
                   this.props.setActiveFolder({
                     name: 'archive',
