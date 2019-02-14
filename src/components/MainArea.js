@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components/native'
 import { Button, Text, TextField } from '@morpheus-ui/core'
 import { CheckSymbol } from '@morpheus-ui/icons'
+import '@morpheus-ui/fonts'
 import { Editor } from 'react-draft-wysiwyg'
 import {
   EditorState,
@@ -13,6 +14,7 @@ import {
 } from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
+import { StyleSheet } from 'react-native'
 import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
