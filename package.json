@@ -20,8 +20,10 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@morpheus-ui/core": "^0.0.9",
+    "@mainframe/sdk": "^0.2.0",
+    "@morpheus-ui/core": "^0.0.26",
     "@morpheus-ui/fonts": "^0.0.1",
+    "@morpheus-ui/icons": "^0.0.16",
     "constant-mirror": "^1.1.1",
     "draft-js": "^0.10.5",
     "lodash": "^4.17.11",

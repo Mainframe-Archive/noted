@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
 import { Button } from '@morpheus-ui/core'
+import { PlusSymbolSm } from '@morpheus-ui/icons'
 import uuidv4 from 'uuid/v4'
 import { type Note, type Folder as FolderType } from '../types'
 import applyContext from '../hocs/Context'
@@ -37,26 +38,15 @@ type State = {
 }
 
 const Container = screenSize(styled.View`
-  width: 250px;
+  width: 220px;
   height: 100%;
   background-color: ${props => props.theme.lightGray};
   display: flex;
   flex-direction: row;
   ${props =>
-    props.screenWidth <= 900 &&
-    css`
-      width: 150px;
-    `};
-  ${props =>
     props.showFolders &&
     css`
-      width: 500px;
-    `};
-  ${props =>
-    props.screenWidth <= 900 &&
-    props.showFolders &&
-    css`
-      width: 300px;
+      width: 390px;
     `};
   ${props =>
     props.screenWidth <= 700 &&
@@ -65,19 +55,13 @@ const Container = screenSize(styled.View`
     `};
 `)
 
-const SidebarContainer = screenSize(styled.View`
+const SidebarContainer = styled.View`
   width: 100%;
   background-color: ${props => props.theme.lightGray};
   ${props =>
-    props.screenWidth <= 900 &&
-    css`
-      padding: 0px;
-      width: 90%;
-    `};
-  ${props =>
     props.showFolders &&
     css`
-      width: 55%;
+      width: 220px;
     `};
   ${props =>
     props.folder &&
@@ -87,43 +71,31 @@ const SidebarContainer = screenSize(styled.View`
       justify-content: space-between;
       background-color: #e9e9e9;
       height: 100%;
-      width: 45%;
+      width: 170px;
     `};
-  ${props =>
-    props.screenWidth <= 900 &&
-    props.folder &&
-    css`
-      padding: 0px;
-    `};
-  ${props =>
-    props.screenWidth <= 700 &&
-    css`
-      width: 0;
-    `};
-`)
+`
 
-const SearchContainer = screenSize(styled.View`
-  display: flex;
-  align-items: center;
-  padding: ${props => props.theme.spacing};
-  ${props =>
-    props.screenWidth <= 900 &&
-    css`
-      margin-bottom: ${props => props.theme.spacing};
-    `};
-`)
-
-const NewButtonContainer = screenSize(styled.View`
+const NewButtonContainer = styled.View`
+  position: relative;
+  margin: 0 auto;
+  width: 205px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  ${props =>
-    props.screenWidth <= 900 &&
-    css`
-      flex-direction: column;
-      align-items: center;
-    `};
-`)
+`
+
+const SideBarButtonContainer = styled.View`
+  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+`
+
+const MarginTop = styled.View`
+  margin-top: 30px;
+  margin-bottom: 15px;
+`
 
 class LeftNav extends Component<Props, State> {
   count: number
@@ -139,6 +111,7 @@ class LeftNav extends Component<Props, State> {
     newTitle: '',
     addFolder: '',
     newFolder: '',
+    searchOpen: false,
   }
 
   addFolder = () => {
@@ -224,6 +197,14 @@ class LeftNav extends Component<Props, State> {
     }
   }
 
+  setOpen = () => {
+    this.setState({ searchOpen: true })
+  }
+
+  closeSearch = () => {
+    this.setState({ searchOpen: false })
+  }
+
   render() {
     return (
       <Container showFolders={this.props.showFolders}>
@@ -299,31 +280,47 @@ class LeftNav extends Component<Props, State> {
                 handleDoubleClick={this.handleDoubleClick}
               />
             </View>
-            <NewButtonContainer>
-              <Button title="NEW FOLDER" onPress={this.addFolder} />
-            </NewButtonContainer>
+            <SideBarButtonContainer>
+              <Button
+                title="NEW FOLDER"
+                onPress={this.addFolder}
+                variant="darkYellow"
+              />
+            </SideBarButtonContainer>
           </SidebarContainer>
         )}
         <SidebarContainer showFolders={this.props.showFolders}>
-          <NewButtonContainer>
-            <Button
-              onPress={this.props.toggleFoldersVisibility}
-              title="FOLDERS"
-            />
-            <Button
-              onPress={() =>
-                this.props.update({
-                  key: uuidv4(),
-                  date: new Date().getTime(),
-                  folder: { name: '', type: 'empty' },
-                })
-              }
-              title="NEW NOTE"
-            />
-          </NewButtonContainer>
-          <SearchContainer>
-            <SearchBar data={this.props.notes} />
-          </SearchContainer>
+          <MarginTop>
+            <NewButtonContainer>
+              {!this.state.searchOpen && (
+                <Button
+                  onPress={this.props.toggleFoldersVisibility}
+                  Icon={PlusSymbolSm}
+                  variant={['grayIcon']}
+                />
+              )}
+              <SearchBar
+                data={this.props.notes}
+                setOpen={this.setOpen}
+                closeSearch={this.closeSearch}
+                open={this.state.searchOpen}
+              />
+              {!this.state.searchOpen && (
+                <Button
+                  onPress={() =>
+                    this.props.update({
+                      key: uuidv4(),
+                      date: new Date().getTime(),
+                      folder: { name: '', type: 'empty' },
+                    })
+                  }
+                  variant={['darkYellow']}
+                  Icon={PlusSymbolSm}
+                  title="NEW NOTE"
+                />
+              )}
+            </NewButtonContainer>
+          </MarginTop>
           {this.props
             .getFolders()
             .map((subArray: Array<Note>, index: number) => {

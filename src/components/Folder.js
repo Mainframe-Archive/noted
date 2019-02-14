@@ -1,15 +1,14 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
 import { type Note, type Folder as FolderType } from '../types'
-import screenSize from '../hocs/ScreenSize'
 
 const FolderContainer = styled.View`
   display: inline;
   padding: 0 5px;
 `
-
-const FolderText = screenSize(styled.TextInput`
+const FolderText = styled.TextInput`
   color: ${props => props.theme.mediumGray};
+  width: 125px;
   font-size: 15px;
   margin-bottom: 5px;
   margin-top: 10px;
@@ -23,15 +22,7 @@ const FolderText = screenSize(styled.TextInput`
       font-weight: bold;
       color: ${props => props.theme.black};
     `}
-  ${props =>
-    props.screenWidth <= 900 &&
-    props.isOpen &&
-    css`
-      border-left: 5px solid ${props => props.theme.yellow};
-      margin-left: -5px;
-      padding-left: 6px;
-    `};
-`)
+`
 
 type Props = {
   folderID: string,
