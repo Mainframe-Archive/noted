@@ -14,7 +14,6 @@ import {
 } from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
-import { StyleSheet } from 'react-native'
 import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
