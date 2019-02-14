@@ -40,7 +40,7 @@ type State = {
 const Container = screenSize(styled.View`
   width: 220px;
   height: 100%;
-  background-color: ${props => props.theme.lightGray};
+  background-color: #f9f9f9;
   display: flex;
   flex-direction: row;
   ${props =>
@@ -57,7 +57,8 @@ const Container = screenSize(styled.View`
 
 const SidebarContainer = styled.View`
   width: 100%;
-  background-color: ${props => props.theme.lightGray};
+  background-color: #f9f9f9;
+  overflow-y: auto;
   ${props =>
     props.showFolders &&
     css`
@@ -68,8 +69,7 @@ const SidebarContainer = styled.View`
     css`
       padding: ${props => props.theme.spacing} 0;
       display: flex;
-      justify-content: space-between;
-      background-color: #e9e9e9;
+      background-color: #f5f5f5;
       height: 100%;
       width: 170px;
     `};
@@ -85,11 +85,8 @@ const NewButtonContainer = styled.View`
 `
 
 const SideBarButtonContainer = styled.View`
-  margin: 0 auto;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
+  margin-left: 20px;
+  margin-top: 15px;
 `
 
 const MarginTop = styled.View`
@@ -121,6 +118,7 @@ class LeftNav extends Component<Props, State> {
       folder: { name: 'new folder', type: 'normal' },
       date: new Date().getTime(),
     })
+    this.props.setActiveFolder({ name: 'new folder', type: 'normal' })
   }
 
   handleClick = item => {
@@ -245,6 +243,10 @@ class LeftNav extends Component<Props, State> {
                             this.state.newFolder,
                             folderDataFromNote.folder,
                           )
+                          this.props.setActiveFolder({
+                            name: this.state.newFolder,
+                            type: 'normal',
+                          })
                           this.setState({ edit: false })
                         }}
                         isBeingEdited={this.state.edit}
@@ -282,9 +284,9 @@ class LeftNav extends Component<Props, State> {
             </View>
             <SideBarButtonContainer>
               <Button
-                title="NEW FOLDER"
                 onPress={this.addFolder}
-                variant="darkYellow"
+                Icon={PlusSymbolSm}
+                variant="grayIcon"
               />
             </SideBarButtonContainer>
           </SidebarContainer>

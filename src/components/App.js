@@ -45,7 +45,7 @@ class App extends Component<{}, State> {
     apiVersion: '',
     archive: [],
     activeFolder: { name: 'all notes', type: 'all' },
-    showFolders: false,
+    showFolders: true,
     showRenameModal: false,
   }
 

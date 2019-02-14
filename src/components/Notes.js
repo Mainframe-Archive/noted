@@ -88,14 +88,14 @@ const Notes = (props: Props) => {
                 onClick={() => props.handleClick(item)}>
                 <TextContainer>
                   <Text variant="bold">
-                    {item.title ? item.title : 'untitled'}
+                    {item.title ? item.title : 'Title...'}
                   </Text>
                 </TextContainer>
                 <TextContainer>
                   <Text variant="smaller">
                     {item.content
                       ? item.content && contentPreview(item.content)
-                      : 'start typing...'}
+                      : 'Start typing...'}
                   </Text>
                 </TextContainer>
                 <TextContainer>

@@ -128,6 +128,7 @@ export default {
     selectedFolderText: {
       color: colors.black,
       fontWeight: 'bold',
+      labelColor: colors.black,
     },
   },
 

@@ -87,7 +87,7 @@ class MainArea extends Component<Props, State> {
     editorState: EditorState.createWithContent(
       this.props.note.content
         ? convertFromRaw(JSON.parse(this.props.note.content))
-        : ContentState.createFromText('start typing...'),
+        : ContentState.createFromText('Start typing...'),
     ),
     showText: false,
   }
@@ -153,7 +153,7 @@ class MainArea extends Component<Props, State> {
                     ? this.props.note.title
                     : this.state.dirty
                     ? ''
-                    : 'untitled'
+                    : 'Title...'
                 }
               />
             </TitleContainer>

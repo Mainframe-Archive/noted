@@ -13,7 +13,7 @@ const FolderContainer = styled.View`
 const FolderText = styled.TextInput`
   flex: 1;
   color: ${props => props.theme.mediumGray};
-  width: 155px;
+  max-width: 135px;
   font-size: 15px;
   cursor: pointer;
   padding-left: 10px;
@@ -81,6 +81,12 @@ const Folder = (props: Props) => {
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
       />
+      {/*      <TextField
+        value={props.folder.name}
+        variant={[props.isOpen ? 'bold' : '', 'folderText']}
+        onChange={props.onChangeText && (text => props.onChangeText(text))}
+        onSubmit={props.onSubmitEditing && props.onSubmitEditing}
+      />*/}
     </FolderContainer>
   )
 }
