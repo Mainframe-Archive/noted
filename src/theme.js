@@ -80,6 +80,14 @@ export default {
       backgroundHoverColor: 'transparent',
       iconHoverColor: colors.yellow,
     },
+    invisible: {
+      iconHoverBackgroundColor: 'transparent',
+      borderColor: 'transparent',
+      borderHoverColor: 'transparent',
+      backgroundHoverColor: 'transparent',
+      iconHoverColor: 'transparent',
+      iconColor: 'transparent',
+    },
     short: {
       titlePadding: '6px',
     },
@@ -104,6 +112,7 @@ export default {
   },
   TextField: {
     large: {
+      textActiveColor: colors.black,
       fontSize: '35px',
       backgroundColor: colors.white,
     },

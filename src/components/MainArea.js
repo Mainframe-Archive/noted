@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { Button, Text, TextField } from '@morpheus-ui/core'
 import { CheckSymbol } from '@morpheus-ui/icons'
 import '@morpheus-ui/fonts'
@@ -41,11 +41,19 @@ const Container = styled.View`
   padding: ${props => props.theme.spacing};
 `
 
-const ButtonTitleContainer = screenSize(styled.View`
+const ButtonTitleContainer = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-`)
+`
+
+const TitleContainer = styled.View`
+  ${props =>
+    props.showfolders &&
+    css`
+      max-width: 240px;
+    `}
+`
 
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
@@ -56,7 +64,7 @@ const EditorContainer = styled.View`
 `
 
 const ButtonContainer = styled.View`
-  padding-top: 6px;
+  padding-top: 15px;
   width: 120px;
   display: flex;
   flex-direction: row;
@@ -66,7 +74,9 @@ const ButtonContainer = styled.View`
 
 const CheckContainer = styled.View`
   display: flex;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 `
 
 class MainArea extends Component<Props, State> {
@@ -135,17 +145,19 @@ class MainArea extends Component<Props, State> {
       <Container>
         <EditorContainer>
           <ButtonTitleContainer>
-            <TextField
-              onChange={this.onTitleChange}
-              variant="large"
-              value={
-                this.props.note.title
-                  ? this.props.note.title
-                  : this.state.dirty
-                  ? ''
-                  : 'untitled'
-              }
-            />
+            <TitleContainer showfolders={this.props.showFolders}>
+              <TextField
+                onChange={this.onTitleChange}
+                variant="large"
+                value={
+                  this.props.note.title
+                    ? this.props.note.title
+                    : this.state.dirty
+                    ? ''
+                    : 'untitled'
+                }
+              />
+            </TitleContainer>
             {this.props.note.folder !== 'archive' && (
               <ButtonContainer>
                 <Button
@@ -168,16 +180,14 @@ class MainArea extends Component<Props, State> {
           />
         </EditorContainer>
         <CheckContainer>
-          {this.state.autosaved && (
-            <Button
-              Icon={CheckSymbol}
-              variant={['icon']}
-              onMouseEnter={this.showAutosaved}
-            />
-          )}
           {this.state.showText && (
             <Text variant="faded">{'auto saved at: ' + formattedTime(d)}</Text>
           )}
+          <Button
+            Icon={CheckSymbol}
+            variant={['icon', !this.state.autosaved ? 'invisible' : '']}
+            onMouseEnter={this.showAutosaved}
+          />
         </CheckContainer>
       </Container>
     )
