@@ -17,7 +17,6 @@ import _ from 'lodash'
 import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
-import screenSize from '../hocs/ScreenSize'
 import { formattedTime } from './Notes'
 
 type State = {

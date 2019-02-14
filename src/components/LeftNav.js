@@ -66,7 +66,7 @@ const SidebarContainer = styled.View`
   ${props =>
     props.folder &&
     css`
-      padding: ${props => props.theme.spacing};
+      padding: ${props => props.theme.spacing} 0;
       display: flex;
       justify-content: space-between;
       background-color: #e9e9e9;

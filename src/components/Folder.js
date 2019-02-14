@@ -3,24 +3,38 @@ import styled, { css } from 'styled-components/native'
 import { type Note, type Folder as FolderType } from '../types'
 
 const FolderContainer = styled.View`
-  display: inline;
-  padding: 0 5px;
+  width: 100%;
+  diplay: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 10px;
 `
 const FolderText = styled.TextInput`
+  flex: 1;
   color: ${props => props.theme.mediumGray};
-  width: 125px;
+  width: 155px;
   font-size: 15px;
-  margin-bottom: 5px;
-  margin-top: 10px;
   cursor: pointer;
   padding-left: 10px;
   ${props =>
     props.isOpen &&
     css`
-      border-left: 9px solid ${props => props.theme.yellow};
-      margin-left: -9px;
       font-weight: bold;
       color: ${props => props.theme.black};
+    `}
+`
+const Triangle = styled.View`
+  width: 0;
+  height: 0;
+  left: 0;
+  border-top: 12px solid transparent;
+  border-bottom: 12px solid transparent;
+  border-left: 12px solid ${props => props.theme.yellow};
+  ${props =>
+    !props.isOpen &&
+    css`
+      border-left: 12px solid transparent;
     `}
 `
 
@@ -42,6 +56,7 @@ type Props = {
 const Folder = (props: Props) => {
   return (
     <FolderContainer>
+      <Triangle isOpen={props.isOpen} />
       <FolderText
         isOpen={props.isOpen}
         draggable={props.folderDraggable}

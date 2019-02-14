@@ -2,6 +2,7 @@ const colors = {
   white: '#fff',
   lightYellow: '#fcecb0',
   yellow: '#FFD953',
+  darkYellow: '#E5B711',
   blue: '#1f3464',
   lightBlue: '#00a7e7',
   red: '#da1157',
@@ -38,7 +39,7 @@ export default {
       fontSize: '11px',
 
       backgroundHoverColor: colors.white,
-      borderHoverColor: colors.yellow,
+      borderHoverColor: 'transparent',
       titleHoverColor: colors.yellow,
     },
     grayIcon: {
@@ -65,10 +66,11 @@ export default {
       letterSpacing: '1px',
       fontSize: '11px',
 
-      iconHoverBackgroundColor: colors.yellow,
-      borderHoverColor: colors.yellow,
-      iconHoverColor: colors.white,
-      titleHoverColor: colors.white,
+      backgroundHoverColor: colors.darkYellow,
+      iconHoverBackgroundColor: colors.darkYellow,
+      borderHoverColor: colors.darkYellow,
+      iconHoverColor: colors.black,
+      titleHoverColor: colors.black,
 
       iconHeight: 12,
       iconWidth: 12,
@@ -108,6 +110,9 @@ export default {
     },
     smaller: {
       fontSize: '12px',
+    },
+    folder: {
+      lineHeight: '10px',
     },
   },
   TextField: {

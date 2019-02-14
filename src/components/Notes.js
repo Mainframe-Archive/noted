@@ -1,6 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
 import { convertFromRaw } from 'draft-js'
+import { Image } from 'react-native'
 import { Text } from '@morpheus-ui/core'
 import { type Note } from '../types'
 
@@ -24,6 +25,14 @@ const TextContainer = styled.View`
   margin-bottom: 2px;
   cursor: pointer;
   display: block;
+`
+const ImageTextContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-left: 11px;
+  margin-top: 3px;
 `
 
 type Props = {
@@ -92,11 +101,17 @@ const Notes = (props: Props) => {
                 <TextContainer>
                   <Text variant="date">{date + '    ' + time}</Text>
                 </TextContainer>
-                <TextContainer>
-                  <Text variant="smaller">
-                    {item.folder.type !== 'all' && item.folder.name}
-                  </Text>
-                </TextContainer>
+                {item.folder.type !== 'all' && item.folder.type !== 'empty' && (
+                  <ImageTextContainer>
+                    <Image
+                      source={require('./img/folder.svg')}
+                      style={{ width: 13, height: 10, marginRight: 5 }}
+                    />
+                    <Text variant={['smaller', 'folder']}>
+                      {item.folder.name}
+                    </Text>
+                  </ImageTextContainer>
+                )}
               </NoteContainer>
             )
           )
