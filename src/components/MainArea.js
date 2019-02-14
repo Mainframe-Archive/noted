@@ -16,6 +16,7 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
 import { type Note } from '../types'
 
+import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import { formattedTime } from './Notes'
 
@@ -46,13 +47,20 @@ const ButtonTitleContainer = styled.View`
   justify-content: space-between;
 `
 
-const TitleContainer = styled.View`
+const TitleContainer = screenSize(styled.View`
+  margin-bottom: -30px;
   ${props =>
     props.showfolders &&
     css`
       max-width: 240px;
     `}
-`
+  ${props =>
+    props.showfolders &&
+    props.screenWidth <= 800 &&
+    css`
+      max-width: 140px;
+    `}
+`)
 
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};

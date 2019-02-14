@@ -116,8 +116,10 @@ export default {
     },
   },
   TextField: {
-    large: {
+    default: {
       textActiveColor: colors.black,
+    },
+    large: {
       fontSize: '35px',
       backgroundColor: colors.white,
     },
