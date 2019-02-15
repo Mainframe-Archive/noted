@@ -187,7 +187,7 @@ class MainArea extends Component<Props, State> {
           />
         </EditorContainer>
         <CheckContainer>
-          {this.state.showText && (
+          {this.state.showText && this.state.autosaved && (
             <Text variant="faded">{'auto saved at: ' + formattedTime(d)}</Text>
           )}
           <Button
