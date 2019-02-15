@@ -10,8 +10,14 @@ const SuggestionText = styled.Text`
 `
 
 const Container = styled.View`
+  position: relative;
+  margin-top: -20px;
+  width: 194px;
+  padding: 0 5px;
   background-color: ${props => props.theme.white};
-  border-radius: 5px;
+  opacity: 1;
+  border-radius: 3px;
+  z-index: 1000;
 `
 
 const Suggestions = props => {

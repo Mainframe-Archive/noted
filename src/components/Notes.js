@@ -1,41 +1,38 @@
 import React from 'react'
 import styled, { css } from 'styled-components/native'
 import { convertFromRaw } from 'draft-js'
+import { Image } from 'react-native'
+import { Text } from '@morpheus-ui/core'
 import { type Note } from '../types'
 
-const NoteContainer = styled.View`
+const NoteContainer = styled.Text`
   ${props =>
     props.isOpen &&
     css`
       background-color: ${props => props.theme.lightYellow};
     `}
-  padding: 10px ${props => props.theme.spacing};
+  padding: 10px 13px;
   border-bottom: 1px solid #e3e3e3;
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
 `
 const FolderFlatList = styled.FlatList`
   display: block;
 `
-const Text = styled.Text`
-  font-size: 14px;
-  color: ${props => props.theme.darkGray};
-  font-weight: bold;
+const TextContainer = styled.View`
   margin-left: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 2px;
   cursor: pointer;
   display: block;
 `
-const NotePreview = styled.Text`
-  font-size: 12px;
-  color: ${props => props.theme.darkGray};
-  margin-left: 10px;
-  margin-bottom: 5px;
-`
-const NoteDate = styled.Text`
-  font-size: 12px;
-  color: ${props => props.theme.mediumGray};
-  margin-left: 10px;
-  margin-bottom: 5px;
+const ImageTextContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-left: 11px;
+  margin-top: 3px;
 `
 
 type Props = {
@@ -47,12 +44,30 @@ type Props = {
   dragStart: (Event, string) => void,
 }
 
-const contentPreview = content => {
+function contentPreview(content) {
   const newContent = convertFromRaw(JSON.parse(content))
     .getPlainText()
     .replace(/[\n\r]/g, ' ')
     .substring(0, 25)
   return newContent
+}
+
+function formattedDate(timestamp) {
+  const today = new Date(timestamp).toLocaleDateString(undefined, {
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric',
+  })
+  return today
+}
+
+export function formattedTime(timestamp) {
+  const time = new Date(timestamp).toLocaleTimeString(undefined, {
+    hour12: false,
+    hour: 'numeric',
+    minute: 'numeric',
+  })
+  return time
 }
 
 const Notes = (props: Props) => {
@@ -61,26 +76,42 @@ const Notes = (props: Props) => {
       <FolderFlatList
         data={props.data}
         renderItem={({ item }) => {
-          const date = new Date(item.date)
+          const dateTime = new Date(item.date)
+          const date = formattedDate(dateTime)
+          const time = formattedTime(dateTime)
           return (
             item.invisible !== true && (
               <NoteContainer
+                draggable={true}
+                onDragStart={e => props.dragStart(e, item.key)}
                 isOpen={props.activeNote.key === item.key}
                 onClick={() => props.handleClick(item)}>
-                <Text draggable onDragStart={e => props.dragStart(e, item.key)}>
-                  {item.title ? item.title : 'untitled'}
-                </Text>
-                <NotePreview>
-                  {item.content
-                    ? item.content && contentPreview(item.content)
-                    : 'start typing...'}
-                </NotePreview>
-                <NoteDate>
-                  {date.toString().replace(/\sGMT-\d{4,}\s\(\w{3,}\)/gi, '')}
-                </NoteDate>
-                <NotePreview>
-                  {item.folder.type !== 'all' && item.folder.name}
-                </NotePreview>
+                <TextContainer>
+                  <Text variant="bold">
+                    {item.title ? item.title : 'Title...'}
+                  </Text>
+                </TextContainer>
+                <TextContainer>
+                  <Text variant="smaller">
+                    {item.content
+                      ? item.content && contentPreview(item.content)
+                      : 'Start typing...'}
+                  </Text>
+                </TextContainer>
+                <TextContainer>
+                  <Text variant="date">{date + '    ' + time}</Text>
+                </TextContainer>
+                {item.folder.type !== 'all' && item.folder.type !== 'empty' && (
+                  <ImageTextContainer>
+                    <Image
+                      source={require('./img/folder.svg')}
+                      style={{ width: 13, height: 10, marginRight: 5 }}
+                    />
+                    <Text variant={['smaller', 'folder']}>
+                      {item.folder.name}
+                    </Text>
+                  </ImageTextContainer>
+                )}
               </NoteContainer>
             )
           )

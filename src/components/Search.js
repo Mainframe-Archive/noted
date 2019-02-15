@@ -1,8 +1,11 @@
 // @flow
 
 import React, { Component } from 'react'
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 import _ from 'lodash'
+import { Button, TextField } from '@morpheus-ui/core'
+import { SearchSm } from '@morpheus-ui/icons'
+
 import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import { type Note } from '../types'
@@ -19,26 +22,18 @@ type Props = {
   update: (note: Note) => void,
   save: () => void,
   delete: () => void,
+  open: boolean,
+  closeSearch: () => void,
+  setOpen: () => void,
 }
 
 const Container = screenSize(styled.View`
-  height: 100%;
+  margin-top: 1px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
   background-color: ${props => props.theme.lightGray};
-  padding: ${props => props.theme.spacing};
-  ${props =>
-    props.screenWidth <= 900 &&
-    css`
-      padding: 0;
-    `};
 `)
-
-const Search = styled.TextInput`
-  background-color: ${props => props.theme.white};
-  font-size: 12px;
-  border-radius: 4px;
-  padding: 5px 10px;
-  border: 1px solid ${props => props.theme.blue};
-`
 
 class SearchBar extends Component<Props, State> {
   state = {
@@ -49,9 +44,11 @@ class SearchBar extends Component<Props, State> {
   handleInputChange = text => {
     if (text && text.length > 1) {
       this.props.notes.map(note => {
-        const escapedString = text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const escapedString = text
+          .toLowerCase()
+          .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         const regex = new RegExp(escapedString + 'w*', 'g')
-        const result = note.title ? note.title.match(regex) : null
+        const result = note.title ? note.title.toLowerCase().match(regex) : null
         if (result) {
           const copy = this.state.results.slice()
           const index = _.findIndex(copy, { title: note.title })
@@ -71,11 +68,26 @@ class SearchBar extends Component<Props, State> {
   render() {
     return (
       <Container>
-        <Search
-          placeholder="Search Title"
-          onChangeText={this.handleInputChange}
-        />
-        <Suggestions results={this.state.results} update={this.props.update} />
+        {this.props.open ? (
+          <TextField
+            placeholder="Search Title"
+            onChange={this.handleInputChange}
+            IconLeft={SearchSm}
+            onPressIcon={this.props.closeSearch}
+          />
+        ) : (
+          <Button
+            Icon={SearchSm}
+            variant={['grayIcon']}
+            onPress={this.props.setOpen}
+          />
+        )}
+        {this.props.open && (
+          <Suggestions
+            results={this.state.results}
+            update={this.props.update}
+          />
+        )}
       </Container>
     )
   }

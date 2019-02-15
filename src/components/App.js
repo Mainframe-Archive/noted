@@ -14,6 +14,7 @@ import { Provider } from '../hocs/Context'
 
 import theme from '../theme'
 import NOTES from '../notes.json'
+import ConfirmationModal from './ConfirmationModal'
 import Home from './Home'
 
 type State = {
@@ -25,6 +26,7 @@ type State = {
   archive: Array<Note>,
   activeFolder: Folder,
   showFolders: boolean,
+  showRenameModal: boolean,
 }
 
 const initialContent =
@@ -44,6 +46,7 @@ class App extends Component<{}, State> {
     archive: [],
     activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
+    showRenameModal: false,
   }
 
   async componentDidMount() {
@@ -118,16 +121,12 @@ class App extends Component<{}, State> {
   }
 
   deleteNote = (note?: Note) => {
-    console.log(
-      'please note: delete not fully functional yet until integration with web3',
-    )
     const copy = this.state.notes.slice()
     const index = _.findIndex(copy, {
       key: note ? note.key : this.state.note.key,
     })
     copy.splice(index, 1)
     setNotes(copy)
-
     this.setState({
       note: {
         key: uuidv4(),
@@ -142,8 +141,8 @@ class App extends Component<{}, State> {
     const copy = this.state.archive.slice()
     const index = _.findIndex(copy, { key: note.key })
     if (index === -1) {
-      note.folder.name = 'archive'
-      note.folder.type = 'archive'
+      const archiveFolder = { name: 'archive', type: 'archive' }
+      note.folder = archiveFolder
       copy.splice(copy.length, 0, note)
     } else {
       copy.splice(index, 1)
@@ -153,24 +152,84 @@ class App extends Component<{}, State> {
     this.deleteNote(note)
   }
 
-  changeFolderNames = (newFolder: string, oldFolder: string) => {
-    const copy = this.state.notes.slice()
-    this.state.notes.forEach(note => {
-      if (note.folder.name === oldFolder) {
-        note.folder.name = newFolder
-        const index = _.findIndex(copy, { key: note.key })
-        copy.splice(index, 1, note)
+  changeFolderNames = (newFolder: string, oldFolder: Folder) => {
+    const folders = this.getFolderArray()
+    let hasRenamingConflict = false
+    folders.forEach(subArray => {
+      const folder = subArray[0].folder.name
+      if (newFolder === folder) {
+        hasRenamingConflict = true
       }
     })
+
+    if (!hasRenamingConflict) {
+      const copy = this.state.notes.slice()
+      const folderMatch = this.findSameFolder(this.state.notes, oldFolder)
+
+      folderMatch.forEach(note => {
+        const folder = { name: newFolder, type: 'normal' }
+        note.folder = folder
+        const index = _.findIndex(copy, { key: note.key })
+        copy.splice(index, 1, note)
+      })
+
+      this.setState({
+        notes: copy,
+        note: {
+          key: uuidv4(),
+          date: new Date().getTime(),
+          folder: { name: '', type: 'empty' },
+        },
+      })
+
+      setNotes(copy)
+    } else {
+      this.setState({
+        showRenameModal: hasRenamingConflict,
+      })
+    }
+  }
+
+  findSameFolder = (notes: Array<Note>, targetFolder: Folder) => {
+    const folderMatches = notes.filter(
+      note =>
+        note.folder.name === targetFolder.name &&
+        note.folder.type === targetFolder.type,
+    )
+    return folderMatches
+  }
+
+  removeFolder = (folder: Folder) => {
+    const archiveCopy = this.state.archive.slice()
+    const notesCopy = this.state.notes.slice()
+    const archiveTemp = []
+
+    const folderMatch = this.findSameFolder(this.state.notes, folder)
+
+    folderMatch.forEach(note => {
+      const index = _.findIndex(notesCopy, {
+        key: note.key,
+      })
+      notesCopy.splice(index, 1)
+      const noteCopy = note
+      const archiveFolder = { name: 'archive', type: 'archive' }
+      noteCopy.folder = archiveFolder
+      archiveTemp.push(noteCopy)
+    })
+
+    archiveCopy.push(...archiveTemp)
+    archiveNotes(archiveCopy)
+    setNotes(notesCopy)
+
     this.setState({
-      notes: copy,
+      notes: notesCopy,
+      archive: archiveCopy,
       note: {
         key: uuidv4(),
         date: new Date().getTime(),
         folder: { name: '', type: 'empty' },
       },
     })
-    setNotes(copy)
   }
 
   isEmptyFolder = (folder: Folder) => {
@@ -226,6 +285,22 @@ class App extends Component<{}, State> {
     }))
   }
 
+  closeRenameModal = () => {
+    this.setState({ showRenameModal: false })
+  }
+
+  discardChanges = () => {
+    this.setState({
+      showRenameModal: false,
+      activeFolder: { name: 'all notes', type: 'all' },
+      note: {
+        key: uuidv4(),
+        date: new Date().getTime(),
+        folder: { name: '', type: 'empty' },
+      },
+    })
+  }
+
   render(): Node {
     return (
       <ThemeProvider theme={theme}>
@@ -234,6 +309,7 @@ class App extends Component<{}, State> {
             ...this.state,
             getFolders: this.getFolderArray,
             updateFolders: this.changeFolderNames,
+            removeFolder: this.removeFolder,
             setActiveFolder: this.setActiveFolder,
             toggleFoldersVisibility: this.toggleFoldersVisibility,
             updateArchive: this.updateArchive,
@@ -246,6 +322,14 @@ class App extends Component<{}, State> {
             getNote: this.getNoteFromKey,
           }}>
           <Home apiVersion={this.state.apiVersion} />
+          <ConfirmationModal
+            show={this.state.showRenameModal}
+            question={'Please rename the folder.'}
+            confirmationOption={'discard changes'}
+            confirmationFunction={this.discardChanges}
+            cancelOption={'cancel'}
+            close={this.closeRenameModal}
+          />
         </Provider>
       </ThemeProvider>
     )

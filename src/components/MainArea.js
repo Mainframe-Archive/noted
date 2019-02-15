@@ -2,7 +2,9 @@
 
 import React, { Component } from 'react'
 import styled, { css } from 'styled-components/native'
-import { Button } from '@morpheus-ui/core'
+import { Button, Text, TextField } from '@morpheus-ui/core'
+import { CheckSymbol } from '@morpheus-ui/icons'
+import '@morpheus-ui/fonts'
 import { Editor } from 'react-draft-wysiwyg'
 import {
   EditorState,
@@ -14,13 +16,15 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
 import { type Note } from '../types'
 
-import applyContext from '../hocs/Context'
-
 import screenSize from '../hocs/ScreenSize'
+import applyContext from '../hocs/Context'
+import { formattedTime } from './Notes'
 
 type State = {
   editorState: EditorState,
   autosaved: boolean,
+  dirty: boolean,
+  showText: boolean,
 }
 
 type Props = {
@@ -30,6 +34,7 @@ type Props = {
   update: (note: Note) => void,
   save: () => void,
   delete: () => void,
+  showFolders: boolean,
 }
 
 const Container = styled.View`
@@ -38,15 +43,25 @@ const Container = styled.View`
   padding: ${props => props.theme.spacing};
 `
 
-const ButtonTitleContainer = screenSize(styled.View`
+const ButtonTitleContainer = styled.View`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+`
+
+const TitleContainer = screenSize(styled.View`
+  margin-bottom: -30px;
   ${props =>
-    props.screenWidth <= 1100 &&
+    props.showfolders &&
     css`
-      flex-direction: column;
-    `};
+      max-width: 240px;
+    `}
+  ${props =>
+    props.showfolders &&
+    props.screenWidth <= 800 &&
+    css`
+      max-width: 140px;
+    `}
 `)
 
 const EditorContainer = styled.View`
@@ -57,21 +72,20 @@ const EditorContainer = styled.View`
   flex: 1;
 `
 
-const Title = styled.TextInput`
-  font-size: 40px;
-  padding-bottom: ${props => props.theme.spacing};
-  color: ${props => props.theme.darkGray};
-`
-
-const Text = styled.Text`
-  font-size: 14px;
-`
-
 const ButtonContainer = styled.View`
-  width: 130px;
+  padding-top: 15px;
+  width: 120px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  align-items: flex-start;
+`
+
+const CheckContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
 `
 
 class MainArea extends Component<Props, State> {
@@ -79,11 +93,13 @@ class MainArea extends Component<Props, State> {
 
   state: State = {
     autosaved: false,
+    dirty: false,
     editorState: EditorState.createWithContent(
       this.props.note.content
         ? convertFromRaw(JSON.parse(this.props.note.content))
-        : ContentState.createFromText('start typing...'),
+        : ContentState.createFromText('Start typing...'),
     ),
+    showText: false,
   }
 
   componentDidMount() {
@@ -120,39 +136,48 @@ class MainArea extends Component<Props, State> {
   }, 250)
 
   onTitleChange = newTitle => {
+    this.setState({ dirty: true })
     this.props.update({ ...this.props.note, title: newTitle })
+  }
+
+  showAutosaved = () => {
+    this.setState({ showText: true }, this.hideAutosaved())
+  }
+
+  hideAutosaved = () => {
+    setTimeout(() => this.setState({ showText: false }), 3000)
   }
 
   render() {
     const d = new Date()
     return (
       <Container>
-        <Text>
-          {this.state.autosaved &&
-            'auto saved at: ' +
-              d.getHours() +
-              ':' +
-              d.getMinutes() +
-              ':' +
-              d.getSeconds()}
-        </Text>
         <EditorContainer>
           <ButtonTitleContainer>
-            <Title
-              value={this.props.note.title ? this.props.note.title : 'untitled'}
-              onChangeText={this.onTitleChange}
-            />
+            <TitleContainer showfolders={this.props.showFolders}>
+              <TextField
+                onChange={this.onTitleChange}
+                variant="large"
+                value={
+                  this.props.note.title
+                    ? this.props.note.title
+                    : this.state.dirty
+                    ? ''
+                    : 'Title...'
+                }
+              />
+            </TitleContainer>
             {this.props.note.folder !== 'archive' && (
               <ButtonContainer>
                 <Button
                   onPress={this.props.delete}
                   title="DELETE"
-                  variant="borderless"
+                  variant={['borderless', 'short']}
                 />
                 <Button
                   onPress={this.props.save}
                   title="SAVE"
-                  variant="yellow"
+                  variant={['darkYellow', 'short']}
                 />
               </ButtonContainer>
             )}
@@ -163,6 +188,16 @@ class MainArea extends Component<Props, State> {
             onContentStateChange={this.onContentChange}
           />
         </EditorContainer>
+        <CheckContainer>
+          {this.state.showText && this.state.autosaved && (
+            <Text variant="faded">{'auto saved at: ' + formattedTime(d)}</Text>
+          )}
+          <Button
+            Icon={CheckSymbol}
+            variant={['icon', !this.state.autosaved ? 'invisible' : '']}
+            onMouseEnter={this.showAutosaved}
+          />
+        </CheckContainer>
       </Container>
     )
   }
