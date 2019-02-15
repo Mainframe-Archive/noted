@@ -31,7 +31,7 @@ const modalStyle = {
 
 const BackgroundView = styled.View`
   zIndex: 'auto',
-  backgroundColor: rgba(255, 255, 255, 0.8);
+  backgroundColor: rgba(255, 255, 255, 0.95);
   position: fixed;
   zIndex: 99999999;
   margin: 0 auto;

@@ -35,6 +35,7 @@ type State = {
   newTitle: string,
   addFolder: string,
   newFolder: string,
+  searchOpen: boolean,
 }
 
 const Container = screenSize(styled.View`

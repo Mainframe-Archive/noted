@@ -22,6 +22,9 @@ type Props = {
   update: (note: Note) => void,
   save: () => void,
   delete: () => void,
+  open: boolean,
+  closeSearch: () => void,
+  setOpen: () => void,
 }
 
 const Container = screenSize(styled.View`
@@ -62,10 +65,6 @@ class SearchBar extends Component<Props, State> {
     }
   }
 
-  openSearch = () => {
-    this.props.setOpen()
-  }
-
   render() {
     return (
       <Container>
@@ -80,7 +79,7 @@ class SearchBar extends Component<Props, State> {
           <Button
             Icon={SearchSm}
             variant={['grayIcon']}
-            onPress={this.openSearch}
+            onPress={this.props.setOpen}
           />
         )}
         {this.props.open && (

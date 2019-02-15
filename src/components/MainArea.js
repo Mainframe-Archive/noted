@@ -24,6 +24,7 @@ type State = {
   editorState: EditorState,
   autosaved: boolean,
   dirty: boolean,
+  showText: boolean,
 }
 
 type Props = {
@@ -33,6 +34,7 @@ type Props = {
   update: (note: Note) => void,
   save: () => void,
   delete: () => void,
+  showFolders: boolean,
 }
 
 const Container = styled.View`

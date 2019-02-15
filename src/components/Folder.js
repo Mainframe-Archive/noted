@@ -81,12 +81,6 @@ const Folder = (props: Props) => {
         onChangeText={props.onChangeText && (text => props.onChangeText(text))}
         onSubmitEditing={props.onSubmitEditing && props.onSubmitEditing}
       />
-      {/*      <TextField
-        value={props.folder.name}
-        variant={[props.isOpen ? 'bold' : '', 'folderText']}
-        onChange={props.onChangeText && (text => props.onChangeText(text))}
-        onSubmit={props.onSubmitEditing && props.onSubmitEditing}
-      />*/}
     </FolderContainer>
   )
 }
