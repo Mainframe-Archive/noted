@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 import { Button, Text, TextField } from '@morpheus-ui/core'
 import { CheckSymbol } from '@morpheus-ui/icons'
 import '@morpheus-ui/fonts'
@@ -16,7 +16,6 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
 import { type Note } from '../types'
 
-import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import { formattedTime } from './Notes'
 
