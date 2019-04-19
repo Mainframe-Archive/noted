@@ -49,20 +49,10 @@ const ButtonTitleContainer = styled.View`
   justify-content: space-between;
 `
 
-const TitleContainer = screenSize(styled.View`
-  margin-bottom: -30px;
-  ${props =>
-    props.showfolders &&
-    css`
-      max-width: 240px;
-    `}
-  ${props =>
-    props.showfolders &&
-    props.screenWidth <= 800 &&
-    css`
-      max-width: 140px;
-    `}
-`)
+const TitleContainer = styled.View`
+  max-width: 450px;
+  width: 100%;
+`
 
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
@@ -167,7 +157,7 @@ class MainArea extends Component<Props, State> {
                 }
               />
             </TitleContainer>
-            {this.props.note.folder !== 'archive' && (
+            {this.props.note.folder.type !== 'archive' && (
               <ButtonContainer>
                 <Button
                   onPress={this.props.delete}

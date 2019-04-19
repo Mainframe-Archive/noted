@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
 import { Button } from '@morpheus-ui/core'
 import { PlusSymbolSm } from '@morpheus-ui/icons'
+import { Image } from 'react-native'
 import uuidv4 from 'uuid/v4'
 import { type Note, type Folder as FolderType } from '../types'
 import applyContext from '../hocs/Context'
@@ -323,7 +324,12 @@ class LeftNav extends Component<Props, State> {
               {!this.state.searchOpen && (
                 <Button
                   onPress={this.props.toggleFoldersVisibility}
-                  Icon={PlusSymbolSm}
+                  Icon={() => (
+                    <Image
+                      source={require('./img/folder-gray.svg')}
+                      style={{ width: 13, height: 11 }}
+                    />
+                  )}
                   variant={['grayIcon']}
                 />
               )}
