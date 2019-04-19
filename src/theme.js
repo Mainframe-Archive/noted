@@ -10,6 +10,7 @@ const colors = {
   gray: '#f1f1f1',
   mediumGray: '#B5B5B5',
   darkGray: '#232323',
+  error: '#E51111',
 }
 
 export default {
@@ -23,13 +24,6 @@ export default {
       borderHoverColor: colors.yellow,
       titleHoverColor: colors.white,
     },
-    yellow: {
-      backgroundColor: colors.yellow,
-      borderColor: colors.yellow,
-      titleColor: colors.black,
-
-      titleHoverColor: colors.white,
-    },
     borderless: {
       backgroundColor: colors.white,
       borderColor: colors.white,
@@ -40,7 +34,8 @@ export default {
 
       backgroundHoverColor: colors.white,
       borderHoverColor: 'transparent',
-      titleHoverColor: colors.yellow,
+      titleHoverColor: colors.black,
+      hoverShadow: true,
     },
     grayIcon: {
       iconBackgroundColor: 'transparent',
@@ -51,8 +46,9 @@ export default {
 
       iconHoverBackgroundColor: 'transparent',
       backgroundHoverColor: 'transparent',
-      borderHoverColor: colors.yellow,
-      iconHoverColor: colors.yellow,
+      borderHoverColor: 'transparent',
+      hoverShadow: true,
+      iconHoverColor: colors.mediumGray,
 
       iconHeight: 12,
       iconWidth: 12,
@@ -92,6 +88,16 @@ export default {
     },
     short: {
       titlePadding: '6px',
+    },
+    whiteClose: {
+      iconColor: colors.white,
+      iconHoverColor: colors.white,
+      iconBackgroundColor: 'transparent',
+      iconHoverBackgroundColor: 'transparent',
+      iconHeight: '12px',
+      iconWidth: '12px',
+      backgroundHoverColor: 'transparent',
+      hoverShadow: false,
     },
   },
   Text: {

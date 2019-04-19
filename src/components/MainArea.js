@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import styled, { css } from 'styled-components/native'
+import styled from 'styled-components/native'
 import { Button, Text, TextField } from '@morpheus-ui/core'
 import { CheckSymbol } from '@morpheus-ui/icons'
 import '@morpheus-ui/fonts'
@@ -16,7 +16,6 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
 import { type Note } from '../types'
 
-import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import { formattedTime } from './Notes'
 
@@ -49,20 +48,10 @@ const ButtonTitleContainer = styled.View`
   justify-content: space-between;
 `
 
-const TitleContainer = screenSize(styled.View`
-  margin-bottom: -30px;
-  ${props =>
-    props.showfolders &&
-    css`
-      max-width: 240px;
-    `}
-  ${props =>
-    props.showfolders &&
-    props.screenWidth <= 800 &&
-    css`
-      max-width: 140px;
-    `}
-`)
+const TitleContainer = styled.View`
+  max-width: 450px;
+  width: 100%;
+`
 
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
@@ -167,7 +156,7 @@ class MainArea extends Component<Props, State> {
                 }
               />
             </TitleContainer>
-            {this.props.note.folder !== 'archive' && (
+            {this.props.note.folder.type !== 'archive' && (
               <ButtonContainer>
                 <Button
                   onPress={this.props.delete}
