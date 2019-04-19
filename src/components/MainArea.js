@@ -16,7 +16,6 @@ import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
 import _ from 'lodash'
 import { type Note } from '../types'
 
-import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import { formattedTime } from './Notes'
 
@@ -49,27 +48,21 @@ const ButtonTitleContainer = styled.View`
   justify-content: space-between;
 `
 
-const TitleContainer = screenSize(styled.View`
-  margin-bottom: -30px;
+const TitleContainer = styled.View`
+  max-width: 550px;
+  width: 100%;
   ${props =>
     props.showfolders &&
     css`
-      max-width: 240px;
-    `}
-  ${props =>
-    props.showfolders &&
-    props.screenWidth <= 800 &&
-    css`
-      max-width: 140px;
-    `}
-`)
+      max-width: 400px;
+    `};
+`
 
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
   background-color: ${props => props.theme.white};
-  max-height: 100vh;
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
 `
 
 const ButtonContainer = styled.View`
@@ -79,6 +72,12 @@ const ButtonContainer = styled.View`
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
+`
+
+const AbsoluteCheckContainer = styled.View`
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 `
 
 const CheckContainer = styled.View`
@@ -167,7 +166,7 @@ class MainArea extends Component<Props, State> {
                 }
               />
             </TitleContainer>
-            {this.props.note.folder !== 'archive' && (
+            {this.props.note.folder.type !== 'archive' && (
               <ButtonContainer>
                 <Button
                   onPress={this.props.delete}
@@ -188,16 +187,20 @@ class MainArea extends Component<Props, State> {
             onContentStateChange={this.onContentChange}
           />
         </EditorContainer>
-        <CheckContainer>
-          {this.state.showText && this.state.autosaved && (
-            <Text variant="faded">{'auto saved at: ' + formattedTime(d)}</Text>
-          )}
-          <Button
-            Icon={CheckSymbol}
-            variant={['icon', !this.state.autosaved ? 'invisible' : '']}
-            onMouseEnter={this.showAutosaved}
-          />
-        </CheckContainer>
+        <AbsoluteCheckContainer>
+          <CheckContainer>
+            {this.state.showText && this.state.autosaved && (
+              <Text variant="faded">
+                {'auto saved at: ' + formattedTime(d)}
+              </Text>
+            )}
+            <Button
+              Icon={CheckSymbol}
+              variant={['icon', !this.state.autosaved ? 'invisible' : '']}
+              onMouseEnter={this.showAutosaved}
+            />
+          </CheckContainer>
+        </AbsoluteCheckContainer>
       </Container>
     )
   }

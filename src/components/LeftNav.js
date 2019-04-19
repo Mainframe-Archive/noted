@@ -5,6 +5,7 @@ import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
 import { Button } from '@morpheus-ui/core'
 import { PlusSymbolSm } from '@morpheus-ui/icons'
+import { Image } from 'react-native'
 import uuidv4 from 'uuid/v4'
 import { type Note, type Folder as FolderType } from '../types'
 import applyContext from '../hocs/Context'
@@ -132,8 +133,11 @@ class LeftNav extends Component<Props, State> {
   addFolder = () => {
     const folderNames = Object.keys(this.props.getFolders())
     const regex = /new folder\s*(\d*)/
+    console.log(this.props.getFolders())
     const maxFolderNumber = this.findMaxStringNumber(folderNames, regex)
     const nextFolderName = this.prettifyFolderName(maxFolderNumber)
+    console.log(maxFolderNumber)
+    console.log(nextFolderName)
 
     this.props.update({
       key: uuidv4(),
@@ -323,7 +327,12 @@ class LeftNav extends Component<Props, State> {
               {!this.state.searchOpen && (
                 <Button
                   onPress={this.props.toggleFoldersVisibility}
-                  Icon={PlusSymbolSm}
+                  Icon={() => (
+                    <Image
+                      source={require('./img/folder-gray.svg')}
+                      style={{ width: 13, height: 11 }}
+                    />
+                  )}
                   variant={['grayIcon']}
                 />
               )}

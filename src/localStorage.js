@@ -4,30 +4,24 @@ type Notes = Array<Note> // Ideally better type than `Object` here
 const NOTES_KEY = 'notes'
 const ARCHIVE_KEY = 'archive'
 
-export const getNotes = async (): Promise<Notes> => {
+export const getNotes = async (): Promise<Object<Notes, Notes>> => {
   let notes = []
-  try {
-    const value = localStorage.getItem(NOTES_KEY)
-    if (value != null) {
-      notes = JSON.parse(value)
-    }
-  } catch (err) {
-    console.warn(err)
-  }
-  return notes
-}
-
-export const getArchive = async (): Promise<Notes> => {
   let archive = []
   try {
-    const value = localStorage.getItem(ARCHIVE_KEY)
-    if (value != null) {
-      archive = JSON.parse(value)
+    const notesVal = localStorage.getItem(NOTES_KEY)
+    const archiveVal = localStorage.getItem(ARCHIVE_KEY)
+
+    if (notesVal != null) {
+      notes = JSON.parse(notesVal)
+    }
+
+    if (archiveVal != null) {
+      archive = JSON.parse(archiveVal)
     }
   } catch (err) {
     console.warn(err)
   }
-  return archive
+  return { notes: notes, archive: archive }
 }
 
 export const setNotes = async (notes: Notes): Promise<void> => {

@@ -48,8 +48,11 @@ function contentPreview(content) {
   const newContent = convertFromRaw(JSON.parse(content))
     .getPlainText()
     .replace(/[\n\r]/g, ' ')
-    .substring(0, 25)
-  return newContent
+  const clippedContent =
+    newContent.length > 25
+      ? newContent.substring(0, 22).concat('...')
+      : newContent
+  return clippedContent
 }
 
 function formattedDate(timestamp) {
@@ -79,6 +82,11 @@ const Notes = (props: Props) => {
           const dateTime = new Date(item.date)
           const date = formattedDate(dateTime)
           const time = formattedTime(dateTime)
+          const formattedTitle = item.title
+            ? item.title.length > 20
+              ? item.title.slice(0, 20).concat('...')
+              : item.title
+            : 'Title...'
           return (
             item.invisible !== true && (
               <NoteContainer
@@ -87,9 +95,7 @@ const Notes = (props: Props) => {
                 isOpen={props.activeNote.key === item.key}
                 onClick={() => props.handleClick(item)}>
                 <TextContainer>
-                  <Text variant="bold">
-                    {item.title ? item.title : 'Title...'}
-                  </Text>
+                  <Text variant="bold">{formattedTitle}</Text>
                 </TextContainer>
                 <TextContainer>
                   <Text variant="smaller">
@@ -105,7 +111,7 @@ const Notes = (props: Props) => {
                   <ImageTextContainer>
                     <Image
                       source={require('./img/folder.svg')}
-                      style={{ width: 13, height: 10, marginRight: 5 }}
+                      style={{ width: 13, height: 11, marginRight: 5 }}
                     />
                     <Text variant={['smaller', 'folder']}>
                       {item.folder.name}
