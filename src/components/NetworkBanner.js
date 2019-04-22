@@ -3,7 +3,7 @@
 import React, { Component } from 'react'
 import { Text, Button } from '@morpheus-ui/core'
 import { Close } from '@morpheus-ui/icons'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import applyContext from '../hocs/Context'
 import { type Assets } from '../types'
 
@@ -15,6 +15,7 @@ type Props = {
   assets: Assets,
   error: string,
   network: string,
+  visible: boolean,
   dismissBanner: () => void,
 }
 
@@ -25,6 +26,11 @@ const Container = styled.View`
   justify-content: center;
   align-items: center;
   background-color: ${props => props.theme.darkYellow};
+  ${props =>
+    !props.visible &&
+    css`
+      display: none;
+    `}
 `
 
 const CloseButtonContainer = styled.View`
@@ -36,7 +42,7 @@ const CloseButtonContainer = styled.View`
 class Banner extends Component<Props, State> {
   render() {
     return (
-      <Container>
+      <Container visible={this.props.visible}>
         <Text color="#fff">{this.props.backupResult}</Text>
         <CloseButtonContainer>
           <Button

@@ -13,11 +13,11 @@ import {
   convertToRaw,
 } from 'draft-js'
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css'
+import '../css/wysiwyg.css'
 import _ from 'lodash'
 import { type Note } from '../types'
 
 import applyContext from '../hocs/Context'
-import { formattedTime } from './Notes'
 
 type State = {
   editorState: EditorState,
@@ -39,18 +39,14 @@ type Props = {
 const Container = styled.View`
   flex: 1;
   background-color: ${props => props.theme.white};
-  padding: ${props => props.theme.spacing};
-`
-
-const ButtonTitleContainer = styled.View`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+  padding: 0 ${props => props.theme.spacing};
 `
 
 const TitleContainer = styled.View`
   max-width: 550px;
   width: 100%;
+  height: 75px;
+  margin-top: 18px;
   ${props =>
     props.showfolders &&
     css`
@@ -61,23 +57,25 @@ const TitleContainer = styled.View`
 const EditorContainer = styled.View`
   padding-bottom: ${props => props.theme.spacing};
   background-color: ${props => props.theme.white};
-  flex: 1;
-  overflow-y: auto;
+  max-height: 100vh;
 `
 
+const ButtonTitleContainer = styled.View`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 75px;
+`
+
+const ContentContainer = styled.View``
+
 const ButtonContainer = styled.View`
-  padding-top: 15px;
   width: 120px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: flex-start;
-`
-
-const AbsoluteCheckContainer = styled.View`
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
+  align-items: center;
 `
 
 const CheckContainer = styled.View`
@@ -85,13 +83,25 @@ const CheckContainer = styled.View`
   flex-direction: row;
   align-items: center;
   justify-content: flex-end;
+  height: 100%;
 `
+
+function formattedTime(timestamp) {
+  const time = new Date(timestamp).toLocaleTimeString(undefined, {
+    hour12: false,
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+  })
+  return time
+}
 
 class MainArea extends Component<Props, State> {
   interval: IntervalID
 
   state: State = {
     autosaved: false,
+    autosavedTime: null,
     dirty: false,
     editorState: EditorState.createWithContent(
       this.props.note.content
@@ -109,7 +119,7 @@ class MainArea extends Component<Props, State> {
         !this.props.initial
 
       if (onlyAutoSaveDirtyNote) {
-        this.setState({ autosaved: true })
+        this.setState({ autosaved: true, autosavedTime: new Date() })
         this.props.save()
       }
     }, 10000)
@@ -148,7 +158,6 @@ class MainArea extends Component<Props, State> {
   }
 
   render() {
-    const d = new Date()
     return (
       <Container>
         <EditorContainer>
@@ -181,17 +190,21 @@ class MainArea extends Component<Props, State> {
               </ButtonContainer>
             )}
           </ButtonTitleContainer>
-          <Editor
-            editorState={this.state.editorState}
-            onEditorStateChange={this.onEditorChange}
-            onContentStateChange={this.onContentChange}
-          />
-        </EditorContainer>
-        <AbsoluteCheckContainer>
+          <ContentContainer>
+            <Editor
+              editorState={this.state.editorState}
+              onEditorStateChange={this.onEditorChange}
+              onContentStateChange={this.onContentChange}
+              editorStyle={{ fontFamily: 'Muli', fontSize: 15 }}
+              editorClassName={
+                this.props.backupResult === '' ? 'editor' : 'banner-editor'
+              }
+            />
+          </ContentContainer>
           <CheckContainer>
             {this.state.showText && this.state.autosaved && (
               <Text variant="faded">
-                {'auto saved at: ' + formattedTime(d)}
+                {'auto saved at: ' + formattedTime(this.state.autosavedTime)}
               </Text>
             )}
             <Button
@@ -200,7 +213,7 @@ class MainArea extends Component<Props, State> {
               onMouseEnter={this.showAutosaved}
             />
           </CheckContainer>
-        </AbsoluteCheckContainer>
+        </EditorContainer>
       </Container>
     )
   }

@@ -33,14 +33,14 @@ type State = {
 const Container = styled.View`
   width: 100%;
   height: 100%;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-y: none;
+  overflow-y: hidden;
 `
 
 const BannerContainer = styled.View`
   display: flex;
-  flex-direction: column;
 `
 
 const NormalContainer = styled.View`
@@ -66,7 +66,7 @@ class App extends Component<{}, State> {
     activeFolder: { name: 'all notes', type: 'all' },
     showFolders: false,
     showRenameModal: false,
-    backupResult: 'fhjdshfk',
+    backupResult: '',
   }
 
   async componentDidMount() {
@@ -75,6 +75,7 @@ class App extends Component<{}, State> {
         this.state.mf.storage.get('stringifiedNotes').then(data => {
           // local storage & swarm empty, so initialize
           // don't write yet until dirty
+          // TODO revisit if i should write when dirty? mayeb more cost effective
           if (data === undefined || data === '') {
             const content = ContentState.createFromText(initialContent)
             let noteContent = convertToRaw(content)
@@ -118,6 +119,7 @@ class App extends Component<{}, State> {
     // add interval call to write to swarm as backup
     this.interval = setInterval(() => {
       if (this.state && this.state.notes && this.state.archive) {
+        console.log(this.state.mf)
         this.state.mf.storage
           .set(
             'stringifiedNotes',
@@ -331,7 +333,6 @@ class App extends Component<{}, State> {
         }
       }
     })
-    console.log(folders)
     const foldersCopy = Object.values(folders)
     foldersCopy.sort((a, b) => {
       let nameA = a[0].folder.name.toLowerCase(),
@@ -398,7 +399,7 @@ class App extends Component<{}, State> {
           }}>
           <Container>
             <BannerContainer>
-              {this.state.backupResult !== '' && <NetworkBanner />}
+              <NetworkBanner visible={this.state.backupResult !== ''} />
             </BannerContainer>
             <NormalContainer>
               <Home />

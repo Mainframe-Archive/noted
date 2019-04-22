@@ -64,7 +64,7 @@ function formattedDate(timestamp) {
   return today
 }
 
-export function formattedTime(timestamp) {
+function formattedTime(timestamp) {
   const time = new Date(timestamp).toLocaleTimeString(undefined, {
     hour12: false,
     hour: 'numeric',
