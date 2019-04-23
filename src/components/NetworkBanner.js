@@ -5,16 +5,13 @@ import { Text, Button } from '@morpheus-ui/core'
 import { Close } from '@morpheus-ui/icons'
 import styled, { css } from 'styled-components/native'
 import applyContext from '../hocs/Context'
-import { type Assets } from '../types'
 
 type State = {
   ticker: string,
 }
 
 type Props = {
-  assets: Assets,
-  error: string,
-  network: string,
+  backupResult: string,
   visible: boolean,
   dismissBanner: () => void,
 }

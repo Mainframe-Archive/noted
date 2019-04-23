@@ -20,13 +20,15 @@ import { type Note } from '../types'
 import applyContext from '../hocs/Context'
 
 type State = {
-  editorState: EditorState,
   autosaved: boolean,
+  autosavedTime: number,
   dirty: boolean,
+  editorState: EditorState,
   showText: boolean,
 }
 
 type Props = {
+  backupResult: string,
   note: Note,
   notes: Array<Note>,
   initial: boolean,
@@ -101,7 +103,7 @@ class MainArea extends Component<Props, State> {
 
   state: State = {
     autosaved: false,
-    autosavedTime: null,
+    autosavedTime: 0,
     dirty: false,
     editorState: EditorState.createWithContent(
       this.props.note.content
@@ -119,7 +121,7 @@ class MainArea extends Component<Props, State> {
         !this.props.initial
 
       if (onlyAutoSaveDirtyNote) {
-        this.setState({ autosaved: true, autosavedTime: new Date() })
+        this.setState({ autosaved: true, autosavedTime: new Date().getTime() })
         this.props.save()
       }
     }, 10000)

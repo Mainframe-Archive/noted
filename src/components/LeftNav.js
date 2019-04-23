@@ -5,7 +5,7 @@ import styled, { css } from 'styled-components/native'
 import { View } from 'react-native-web'
 import { Button } from '@morpheus-ui/core'
 import { PlusSymbolSm } from '@morpheus-ui/icons'
-import { Image } from 'react-native'
+import { Image } from 'react-native-web'
 import uuidv4 from 'uuid/v4'
 import { type Note, type Folder as FolderType } from '../types'
 import applyContext from '../hocs/Context'
@@ -16,7 +16,7 @@ import SearchBar from './Search'
 
 type Props = {
   note: Note,
-  notes: Array<Note>,
+  notes: Array<$Exact<Note>>,
   update: (Note, ?boolean) => void,
   updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
@@ -185,30 +185,32 @@ class LeftNav extends Component<Props, State> {
 
   onDrop = (e, targetFolder) => {
     const key = e.dataTransfer.getData('key')
-    const note = Object.assign(
-      {},
-      this.props.getNote(key)
-        ? this.props.getNote(key)
-        : this.findInArchive(key),
-    )
-    note.folder.name = targetFolder.name
+    if (key) {
+      const note = Object.assign(
+        {},
+        this.props.getNote(key)
+          ? this.props.getNote(key)
+          : this.findInArchive(key),
+      )
+      note.folder.name = targetFolder.name
 
-    if (targetFolder.type === 'archive' || note.folder.type === 'archive') {
-      this.props.updateArchive(note)
+      if (targetFolder.type === 'archive' || note.folder.type === 'archive') {
+        this.props.updateArchive(note)
+      }
+
+      switch (targetFolder.type) {
+        case 'all':
+          note.folder.type = targetFolder.type
+          break
+        case 'archive':
+          note.folder.type = targetFolder.type
+          break
+        default:
+          note.folder.type = 'normal'
+      }
+
+      this.props.updateAndSave(note)
     }
-
-    switch (targetFolder.type) {
-      case 'all':
-        note.folder.type = targetFolder.type
-        break
-      case 'archive':
-        note.folder.type = targetFolder.type
-        break
-      default:
-        note.folder.type = 'normal'
-    }
-
-    this.props.updateAndSave(note)
   }
 
   archive = e => {
@@ -231,6 +233,8 @@ class LeftNav extends Component<Props, State> {
   }
 
   render() {
+    const folds = this.props.getFolders()
+
     return (
       <Container showFolders={this.props.showFolders}>
         {this.props.showFolders && (
@@ -248,7 +252,7 @@ class LeftNav extends Component<Props, State> {
                 }
                 handleDoubleClick={this.handleDoubleClick}
               />
-              {Object.values(this.props.getFolders()).map(
+              {Object.values(folds).map(
                 (subArray: Array<Note>, index: number) => {
                   const folderDataFromNote = subArray[0]
                   return (
@@ -355,26 +359,24 @@ class LeftNav extends Component<Props, State> {
               )}
             </NewButtonContainer>
           </MarginTop>
-          {Object.values(this.props.getFolders()).map(
-            (subArray: Array<Note>, index: number) => {
-              return (
-                <View key={subArray[0].key}>
-                  <Notes
-                    data={subArray.sort((a, b) => b.date - a.date)}
-                    folderName={
-                      subArray[0].folder.name && subArray[0].folder.name
-                    }
-                    activeNote={this.props.note}
-                    isOpen={
-                      this.props.activeFolder.name === subArray[0].folder.name
-                    }
-                    dragStart={this.onDragStart}
-                    handleClick={this.handleClick}
-                  />
-                </View>
-              )
-            },
-          )}
+          {Object.values(folds).map((subArray: Array<Note>, index: number) => {
+            return (
+              <View key={subArray[0].key}>
+                <Notes
+                  data={subArray.sort((a, b) => b.date - a.date)}
+                  folderName={
+                    subArray[0].folder.name && subArray[0].folder.name
+                  }
+                  activeNote={this.props.note}
+                  isOpen={
+                    this.props.activeFolder.name === subArray[0].folder.name
+                  }
+                  dragStart={this.onDragStart}
+                  handleClick={this.handleClick}
+                />
+              </View>
+            )
+          })}
           <Notes
             data={this.props.notes.sort((a, b) => b.date - a.date)}
             folderName={'all notes'}

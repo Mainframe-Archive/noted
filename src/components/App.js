@@ -19,13 +19,14 @@ import NetworkBanner from './NetworkBanner'
 import Home from './Home'
 
 type State = {
-  note: Note,
-  notes: Array<Note>,
-  mf: MainframeSDK,
   initial: boolean,
   apiVersion: string,
   archive: Array<Note>,
   activeFolder: Folder,
+  backupResult: string,
+  mf: MainframeSDK,
+  note: Note,
+  notes: Array<Note>,
   showFolders: boolean,
   showRenameModal: boolean,
 }
@@ -52,6 +53,8 @@ const initialContent =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Lorem mollis aliquam ut porttitor. Mattis aliquam faucibus purus in. Est velit egestas dui id ornare arcu. Dui vivamus arcu felis bibendum ut tristique. Vulputate ut pharetra sit amet aliquam id diam maecenas ultricies. Viverra accumsan in nisl nisi scelerisque. Sed libero enim sed faucibus turpis in eu. Scelerisque eleifend donec pretium vulputate sapien nec sagittis aliquam. Duis at consectetur lorem donec massa sapien faucibus et molestie. Sit amet risus nullam eget felis eget. Donec massa sapien faucibus et molestie ac.'
 
 class App extends Component<{}, State> {
+  interval: IntervalID
+
   state: State = {
     note: {
       key: uuidv4(),
@@ -72,41 +75,45 @@ class App extends Component<{}, State> {
   async componentDidMount() {
     getNotes().then(result => {
       if (result.notes.length === 0 && result.archive.length === 0) {
-        this.state.mf.storage.get('stringifiedNotes').then(data => {
-          // local storage & swarm empty, so initialize
-          // don't write yet until dirty
-          // TODO revisit if i should write when dirty? mayeb more cost effective
-          if (data === undefined || data === '') {
-            const content = ContentState.createFromText(initialContent)
-            let noteContent = convertToRaw(content)
-            noteContent = JSON.stringify(noteContent)
-            const initialNote = {
-              key: uuidv4(),
-              date: new Date().getTime(),
-              title: 'Welcome to Noted',
-              content: noteContent,
-              folder: { name: '', type: 'empty' },
+        this.state.mf.storage
+          .get('stringifiedNotes')
+          .then(data => {
+            // local storage & swarm empty, so initialize
+            // don't write yet until dirty
+            if (data === undefined || data === '' || data === null) {
+              const content = ContentState.createFromText(initialContent)
+              let noteContent = convertToRaw(content)
+              noteContent = JSON.stringify(noteContent)
+              const initialNote = {
+                key: uuidv4(),
+                date: new Date().getTime(),
+                title: 'Welcome to Noted',
+                content: noteContent,
+                folder: { name: '', type: 'empty' },
+              }
+              this.setState({
+                notes: [initialNote],
+                note: initialNote,
+                initial: true,
+              })
             }
-            this.setState({
-              notes: [initialNote],
-              note: initialNote,
-              initial: true,
-            })
-          }
-          // no local storage but swarm, retrieve from swarm
-          // then write to local storage
-          else {
-            const parsedData = JSON.parse(data)
-            const archive = parsedData.archive
-            const notes = parsedData.notes
-            this.setState({
-              notes: _.toArray(notes),
-              archive: _.toArray(archive),
-            })
-            setNotes(_.toArray(notes))
-            archiveNotes(_.toArray(archive))
-          }
-        })
+            // no local storage but swarm, retrieve from swarm
+            // then write to local storage
+            else {
+              const parsedData = JSON.parse(data)
+              const archive = parsedData.archive
+              const notes = parsedData.notes
+              this.setState({
+                notes: _.toArray(notes),
+                archive: _.toArray(archive),
+              })
+              setNotes(_.toArray(notes))
+              archiveNotes(_.toArray(archive))
+            }
+          })
+          .catch(err =>
+            this.setState({ backupResult: 'Could not read data from Swarm.' }),
+          )
         // if local storage then load from local storage
       } else {
         this.setState({
@@ -318,7 +325,7 @@ class App extends Component<{}, State> {
     }
   }
 
-  getFolderArray = (): Array<any> => {
+  getFolderArray = (): Array<$Exact<Note>> => {
     const folders = []
     this.state.notes.forEach(note => {
       if (

@@ -13,7 +13,7 @@ const Root = styled.View`
   flex-direction: row;
 `
 
-class Home extends Component<> {
+class Home extends Component<{}> {
   render() {
     return (
       <Root>
