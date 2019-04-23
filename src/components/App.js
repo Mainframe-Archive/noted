@@ -119,7 +119,6 @@ class App extends Component<{}, State> {
     // add interval call to write to swarm as backup
     this.interval = setInterval(() => {
       if (this.state && this.state.notes && this.state.archive) {
-        console.log(this.state.mf)
         this.state.mf.storage
           .set(
             'stringifiedNotes',
@@ -224,7 +223,7 @@ class App extends Component<{}, State> {
   }
 
   changeFolderNames = (newFolder: string, oldFolder: Folder) => {
-    const folders = this.getFolderArray()
+    const folders = Object.values(this.getFolderArray())
     let hasRenamingConflict = false
     folders.forEach(subArray => {
       const folder = subArray[0].folder.name
@@ -333,7 +332,7 @@ class App extends Component<{}, State> {
         }
       }
     })
-    const foldersCopy = Object.values(folders)
+    const foldersCopy = folders
     foldersCopy.sort((a, b) => {
       let nameA = a[0].folder.name.toLowerCase(),
         nameB = b[0].folder.name.toLowerCase()

@@ -133,11 +133,8 @@ class LeftNav extends Component<Props, State> {
   addFolder = () => {
     const folderNames = Object.keys(this.props.getFolders())
     const regex = /new folder\s*(\d*)/
-    console.log(this.props.getFolders())
     const maxFolderNumber = this.findMaxStringNumber(folderNames, regex)
     const nextFolderName = this.prettifyFolderName(maxFolderNumber)
-    console.log(maxFolderNumber)
-    console.log(nextFolderName)
 
     this.props.update({
       key: uuidv4(),
@@ -148,7 +145,7 @@ class LeftNav extends Component<Props, State> {
       },
       date: new Date().getTime(),
     })
-    this.props.setActiveFolder({ name: 'new folder', type: 'normal' })
+    this.props.setActiveFolder({ name: nextFolderName, type: 'normal' })
   }
 
   handleClick = item => {
@@ -251,9 +248,8 @@ class LeftNav extends Component<Props, State> {
                 }
                 handleDoubleClick={this.handleDoubleClick}
               />
-              {this.props
-                .getFolders()
-                .map((subArray: Array<Note>, index: number) => {
+              {Object.values(this.props.getFolders()).map(
+                (subArray: Array<Note>, index: number) => {
                   const folderDataFromNote = subArray[0]
                   return (
                     <View key={folderDataFromNote.key}>
@@ -294,7 +290,8 @@ class LeftNav extends Component<Props, State> {
                       />
                     </View>
                   )
-                })}
+                },
+              )}
               <Folder
                 folder={{ name: 'archive', type: 'archive' }}
                 folderID={'archive'}
@@ -330,10 +327,10 @@ class LeftNav extends Component<Props, State> {
                   Icon={() => (
                     <Image
                       source={require('./img/folder-gray.svg')}
-                      style={{ width: 13, height: 11 }}
+                      style={{ width: 14, height: 12 }}
                     />
                   )}
-                  variant={['grayIcon']}
+                  variant={['grayIcon', 'grayIconSize']}
                 />
               )}
               <SearchBar
@@ -358,9 +355,8 @@ class LeftNav extends Component<Props, State> {
               )}
             </NewButtonContainer>
           </MarginTop>
-          {this.props
-            .getFolders()
-            .map((subArray: Array<Note>, index: number) => {
+          {Object.values(this.props.getFolders()).map(
+            (subArray: Array<Note>, index: number) => {
               return (
                 <View key={subArray[0].key}>
                   <Notes
@@ -377,7 +373,8 @@ class LeftNav extends Component<Props, State> {
                   />
                 </View>
               )
-            })}
+            },
+          )}
           <Notes
             data={this.props.notes.sort((a, b) => b.date - a.date)}
             folderName={'all notes'}

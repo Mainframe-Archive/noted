@@ -127,7 +127,7 @@ class MainArea extends Component<Props, State> {
 
   componentWillUnmount() {
     clearInterval(this.interval)
-    this.setState({ autosaved: false })
+    this.setState({ autosaved: false, dirty: false })
   }
 
   onEditorChange = editorState => {
@@ -207,11 +207,13 @@ class MainArea extends Component<Props, State> {
                 {'auto saved at: ' + formattedTime(this.state.autosavedTime)}
               </Text>
             )}
-            <Button
-              Icon={CheckSymbol}
-              variant={['icon', !this.state.autosaved ? 'invisible' : '']}
-              onMouseEnter={this.showAutosaved}
-            />
+            {this.state.autosaved && (
+              <Button
+                Icon={CheckSymbol}
+                variant={['icon', !this.state.autosaved ? 'invisible' : '']}
+                onMouseEnter={this.showAutosaved}
+              />
+            )}
           </CheckContainer>
         </EditorContainer>
       </Container>
