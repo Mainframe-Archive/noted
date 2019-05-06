@@ -328,7 +328,7 @@ class App extends Component<{}, State> {
     }
   }
 
-  getFolderArray = (): Array<$Exact<Note>> => {
+  getFolderArray = (): Array<any> => {
     const folders = []
     this.state.notes.forEach(note => {
       if (

@@ -16,7 +16,7 @@ import SearchBar from './Search'
 
 type Props = {
   note: Note,
-  notes: Array<$Exact<Note>>,
+  notes: Array<Note>,
   update: (Note, ?boolean) => void,
   updateAndSave: (Note, ?boolean) => void,
   archive: Array<Note>,
