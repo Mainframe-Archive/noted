@@ -80,7 +80,6 @@ class App extends Component<{}, State> {
           .then(data => {
             // local storage & swarm empty, so initialize
             // don't write yet until dirty
-            console.log(data)
             if (data === undefined || data === '' || data === null) {
               const content = ContentState.createFromText(initialContent)
               let noteContent = convertToRaw(content)
@@ -113,7 +112,7 @@ class App extends Component<{}, State> {
             }
           })
           .catch(err => {
-            const errMsg = 'Could not read data from Swarm. ' + err
+            const errMsg = 'Could not read data from back up. ' + err
             this.setState({
               backupResult: errMsg,
             })
@@ -140,8 +139,7 @@ class App extends Component<{}, State> {
           )
           .then(response => {
             this.setState({
-              backupResult:
-                'Your notes have been successfully backed up to Swarm',
+              backupResult: 'Your notes have been successfully backed up.',
             })
           })
           .catch(err => {
