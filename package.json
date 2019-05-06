@@ -20,6 +20,7 @@
     "not op_mini all"
   ],
   "dependencies": {
+    "@mainframe/sdk": "^0.3.0",
     "@morpheus-ui/core": "^0.0.26",
     "@morpheus-ui/fonts": "^0.0.1",
     "@morpheus-ui/icons": "^0.0.16",
