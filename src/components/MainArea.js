@@ -1,7 +1,7 @@
 // @flow
 
 import React, { Component } from 'react'
-import styled from 'styled-components/native'
+import styled, { css } from 'styled-components/native'
 import { Button, Text, TextField } from '@morpheus-ui/core'
 import { CheckSymbol } from '@morpheus-ui/icons'
 import '@morpheus-ui/fonts'
