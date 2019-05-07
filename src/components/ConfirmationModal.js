@@ -71,7 +71,7 @@ class ConfirmationModal extends Component<Props> {
             <Button
               title={this.props.confirmationOption}
               onPress={this.props.confirmationFunction}
-              variant={'yellow'}
+              variant={'darkYellow'}
             />
           </ButtonContainer>
         </BackgroundView>

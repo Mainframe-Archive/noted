@@ -51,7 +51,7 @@ export default {
       iconHoverColor: colors.mediumGray,
 
       iconHeight: 12,
-      iconWidth: 12,
+      iconWidth: 13,
     },
     darkYellow: {
       backgroundColor: colors.yellow,

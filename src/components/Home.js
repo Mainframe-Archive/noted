@@ -6,10 +6,6 @@ import styled from 'styled-components/native'
 import LeftNav from './LeftNav'
 import MainArea from './MainArea'
 
-type Props = {
-  apiVersion: string,
-}
-
 const Root = styled.View`
   width: 100vw;
   height: 100vh;
@@ -17,7 +13,7 @@ const Root = styled.View`
   flex-direction: row;
 `
 
-class Home extends Component<Props> {
+class Home extends Component<{}> {
   render() {
     return (
       <Root>

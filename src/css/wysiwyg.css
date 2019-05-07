@@ -1,0 +1,11 @@
+.editor {
+  height: calc(100vh - 250px);
+  overflow-y: auto;
+  border: 2px solid #f7f7f7;
+}
+
+.banner-editor {
+  height: calc(100vh - 290px);
+  overflow-y: auto;
+  border: 2px solid #f7f7f7;
+}

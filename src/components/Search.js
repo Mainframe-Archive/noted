@@ -6,7 +6,6 @@ import _ from 'lodash'
 import { Button, TextField } from '@morpheus-ui/core'
 import { SearchSm } from '@morpheus-ui/icons'
 
-import screenSize from '../hocs/ScreenSize'
 import applyContext from '../hocs/Context'
 import { type Note } from '../types'
 import Suggestions from './Suggestions'
@@ -27,13 +26,13 @@ type Props = {
   setOpen: () => void,
 }
 
-const Container = screenSize(styled.View`
+const Container = styled.View`
   margin-top: 1px;
   position: relative;
   display: flex;
   flex-direction: column;
   background-color: ${props => props.theme.lightGray};
-`)
+`
 
 class SearchBar extends Component<Props, State> {
   state = {
