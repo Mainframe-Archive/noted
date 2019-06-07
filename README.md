@@ -4,7 +4,7 @@ Noted is a simple dApp for composing and organizing text notes in MainframeOS
 
 ## Build/run instructions
 Clone this repo, install dependencies, and build the project
-
+```
     $ git clone https://github.com/MainframeHQ/noted.git
     $ cd noted
     $ yarn
