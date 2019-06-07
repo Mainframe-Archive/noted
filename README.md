@@ -49,7 +49,7 @@ In App.js `getNotes()`:
 
 #### Save Notes to Swarm
 
-this.state.mf.storage
+    this.state.mf.storage
           .set(
             'stringifiedNotes',
             JSON.stringify({
