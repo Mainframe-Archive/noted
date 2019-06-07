@@ -3,11 +3,12 @@
 Noted is a simple dApp for composing and organizing text notes in MainframeOS
 
 ## Build/run instructions
+Clone this repo, install dependencies, and build the project
 
-#### Install dependencies & build
-```
-yarn
-yarn build
+    $ git clone https://github.com/MainframeHQ/noted.git
+    $ cd noted
+    $ yarn
+    $ yarn build
 ```
 
 #### Open in Mainframe OS
@@ -32,3 +33,27 @@ Then in the app window running in Mainframe OS, click the content path field at 
 - Inside the root of this project, run `yarn link @mainframe/sdk`.
 - Build the app with `yarn build`.
 - Run app in Mainframe OS
+
+#### Instantiate new MainframeSDK object
+In App.js:
+
+    state: State = {
+    mf: new MainframeSDK()
+    }
+
+#### Get Notes stored on Swarm
+
+In App.js `getNotes()`:
+
+    this.state.mf.storage.get('stringifiedNotes')
+
+#### Save Notes to Swarm
+
+this.state.mf.storage
+          .set(
+            'stringifiedNotes',
+            JSON.stringify({
+              notes: this.state.notes,
+              archive: this.state.archive,
+            }),
+          )
