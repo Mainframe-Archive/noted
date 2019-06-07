@@ -41,13 +41,13 @@ In App.js:
     mf: new MainframeSDK()
     }
 
-#### Get Notes stored on Swarm
+#### Get Notes from decentralized storage
 
 In App.js `getNotes()`:
 
     this.state.mf.storage.get('stringifiedNotes')
 
-#### Save Notes to Swarm
+#### Save Notes to decentralized storage
 
     this.state.mf.storage
           .set(
