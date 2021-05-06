@@ -31,7 +31,7 @@
     "react": "^16.6.0",
     "react-art": "^16.6.0",
     "react-dom": "^16.6.0",
-    "react-draft-wysiwyg": "^1.12.13",
+    "react-draft-wysiwyg": "^1.14.6",
     "react-modal": "^3.6.1",
     "react-native-web": "^0.9.4",
     "react-overlays": "^1.1.0",
